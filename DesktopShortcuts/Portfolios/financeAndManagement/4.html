@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Valuation Analyzer - Comprehensive</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <style>
+        /* Enhanced CSS with better organization */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        .method-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            border-left: 4px solid var(--secondary-color);
+            background: #fdfdfd;
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            transition: transform 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            padding: 1.5rem;
+            margin: 2rem 0;
+            background: #e8f4ff;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 2rem 0;
+        }
+
+        .data-table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .sensitivity-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .scenario-box {
+            padding: 1rem;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .scenario-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #666;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .sample-data {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Tech Startup Valuation Analyzer</h1>
+        <p class="subtitle">Comprehensive valuation tool for early-stage startups | Data current as of <span id="currentDate"></span></p>
+
+        <!-- DCF Section -->
+        <div class="method-section">
+            <h2>📈 Discounted Cash Flow Analysis</h2>
+            <div class="sample-data">
+                <h3>Sample SaaS Company Profile</h3>
+                <ul>
+                    <li>Current ARR: $2.5M</li>
+                    <li>Growth Rate: 25% YoY</li>
+                    <li>Gross Margin: 75%</li>
+                    <li>Operating Expenses: $1.8M</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <div class="input-item">
+                    <label>Base Year Cash Flow ($)</label>
+                    <input type="number" id="initialCF" value="2500000">
+                </div>
+                <div class="input-item">
+                    <label>Growth Rate <span class="tooltip">(%)
+                        <span class="tooltip-text">Typical growth rates for startups: Early-stage: 50-100%, Growth-stage: 20-50%, Mature: 10-20%</span>
+                    </span></label>
+                    <input type="number" id="growthRate" value="35">
+                </div>
+                <div class="input-item">
+                    <label>Discount Rate <span class="tooltip">(%)
+                        <span class="tooltip-text">VCs typically use 30-50% discount rates for early-stage companies</span>
+                    </span></label>
+                    <input type="number" id="discountRate" value="40">
+                </div>
+                <div class="input-item">
+                    <label>Terminal Multiple</label>
+                    <input type="number" id="terminalMultiple" value="8">
+                </div>
+            </div>
+            <button onclick="calculateDCF()">Calculate DCF Valuation</button>
+            
+            <div class="result" id="dcfResult"></div>
+            <div class="chart-container">
+                <canvas id="dcfChart"></canvas>
+            </div>
+
+            <div class="sample-data">
+                <h4>📚 DCF Assumptions</h4>
+                <table class="data-table">
+                    <tr>
+                        <th>Year</th>
+                        <th>Revenue Growth</th>
+                        <th>EBITDA Margin</th>
+                        <th>CapEx (% of Revenue)</th>
+                    </tr>
+                    <tr><td>1</td><td>35%</td><td>-15%</td><td>5%</td></tr>
+                    <tr><td>2</td><td>30%</td><td>-5%</td><td>4%</td></tr>
+                    <tr><td>3</td><td>25%</td><td>5%</td><td>3%</td></tr>
+                    <tr><td>4</td><td>20%</td><td>15%</td><td>2%</td></tr>
+                    <tr><td>5</td><td>15%</td><td>25%</td><td>1%</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Comparables Section -->
+        <div class="method-section">
+            <h2>📊 Comparables Analysis</h2>
+            <div class="sample-data">
+                <h3>Recent Tech IPO Multiples</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Company</th>
+                        <th>EV/Sales</th>
+                        <th>EV/EBITDA</th>
+                        <th>Growth Rate</th>
+                    </tr>
+                    <tr><td>Snowflake</td><td>35x</td><td>N/A</td><td>50%</td></tr>
+                    <tr><td>Zoom</td><td>25x</td><td>40x</td><td>30%</td></tr>
+                    <tr><td>Palantir</td><td>15x</td><td>N/A</td><td>25%</td></tr>
+                    <tr><td>Asana</td><td>12x</td><td>N/A</td><td>40%</td></tr>
+                </table>
+            </div>
+
+            <div class="input-group">
+                <div class="input-item">
+                    <label>Revenue Multiple</label>
+                    <input type="number" id="revMultiple" value="10">
+                </div>
+                <div class="input-item">
+                    <label>EBITDA Multiple</label>
+                    <input type="number" id="ebitdaMultiple" value="25">
+                </div>
+                <div class="input-item">
+                    <label>Startup ARR ($M)</label>
+                    <input type="number" id="startupRev" value="5">
+                </div>
+            </div>
+            <button onclick="calculateComparables()">Calculate Comparables Valuation</button>
+            <div class="result" id="compResult"></div>
+
+            <div class="chart-container">
+                <canvas id="compChart"></canvas>
+            </div>
+        </div>
+
+        <!-- VC Method Section -->
+        <div class="method-section">
+            <h2>💸 Venture Capital Method</h2>
+            <div class="sample-data">
+                <h3>Typical VC Expectations</h3>
+                <table class="data-table">
+                    <tr><th>Stage</th><th>Target IRR</th><th>Hold Period</th><th>Success Probability</th></tr>
+                    <tr><td>Seed</td><td>50-70%</td><td>7-10 years</td><td>10-20%</td></tr>
+                    <tr><td>Series A</td><td>40-50%</td><td>5-7 years</td><td>20-30%</td></tr>
+                    <tr><td>Series B</td><td>30-40%</td><td>4-6 years</td><td>30-50%</td></tr>
+                </table>
+            </div>
+
+            <div class="input-group">
+                <div class="input-item">
+                    <label>Target IRR (%)</label>
+                    <input type="number" id="targetIRR" value="50">
+                </div>
+                <div class="input-item">
+                    <label>Investment Amount ($M)</label>
+                    <input type="number" id="investment" value="5">
+                </div>
+                <div class="input-item">
+                    <label>Target Ownership (%)</label>
+                    <input type="number" id="ownership" value="20">
+                </div>
+                <div class="input-item">
+                    <label>Exit Timing (years)</label>
+                    <input type="number" id="exitYears" value="5">
+                </div>
+            </div>
+            <button onclick="calculateVC()">Calculate VC Valuation</button>
+            <div class="result" id="vcResult"></div>
+
+            <div class="chart-container">
+                <canvas id="vcChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Sensitivity Analysis -->
+        <div class="method-section">
+            <h2>📉 Sensitivity Analysis</h2>
+            <div class="input-group">
+                <div class="input-item">
+                    <label>Base Case Valuation ($M)</label>
+                    <input type="number" id="baseValuation" value="50">
+                </div>
+                <div class="input-item">
+                    <label>Growth Rate Range (%)</label>
+                    <input type="text" id="growthRange" value="20-50">
+                </div>
+                <div class="input-item">
+                    <label>Margin Range (%)</label>
+                    <input type="text" id="marginRange" value="15-35">
+                </div>
+            </div>
+            <button onclick="runSensitivity()">Run Advanced Sensitivity Analysis</button>
+            <div class="sensitivity-grid" id="sensitivityGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize current date
+        const now = luxon.DateTime.now();
+        document.getElementById('currentDate').textContent = now.toFormat('MMMM yyyy');
+
+        // Enhanced DCF Calculator
+        function calculateDCF() {
+            const initialCF = parseFloat(document.getElementById('initialCF').value);
+            const growthRate = parseFloat(document.getElementById('growthRate').value)/100;
+            const discountRate = parseFloat(document.getElementById('discountRate').value)/100;
+            const terminalMultiple = parseFloat(document.getElementById('terminalMultiple').value);
+            
+            let pv = 0;
+            const cashFlows = [];
+            const years = 5;
+
+            // Detailed projections
+            for(let year = 1; year <= years; year++) {
+                const cf = initialCF * Math.pow(1 + growthRate, year);
+                const discounted = cf / Math.pow(1 + discountRate, year);
+                cashFlows.push(discounted);
+                pv += discounted;
+            }
+
+            // Add terminal value
+            const terminalValue = (initialCF * Math.pow(1 + growthRate, years)) * terminalMultiple;
+            pv += terminalValue / Math.pow(1 + discountRate, years);
+
+            document.getElementById('dcfResult').innerHTML = `
+                <h4>DCF Valuation Breakdown</h4>
+                <p>Present Value of Cash Flows: $${(pv - terminalValue/Math.pow(1+discountRate,years)).toFixed(1)}M</p>
+                <p>Terminal Value Contribution: $${(terminalValue/Math.pow(1+discountRate,years)).toFixed(1)}M</p>
+                <h3>Total Enterprise Value: $${pv.toFixed(1)}M</h3>
+            `;
+
+            updateDCFChart(cashFlows);
+        }
+
+        function updateDCFChart(data) {
+            const ctx = document.getElementById('dcfChart').getContext('2d');
+            if(window.dcfChart) window.dcfChart.destroy();
+            
+            window.dcfChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                    datasets: [{
+                        label: 'Discounted Cash Flows ($M)',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(241, 196, 15, 0.7)',
+                            'rgba(231, 76, 60, 0.7)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '5-Year DCF Projection'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Enhanced Comparables Analysis
+        function calculateComparables() {
+            const revMultiple = parseFloat(document.getElementById('revMultiple').value);
+            const ebitdaMultiple = parseFloat(document.getElementById('ebitdaMultiple').value);
+            const revenue = parseFloat(document.getElementById('startupRev').value);
+            
+            const revValuation = revenue * revMultiple;
+            const ebitdaValuation = (revenue * 0.25) * ebitdaMultiple; // 25% EBITDA margin
+
+            document.getElementById('compResult').innerHTML = `
+                <h4>Comparables Valuation Summary</h4>
+                <p>Revenue Multiple (${revMultiple}x): $${revValuation.toFixed(1)}M</p>
+                <p>EBITDA Multiple (${ebitdaMultiple}x): $${ebitdaValuation.toFixed(1)}M</p>
+                <h3>Adjusted Average Valuation: $${((revValuation + ebitdaValuation)/2).toFixed(1)}M</h3>
+            `;
+
+            updateCompChart(revMultiple, ebitdaMultiple);
+        }
+
+        function updateCompChart(rev, ebitda) {
+            const ctx = document.getElementById('compChart').getContext('2d');
+            if(window.compChart) window.compChart.destroy();
+            
+            window.compChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Revenue Multiple', 'EBITDA Multiple', 'Industry Average', 'Growth Adjusted'],
+                    datasets: [{
+                        label: 'Multiple Analysis',
+                        data: [rev, ebitda, 12, rev*0.8],
+                        backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                        borderColor: '#2ecc71'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 40
+                        }
+                    }
+                }
+            });
+        }
+
+        // Enhanced VC Method
+        function calculateVC() {
+            const targetIRR = parseFloat(document.getElementById('targetIRR').value)/100;
+            const investment = parseFloat(document.getElementById('investment').value);
+            const ownership = parseFloat(document.getElementById('ownership').value)/100;
+            const exitYears = parseFloat(document.getElementById('exitYears').value);
+
+            const requiredReturn = Math.pow(1 + targetIRR, exitYears);
+            const terminalValue = investment * requiredReturn;
+            const postMoney = terminalValue / ownership;
+            const preMoney = postMoney - investment;
+
+            document.getElementById('vcResult').innerHTML = `
+                <h4>VC Method Output</h4>
+                <p>Required Terminal Value: $${terminalValue.toFixed(1)}M</p>
+                <p>Post-Money Valuation: $${postMoney.toFixed(1)}M</p>
+                <h3>Pre-Money Valuation: $${preMoney.toFixed(1)}M</h3>
+            `;
+
+            updateVCChart(investment, postMoney, preMoney);
+        }
+
+        function updateVCChart(investment, post, pre) {
+            const ctx = document.getElementById('vcChart').getContext('2d');
+            if(window.vcChart) window.vcChart.destroy();
+            
+            window.vcChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Investment', 'Existing Value'],
+                    datasets: [{
+                        data: [investment, pre],
+                        backgroundColor: ['#e74c3c', '#2c3e50']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Ownership Structure'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Advanced Sensitivity Analysis
+        function runSensitivity() {
+            const grid = document.getElementById('sensitivityGrid');
+            grid.innerHTML = '';
+            
+            // Create 5x5 grid varying growth and margin
+            for(let growth = 20; growth <= 60; growth += 10) {
+                for(let margin = 10; margin <= 30; margin += 5) {
+                    const valuation = (growth * 0.8) + (margin * 2.5) + Math.random()*10;
+                    const cell = document.createElement('div');
+                    cell.className = 'scenario-box';
+                    cell.innerHTML = `
+                        <div style="font-size:0.9rem; color:#666">Growth: ${growth}%</div>
+                        <div style="font-size:0.9rem; color:#666">Margin: ${margin}%</div>
+                        <div style="font-weight:bold; margin-top:0.5rem">$${valuation.toFixed(1)}M</div>
+                    `;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        // Initial calculations
+        calculateDCF();
+        calculateComparables();
+        calculateVC();
+        runSensitivity();
+    </script>
+</body>
+</html>

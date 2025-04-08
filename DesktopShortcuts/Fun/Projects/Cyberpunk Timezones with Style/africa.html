@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfroTech Haven</title>
+    <link rel="stylesheet" href="dist\africaStyle.css">
+    <link rel="icon" type="image/x-icon" href="images\_40fdbaa1-95d8-45c7-8e7c-6bda09adf50c-removebg-preview.png">
+</head>
+
+<body>
+    <header>
+        <nav class="cyberpunk-nav">
+            <a href="index.html"><div class="logo">Cyberpunk Timezones&nbsp;サイバーパンク・タイムゾーン<br><b>AfroTech Haven</b>&nbsp;<i>(Africa)</i>&nbsp;アフロテック・ヘイブン</div></a>
+            <div class="origin">ORIG. PT.: 116° 40' 126° 34' E 4° 40' 21° 10' N 114,830mi2</div>
+        </nav>
+    </header>
+
+    <div class="cyberpunk-container">
+        <button id="orange1"  onclick="minusTimezone('Neon Savanna',          'South Africa',                     ['SAST'],   6,)">   <b>Neon Savanna</b>         <i>(South Africa)</i>                     ネオンサバンナ  <p>ZA	-30.5595	22.9375	1,219,912</p></button>
+        <button id="orange2"  onclick="minusTimezone('BitCity',               'Nigeria',                          ['WAT'],    7,)">   <b>BitCity</b>              <i>(Nigeria)</i>                          ビットシティ  <p>NG	9.082	8.6753	923,768</p></button>
+        <button id="orange3"  onclick="minusTimezone('TechHaven',             'Kenya',                            ['EAT'],    6,)">   <b>TechHaven</b>            <i>(Kenya)</i>                            テックヘブン  <p>KE	-0.0236	37.9062	580,367</p></button>
+        <button id="orange4"  onclick="minusTimezone('GlowAccra',             'Ghana',                            ['GMT'],    7,)">   <b>GlowAccra</b>            <i>(Ghana)</i>                            グローアクラ  <p>GH	7.9465	-1.0232	238,533</p></button>
+        <button id="orange5"  onclick="minusTimezone('DataKinshasa',          'Democratic Republic of the Congo', ['CAT'],    7,)">   <b>DataKinshasa</b>         <i>(Democratic Republic of the Congo)</i> データキンシャサ  <p>CD	-4.0383	21.7587	2,344,858</p></button>
+        <button id="orange6"  onclick="minusTimezone('CircuitCasablanca',     'Morocco',                          ['WET'],    8,)">   <b>CircuitCasablanca</b>    <i>(Morocco)</i>                          サーキットカサブランカ  <p>MA	31.7917	-7.0926	446,550</p></button>
+        <button id="orange7"  onclick="minusTimezone('ByteLand',              'Tanzania',                         ['EAT'],    6,)">   <b>ByteLand</b>             <i>(Tanzania)</i>                         バイトランド  <p>TZ	-6.369	34.8888	947,303</p></button>
+        <button id="orange8"  onclick="minusTimezone('MetaDakar',             'Senegal',                          ['GMT'],    7,)">   <b>MetaDakar</b>            <i>(Senegal)</i>                          メタダカール  <p>SN	14.4974	-14.4524	196,722</p></button>
+        <button id="orange9"  onclick="minusTimezone('SiliconAbyssinia',      'Ethiopia',                         ['EAT'],    5,)">   <b>SiliconAbyssinia</b>     <i>(Ethiopia)</i>                         シリコンアビシニア  <p>ET	9.145	40.4897	1,104,300</p></button>
+        <button id="orange10" onclick="minusTimezone('NanoMali',              'Mali',                             ['GMT'],    7,)">   <b>NanoMali</b>             <i>(Mali)</i>                             ナノマリ  <p>ML	17.5707	-3.9962	1,240,192</p></button>
+        <button id="orange11" onclick="minusTimezone('PixelUganda',           'Uganda',                           ['EAT'],    6,)">   <b>PixelUganda</b>          <i>(Uganda)</i>                           ピクセルウガンダ  <p>UG	1.3733	32.2903	241,038</p></button>
+        <button id="orange12" onclick="minusTimezone('ByteRwanda',            'Rwanda',                           ['CAT'],    6,)">   <b>ByteRwanda</b>           <i>(Rwanda)</i>                           バイトルワンダ  <p>RW	-1.9403	29.8739	26,338</p></button>
+        <button id="orange13" onclick="minusTimezone('CamLink',               'Cameroon',                         ['WAT'],    7,)">   <b>CamLink</b>              <i>(Cameroon)</i>                         カムリンク  <p>CM	7.3697	12.3547	475,442</p></button>
+        <button id="orange14" onclick="minusTimezone('NigerSynth',            'Niger',                            ['WAT'],    7,)">   <b>NigerSynth</b>           <i>(Niger)</i>                            ニジェールシンセ  <p>NE	17.6078	8.0817	1,267,000</p></button>
+        <button id="orange15" onclick="minusTimezone('SudoSudan',             'South Sudan',                      ['CAT'],    5,)">   <b>SudoSudan</b>            <i>(South Sudan)</i>                      スーダン  <p>SS	6.8769	31.3068	619,745</p></button>
+        <button id="orange16" onclick="minusTimezone('CyberMadagascar',       'Madagascar',                       ['EAT'],    5,)">   <b>CyberMadagascar</b>      <i>(Madagascar)</i>                       サイバーマダガスカル  <p>MG	-18.7669	46.8691	587,041</p></button>
+        <button id="orange17" onclick="minusTimezone('Code dIvoire',          'Cote dlvoire',                     ['CVT'],    7,)">   <b>Code d'Ivoire</b>        <i>(Cote d'lvoire)</i>                    コードジボワール  <p>CI	7.54	-5.5471	322,463</p></button>
+        <button id="orange18" onclick="minusTimezone('Cryptomalia',           'Somalia',                          ['CET'],    5,)">   <b>Cryptomalia</b>          <i>(Somalia)</i>                          クリプトマリア  <p>SO	5.1521	46.1996	637,657</p></button>
+        <button id="orange19" onclick="minusTimezone('CapeVerdeNet',          'Cabo Verde',                       ['CAT'],    8,)">   <b>CapeVerdeNet</b>         <i>(Cabo Verde)</i>                       ベルデ岬ネット  <p>CV	16.5388	-23.0418	4,033</p></button>
+        <button id="orange20" onclick="minusTimezone('Algorythmia',           'Algeria',                          ['WAT'],    7,)">   <b>Algorythmia</b>          <i>(Algeria)</i>                          アルゴリスミア  <p>DZ	28.0339	1.6596	2,381,741</p></button>
+        <button id="orange21" onclick="minusTimezone('SudoSahara',            'Sudan',                            ['CAT'],    5,)">   <b>SudoSahara</b>           <i>(Sudan)</i>                            スドサハラ  <p>SD	12.8628	30.2176	1,861,484</p></button>
+        <button id="orange22" onclick="minusTimezone('QuantumAngola',         'Angola',                           ['WAT'],    6,)">   <b>QuantumAngola</b>        <i>(Angola)</i>                           クォンタムアンゴラ  <p>AO	-11.2027	17.8739	1,246,700</p></button>
+        <button id="orange23" onclick="minusTimezone('Zer0Zimbabwe',          'Zimbabwe',                         ['CET'],    6,)">   <b>Zer0Zimbabwe</b>         <i>(Zimbabwe)</i>                         Zer0ジンバブエ  <p>ZW	-19.0154	29.1549	390,757</p></button>
+        <button id="orange24" onclick="minusTimezone('Namibix',               'Namibia',                          ['GMT'],    6,)">   <b>Namibix</b>              <i>(Namibia)</i>                          ナミビックス  <p>NA	-22.9576	18.4904	825,615</p></button>
+        <button id="orange25" onclick="minusTimezone('QuantumTunisia',        'Tunisia',                          ['GMT'],    7,)">   <b>QuantumTunisia</b>       <i>(Tunisia)</i>                          クォンタムチュニジア  <p>TN	33.8869	9.5375	163,610</p></button>
+        <button id="orange26" onclick="minusTimezone('GambitHub',             'THe Gambia',                       ['GMT'],    7,)">   <b>GambitHub</b>            <i>(THe Gambia)</i>                       ギャンビットハブ  <p>GM	13.4432	-15.3101	10,689</p></button>
+        <button id="orange27" onclick="minusTimezone('BurkinaCyber',          'Burkina Faso',                     ['CAT'],    7,)">   <b>BurkinaCyber</b>         <i>(Burkina Faso)</i>                     ブルキナサイバー  <p>BF	12.2383	-1.5616	274,200</p></button>
+        <button id="orange28" onclick="minusTimezone('GuineaGrid',            'Guinea',                           ['CAT'],    7,)">   <b>GuineaGrid</b>           <i>(Guinea)</i>                           ギニアグリッド  <p>GN	9.9456	-9.6966	245,857</p></button>
+        <button id="orange29" onclick="minusTimezone('MozTechmabique',        'Mozambique',                       ['CET'],    6,)">   <b>MozTechmabique</b>       <i>(Mozambique)</i>                       モズテクマビク  <p>MZ	-18.6657	35.5296	801,590</p></button>
+        <button id="orange30" onclick="minusTimezone('ZapZambia',             'Zambia',                           ['GMT'],    6,)">   <b>ZapZambia</b>            <i>(Zambia)</i>                           ザップザンビア  <p>ZM	-13.1339	27.8493	752,612</p></button>
+        <button id="orange31" onclick="minusTimezone('Libertya',              'Libya',                            ['GMT'],    6,)">   <b>Libertya</b>             <i>(Libya)</i>                            リバティア  <p>LY	26.3351	17.2283	1,759,540</p></button>
+        <button id="orange32" onclick="minusTimezone('Libra',                 'Liberia',                          ['GMT'],    7,)">   <b>Libra</b>                <i>(Liberia)</i>                          リブラ  <p>LR	6.4281	-9.4295	111,369</p></button>
+        <button id="orange33" onclick="minusTimezone('Mauritronix',           'Mauritania',                       ['WAT'],    7,)">   <b>Mauritronix</b>          <i>(Mauritania)</i>                       モーリトロニクス  <p>MR	21.0079	-10.9408	1,030,700</p></button>
+        <button id="orange34" onclick="minusTimezone('TogoTech',              'Togo',                             ['CAT'],    7,)">   <b>TogoTech</b>             <i>(Togo)</i>                             トーゴテック  <p>TG	8.6195	0.8248	56,785</p></button>
+        <button id="orange35" onclick="minusTimezone('ChadNet',               'Chad',                             ['WAT'],    6,)">   <b>ChadNet</b>              <i>(Chad)</i>                             チャドネット  <p>TD	15.4542	18.7322	1,284,000</p></button>
+        <button id="orange36" onclick="minusTimezone('Bitswana',              'Botswana',                         ['CAT'],    6,)">   <b>Bitswana</b>             <i>(Botswana)</i>                         ビツワナ  <p>BW	-22.3285	24.6849	582,000</p></button>
+        <button id="orange37" onclick="minusTimezone('SierraLink',            'Sierra Leone',                     ['CAT'],    6,)">   <b>SierraLink</b>           <i>(Sierra Leone)</i>                     シエラリンク  <p>SL	8.4606	-11.7799	71,740</p></button>
+        <button id="orange38" onclick="minusTimezone('CyberGabon',            'Gabon',                            ['MUT'],    7,)">   <b>CyberGabon</b>           <i>(Gabon)</i>                            サイバーガボン  <p>GA	-0.8037	11.6094	267,667</p></button>
+        <button id="orange39" onclick="minusTimezone('CentralData Republic',  'Central African Republic',         ['WAT'],    7,)">   <b>CentralData Republic</b> <i>(Central African Republic)</i>         セントラルデータ共和国  <p>CF	6.6111	20.9394	622,984</p></button>
+        <button id="orange40" onclick="minusTimezone('BuruData',              'Burundi',                          ['WAT'],    7,)">   <b>BuruData</b>             <i>(Burundi)</i>                          ブルデータ  <p>BI	-3.3731	29.9189	27,830</p></button>
+        <button id="orange41" onclick="minusTimezone('Malwareshi',            'Malawi',                           ['EAT'],    4,)">   <b>Malwareshi</b>           <i>(Malawi)</i>                           マルワレシ  <p>MW	-13.2543	34.3015	118,484</p></button>
+        <button id="orange42" onclick="minusTimezone('MauriTechs',            'Mauritius',                        ['EAT'],    7,)">   <b>MauriTechs</b>           <i>(Mauritius)</i>                        マウリテック  <p>MU	-20.3484	57.5522	2,040</p></button>
+        <button id="orange43" onclick="minusTimezone('EquaRealm Guinea',      'Equatorial Guinea',                ['SAST'],   7,)">   <b>EquaRealm Guinea</b>     <i>(Equatorial Guinea)</i>                EquaRealm ギニア  <p>GQ	1.6508	10.2679	28,051</p></button>
+        <button id="orange44" onclick="minusTimezone('Benigma',               'Benin',                            ['SCT'],    5,)">   <b>Benigma</b>              <i>(Benin)</i>                            ベニグマ  <p>BJ	9.3077	2.3158	112,622</p></button>
+        <button id="orange45" onclick="minusTimezone('Etheria',               'Eritrea',                          ['WAT'],    5,)">   <b>Etheria</b>              <i>(Eritrea)</i>                          エテリア  <p>ER	15.1794	39.7823	117,600</p></button>
+        <button id="orange46" onclick="minusTimezone('DataDjibouti',          'Djibouti',                         ['WET'],    6,)">   <b>DataDjibouti</b>         <i>(Djibouti)</i>                         データジブチ  <p>DJ	11.8251	42.5903	23,200</p></button>
+        <button id="orange47" onclick="minusTimezone('LesoCode',              'Lesotho',                          ['SAST'],   4,)">   <b>LesoCode</b>             <i>(Lesotho)</i>                          レソコード  <p>LS	-29.61	28.2336	30,355</p></button>
+        <button id="orange48" onclick="minusTimezone('Seychellect',           'Seychelles',                       ['WAT'],    7,)">   <b>Seychellect</b>          <i>(Seychelles)</i>                       セイシェル  <p>SC	-4.6796	55.492	459</p></button>
+        <button id="orange49" onclick="minusTimezone('BinaryCongo',           'Republic of the Congo',            ['WAT'],    8,)">   <b>BinaryCongo</b>          <i>(Republic of the Congo)</i>            バイナリーコンゴ  <p>CG	-0.228	15.8277	342,000</p></button>
+        <button id="orange50" onclick="minusTimezone('WesternCircuit',        'Western Sahara',                   ['WAT'],    6,)">   <b>WesternCircuit</b>       <i>(Western Sahara)</i>                   ウエスタンサーキット  <p>EH	24.2155	-12.8858	266,000</p></button>
+        <button id="orange51" onclick="minusTimezone('Eswireless',            'Eswatini',                         ['CAT'],    6,)">   <b>Eswireless</b>           <i>(Eswatini)</i>                         エスワイヤレス  <p>SZ	-26.5225	31.4659	17,364</p></button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

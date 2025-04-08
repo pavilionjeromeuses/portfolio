@@ -1,0 +1,119 @@
+/* Additions for hover effect and background animation */
+img {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+lightbox-image:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background: linear-gradient(-45deg, #1a237e, #0d47a1, #1976d2, #64b5f6);
+  background-size: 400% 400%;
+  animation: dataWave 15s ease infinite;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes dataWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Data science-themed floating elements */
+body::before {
+  content: '';
+  position: fixed;
+  width: 200vw;
+  height: 200vh;
+  top: -50%;
+  left: -50%;
+  background-image: 
+    linear-gradient(rgba(100, 181, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 181, 246, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridFlow 20s linear infinite;
+  z-index: -1;
+}
+
+@keyframes gridFlow {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(40px, 40px);
+  }
+}
+
+html:has(dialog[open]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+  
+  body {
+    display: grid;
+    place-items: center;
+    font-family: system-ui, sans-serif;
+  }
+  
+  main {
+    display: grid;
+    gap: 1rem;
+    padding: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-content: center;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: bottom;
+    border-radius: 1rem;
+  }
+  
+  lightbox-image:defined {
+    display: block;
+    cursor: zoom-in;
+  }
+  
+  lightbox-image {
+    max-width: 100%;
+  }
+  
+  dialog {
+    --_gutter: 2rem;
+    padding: 1rem;
+    outline: unset;
+    border: unset;
+    background: unset;
+    max-height: 100vh;
+    cursor: zoom-out;
+  
+    &::backdrop {
+      background: blue;
+      opacity: 0.75;
+    }
+  
+    form {
+      position: absolute;
+      opacity: 0;
+    }
+  
+    img {
+      max-height: calc(100vh - var(--_gutter));
+    }
+  }
+  
+  ::view-transition-group(active-lightbox-image) {
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  

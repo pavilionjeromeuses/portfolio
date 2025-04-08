@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Based Project Management - AgileFlow Consulting</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --accent: #a5b4fc;
+            --background: #f8fafc;
+            --text: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .status.completed { background: #dcfce7; color: #16a34a; }
+        .status.in-progress { background: #fef9c3; color: #ca8a04; }
+        .status.on-hold { background: #fee2e2; color: #dc2626; }
+        .status.backlog { background: #e0e7ff; color: #4338ca; }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Based Project Management</h1>
+        <p>AgileFlow Consulting • 100 Active Projects</p>
+    </div>
+
+    <div class="projects-grid">
+        <script>
+            const sampleProjects = [];
+            const statuses = ['completed', 'in-progress', 'on-hold', 'backlog'];
+            const priorities = ['Low', 'Medium', 'High', 'Critical'];
+            const managers = ['Alex Morgan', 'Sam Chen', 'Jordan Smith', 'Taylor Kim'];
+
+            for (let i = 1; i <= 100; i++) {
+                sampleProjects.push({
+                    id: i,
+                    name: `Project ${i} - ${['Digital Transformation', 'Cloud Migration', 'CX Optimization', 'AI Integration'][Math.floor(Math.random() * 4)]}`,
+                    manager: managers[Math.floor(Math.random() * managers.length)],
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    priority: priorities[Math.floor(Math.random() * priorities.length)],
+                    startDate: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28 + 1)).toLocaleDateString(),
+                    endDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28 + 1)).toLocaleDateString(),
+                    progress: Math.floor(Math.random() * 100)
+                });
+            }
+
+            sampleProjects.forEach(project => {
+                document.write(`
+                    <div class="project-card">
+                        <div class="status ${project.status}">${project.status.replace('-', ' ')}</div>
+                        <h3>${project.name}</h3>
+                        <p class="manager">Manager: ${project.manager}</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress}%"></div>
+                        </div>
+                        <div class="project-meta">
+                            <span>Priority: ${project.priority}</span>
+                            <span>${project.progress}%</span>
+                        </div>
+                        <div class="project-meta">
+                            <span>Start: ${project.startDate}</span>
+                            <span>End: ${project.endDate}</span>
+                        </div>
+                    </div>
+                `);
+            });
+        </script>
+    </div>
+</body>
+</html>

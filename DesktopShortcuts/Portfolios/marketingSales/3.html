@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FunnelFlow - Sales Funnel Optimization Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .heatmap-cell:hover { transform: scale(1.2); z-index: 10; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center">
+            <div class="flex-shrink-0 font-bold text-blue-600 text-xl">FunnelFlow</div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Metrics Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <h3 class="text-gray-500 text-sm">Conversion Rate</h3>
+                <p class="text-3xl font-bold">4.8% <span class="text-green-500 text-sm">↑2.1%</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                <h3 class="text-gray-500 text-sm">Avg. Order Value</h3>
+                <p class="text-3xl font-bold">$89 <span class="text-green-500 text-sm">↑$12</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                <h3 class="text-gray-500 text-sm">Bounce Rate</h3>
+                <p class="text-3xl font-bold">32% <span class="text-red-500 text-sm">↓8%</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+                <h3 class="text-gray-500 text-sm">Revenue Impact</h3>
+                <p class="text-3xl font-bold">+$28K</p>
+            </div>
+        </div>
+
+        <!-- Funnel Visualization -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h2 class="text-xl font-semibold mb-4">Conversion Funnel</h2>
+                <canvas id="funnelChart"></canvas>
+            </div>
+            
+            <!-- Heatmap Simulation -->
+            <div class="bg-white p-6 rounded-xl shadow-sm relative">
+                <h2 class="text-xl font-semibold mb-4">User Attention Heatmap</h2>
+                <div class="relative h-80 bg-gray-100 rounded-lg overflow-hidden">
+                    <div class="heatmap-cell absolute w-24 h-24 bg-red-500 opacity-50 rounded-full blur-[2px] top-1/4 left-1/4 animate-pulse"></div>
+                    <div class="heatmap-cell absolute w-16 h-16 bg-orange-400 opacity-40 rounded-full blur-[2px] top-1/3 right-1/4"></div>
+                    <div class="heatmap-cell absolute w-20 h-20 bg-yellow-300 opacity-40 rounded-full blur-[2px] bottom-1/4 left-1/3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A/B Test Results -->
+        <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+            <h2 class="text-xl font-semibold mb-4">A/B Test Performance</h2>
+            <canvas id="abTestChart"></canvas>
+        </div>
+
+        <!-- Changes Breakdown -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-blue-50 p-6 rounded-xl">
+                <h3 class="font-semibold mb-2">🛠️ Changes Implemented</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm">
+                    <li>Simplified checkout form</li>
+                    <li>Added trust badges</li>
+                    <li>Mobile-optimized layout</li>
+                    <li>Exit-intent popup</li>
+                </ul>
+            </div>
+            <div class="bg-green-50 p-6 rounded-xl">
+                <h3 class="font-semibold mb-2">📈 Key Improvements</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm">
+                    <li>15% reduction in cart abandonment</li>
+                    <li>25% faster checkout completion</li>
+                    <li>40% mobile conversion increase</li>
+                </ul>
+            </div>
+            <div class="bg-purple-50 p-6 rounded-xl">
+                <h3 class="font-semibold mb-2">💡 Psychology Principles</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm">
+                    <li>Scarcity (limited stock)</li>
+                    <li>Social proof (live purchases)</li>
+                    <li>Authority (expert reviews)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Testimonials Carousel -->
+        <div class="bg-white p-6 rounded-xl shadow-sm relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-10"></div>
+            <div id="testimonial1" class="testimonial opacity-100 transition-opacity duration-500">
+                <p class="text-lg italic mb-4">"The funnel optimizations increased our RPV by 22% within just two weeks."</p>
+                <p class="font-semibold">— Sarah Johnson, E-commerce Director</p>
+            </div>
+            <div id="testimonial2" class="testimonial absolute top-0 left-0 p-6 opacity-0 transition-opacity duration-500">
+                <p class="text-lg italic mb-4">"Their data-driven approach helped us identify bottlenecks we never noticed before."</p>
+                <p class="font-semibold">— Michael Chen, Product Manager</p>
+            </div>
+        </div>
+    </main>
+
+<script>
+    // Sample Funnel Data
+    const funnelData = {
+        labels: ['Visitors', 'Product Views', 'Add to Cart', 'Checkout', 'Purchase'],
+        datasets: [{
+            label: 'Before',
+            data: [10000, 4500, 1500, 500, 300],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+        },{
+            label: 'After',
+            data: [10000, 6200, 2800, 1200, 800],
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgb(54, 162, 235)',
+        }]
+    };
+
+    // A/B Test Data
+    const abTestData = {
+        labels: ['Original', 'Variant A', 'Variant B'],
+        datasets: [{
+            label: 'Conversion Rate %',
+            data: [3.8, 4.2, 5.1],
+            backgroundColor: ['#3B82F6', '#10B981', '#8B5CF6'],
+        }]
+    };
+
+    // Initialize Charts
+    window.onload = function() {
+        new Chart(document.getElementById('funnelChart'), {
+            type: 'bar',
+            data: funnelData,
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        new Chart(document.getElementById('abTestChart'), {
+            type: 'bar',
+            data: abTestData,
+            options: { responsive: true, indexAxis: 'y' }
+        });
+
+        // Testimonial Carousel
+        let currentTestimonial = 1;
+        setInterval(() => {
+            document.querySelectorAll('.testimonial').forEach(el => el.style.opacity = 0);
+            currentTestimonial = currentTestimonial === 1 ? 2 : 1;
+            document.getElementById(`testimonial${currentTestimonial}`).style.opacity = 1;
+        }, 5000);
+    };
+</script>
+</body>
+</html>

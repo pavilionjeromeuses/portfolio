@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #111;
+
+    a {
+        text-decoration: none;
+    }
+
+    p {margin-left: auto;}
+    
+    header {
+        background-color: #111;
+        padding: 20px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        margin-bottom: 19px;
+    }
+}
+
+.cyberpunk-nav {
+    display: flex;
+    justify-content: space-between;
+
+    .logo, .origin {
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: bold;
+    }
+}
+
+$primary-color: #0000ff;
+$text-color: #ffffff;
+
+.cyberpunk-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: $text-color;
+    background-color: $primary-color;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;   
+}
+
+#blue1:hover  {color: #000000; background-color: #D3F8FF;}
+#blue2:hover  {color: #000100; background-color: #C1F4FF;}
+#blue3:hover  {color: #000200; background-color: #AEEFFF;}
+#blue4:hover  {color: #000300; background-color: #9CEBFF;}
+#blue5:hover  {color: #000400; background-color: #89E7FF;}
+#blue6:hover  {color: #000400; background-color: #77E3FF;}
+#blue7:hover  {color: #000E0B; background-color: #64DFFF;}
+#blue8:hover  {color: #001818; background-color: #52DBFF;}
+#blue9:hover  {color: #002224; background-color: #3FD7FF;}
+#blue10:hover {color: #002C31; background-color: #2DD3FF;}
+#blue11:hover {color: #00363E; background-color: #1AD0FF;}
+#blue12:hover {color: #00404B; background-color: #08CCFF;}
+#blue13:hover {color: #004A58; background-color: #00C2F2;}
+#blue14:hover {color: #005465; background-color: #00B8E6;}
+#blue15:hover {color: #005E72; background-color: #00AED9;}
+#blue16:hover {color: #00687F; background-color: #00A4CC;}
+#blue17:hover {color: #00728C; background-color: #009ABF;}
+#blue18:hover {color: #007C99; background-color: #0090B2;}
+#blue19:hover {color: #0086A6; background-color: #0086A6;}
+#blue20:hover {color: #0090B2; background-color: #007C99;}
+#blue21:hover {color: #009ABF; background-color: #00728C;}
+#blue22:hover {color: #00A4CC; background-color: #00687F;}
+#blue23:hover {color: #00AED9; background-color: #005E72;}
+#blue24:hover {color: #00B8E6; background-color: #005465;}
+#blue25:hover {color: #00C2F2; background-color: #004A58;}
+#blue26:hover {color: #08CCFF; background-color: #00404B;}
+#blue27:hover {color: #1AD0FF; background-color: #00363E;}
+#blue28:hover {color: #2DD3FF; background-color: #002C31;}
+#blue29:hover {color: #3FD7FF; background-color: #002224;}
+#blue30:hover {color: #52DBFF; background-color: #001818;}
+#blue31:hover {color: #64DFFF; background-color: #000E0B;}
+#blue32:hover {color: #77E3FF; background-color: #000400;}
+#blue33:hover {color: #89E7FF; background-color: #000400;}
+#blue34:hover {color: #9CEBFF; background-color: #000300;}
+#blue35:hover {color: #AEEFFF; background-color: #000200;}
+#blue36:hover {color: #C1F4FF; background-color: #000100;}
+#blue37:hover {color: #D3F8FF; background-color: #000000;}

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Crisis Communication Toolkit</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: #f0f4f8;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        h1 { border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+
+        .flowchart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .flow-step {
+            padding: 20px;
+            background: #ffffff;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: "➔";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #3498db;
+        }
+
+        .flow-step:last-child::after { display: none; }
+
+        .template {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover { background: #2980b9; transform: translateY(-2px); }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .timeline {
+            border-left: 3px solid #3498db;
+            padding-left: 25px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "●";
+            position: absolute;
+            left: -32px;
+            top: 15px;
+            color: #3498db;
+            font-size: 24px;
+        }
+
+        .checklist {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .checklist li {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            list-style-type: none;
+        }
+
+        .severity-indicator {
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            margin: 10px 0;
+        }
+
+        .severity-low { background: #27ae60; }
+        .severity-medium { background: #f1c40f; }
+        .severity-high { background: #e74c3c; }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h1>Enterprise Crisis Communication Toolkit</h1>
+        <p>Last updated: <input type="date" value="2024-03-15"></p>
+    </div>
+
+    <div class="section">
+        <h2>Example Scenario: Major Data Breach</h2>
+        <div class="severity-indicator severity-high">SEVERITY LEVEL: CRITICAL</div>
+        <p><strong>Incident Summary:</strong> Unauthorized access detected in customer database, potential exposure of 2M user records including payment information. Detected 03/14/24 at 22:45 EST.</p>
+    </div>
+
+    <div class="section">
+        <h2>Escalation Protocol</h2>
+        <div class="flowchart">
+            <div class="flow-step">
+                <h3>1. Detection & Reporting</h3>
+                <p><strong>Team:</strong> Security Operations Center<br>
+                <strong>Actions:</strong><br>
+                - Confirm incident validity<br>
+                - Log all details<br>
+                - Notify Incident Manager within 30min</p>
+            </div>
+            <div class="flow-step">
+                <h3>2. Triage & Classification</h3>
+                <p><strong>Team:</strong> Crisis Response Team<br>
+                <strong>Timeline:</strong> 1 hour from detection<br>
+                <strong>Output:</strong> Severity assessment, impact analysis</p>
+            </div>
+            <div class="flow-step">
+                <h3>3. Executive Activation</h3>
+                <p><strong>Team:</strong> C-Suite & Legal<br>
+                <strong>Actions:</strong><br>
+                - Approve communication plan<br>
+                - Allocate resources<br>
+                - Regulatory compliance check</p>
+            </div>
+            <div class="flow-step">
+                <h3>4. Response Execution</h3>
+                <p><strong>Phase 1:</strong> Containment & Customer Notification<br>
+                <strong>Phase 2:</strong> System Remediation<br>
+                <strong>Phase 3:</strong> Post-Mortem & Prevention</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Stakeholder Communication Matrix</h2>
+        <div class="grid-2">
+            <div>
+                <h3>Internal Stakeholders</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Employees:</strong> All-hands meeting within 4hrs, daily updates via email
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Board of Directors:</strong> Immediate phone briefing, detailed report within 12hrs
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>External Stakeholders</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Customers:</strong> Email notification within 6hrs, dedicated support portal
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Regulators:</strong> Formal notification per GDPR/CCPA within 24hrs
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Press Release Template</h2>
+        <div class="template">
+            <input type="text" placeholder="Company Name" value="TechSecure Inc.">
+            <input type="date" value="2024-03-15">
+            <textarea rows="12">
+FOR IMMEDIATE RELEASE
+
+TechSecure Inc. Responds to Cybersecurity Incident
+
+NEW YORK, NY - March 15, 2024 - TechSecure Inc. (NASDAQ: TSEC) today announced it is responding to a cybersecurity incident detected on March 14, 2024. Unauthorized access to certain systems was identified, potentially affecting customer data including names, email addresses, and encrypted payment information.
+
+"Our top priority is protecting our customers," said CEO Amanda Chen. "We immediately activated our security protocols, engaged leading cybersecurity experts, and are working with law enforcement. All affected customers will receive free credit monitoring and identity theft protection."
+
+Next Steps:
+- 24/7 Incident Response Team activated
+- Dedicated customer support hotline: 1-800-555-0192
+- Ongoing updates at status.techsecure.com
+
+Media Contact:
+Sarah Wilkins
+VP of Communications
+swilkins@techsecure.com
+212-555-0192
+            </textarea>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Customer Notification Email</h2>
+        <div class="template">
+            <textarea rows="10">
+Subject: Important Security Update from TechSecure
+
+Dear Valued Customer,
+
+We are writing to inform you about a recent security incident that may have involved your account information. On March 14, 2024, our security team detected unauthorized access to our systems.
+
+What Information Was Involved:
+• Name and contact information
+• Encrypted payment card numbers (CVV not stored)
+• Account preferences
+
+What We're Doing:
+✓ Engaged cybersecurity experts
+✓ Enhanced system security
+✓ 24/7 monitoring implemented
+✓ Free identity protection for 2 years
+
+Action Items for You:
+1. Monitor account statements
+2. Reset your password (link)
+3. Enroll in free credit monitoring
+
+Contact our dedicated support team:
+📞 1-800-555-0192 (24/7)
+✉️ breachresponse@techsecure.com
+
+We deeply regret this incident and remain committed to your security.
+
+Sincerely,
+Amanda Chen
+CEO, TechSecure Inc.
+            </textarea>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Internal Communications</h2>
+        <div class="grid-2">
+            <div>
+                <h3>Manager Talking Points</h3>
+                <div class="template">
+                    <textarea rows="8">
+Key Messages for Team Communication:
+1. "We take this incident extremely seriously"
+2. "Top cybersecurity experts are engaged"
+3. "Customer protection is our priority"
+4. "All regulatory requirements are being met"
+
+Prohibited Statements:
+❌ "This was a minor incident"
+❌ "Our systems were insecure"
+❌ Speculative timeline estimates
+
+Q&A Guidance:
+Q: Should I discuss this with clients?
+A: Direct all inquiries to PR team - do not speculate
+                    </textarea>
+                </div>
+            </div>
+            <div>
+                <h3>Employee FAQ</h3>
+                <div class="template">
+                    <textarea rows="8">
+Q: How does this affect my work?
+A: Continue normal operations - security scans may slow systems
+
+Q: Are employee data affected?
+A: HR systems were not compromised
+
+Q: Can I discuss this publicly?
+A: Refer all external inquiries to communications@company.com
+
+Q: What if I notice suspicious activity?
+A: Immediately contact IT Security (ext. 5555)
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Response Timeline</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <strong>Hour 0-4:</strong> Contain breach, secure systems, legal consultation
+            </div>
+            <div class="timeline-item">
+                <strong>Hour 4-8:</strong> Draft customer notifications, prepare regulatory filings
+            </div>
+            <div class="timeline-item">
+                <strong>Hour 8-24:</strong> Customer notifications sent, press briefing conducted
+            </div>
+            <div class="timeline-item">
+                <strong>Day 2-7:</strong> Daily status updates, support operations
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <button onclick="downloadPlan()">Download Full Plan</button>
+        <button onclick="window.print()">Print Plan</button>
+    </div>
+
+    <script>
+        function downloadPlan() {
+            const content = `
+CRISIS COMMUNICATION PLAN
+========================
+
+Company: ${document.querySelector('[placeholder="Company Name"]').value}
+
+## Incident Overview ##
+${document.querySelector('.severity-indicator').innerText}
+${document.querySelector('p strong').nextSibling.textContent}
+
+## Escalation Protocol ##
+${Array.from(document.querySelectorAll('.flow-step')).map(step => step.innerText).join('\n\n')}
+
+## Communications ##
+Press Release:
+${document.querySelector('textarea').value}
+
+Customer Email:
+${document.querySelectorAll('textarea')[1].value}
+
+Internal Guidance:
+${document.querySelectorAll('textarea')[2].value}
+${document.querySelectorAll('textarea')[3].value}
+
+Timeline:
+${Array.from(document.querySelectorAll('.timeline-item')).map(item => item.innerText).join('\n')}
+            `;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'crisis_plan_full.txt';
+            a.click();
+        }
+    </script>
+</body>
+</html>

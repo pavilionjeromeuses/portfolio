@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geometric Dreamscape</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        #gui { position: absolute; top: 10px; right: 10px; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.7/build/dat.gui.min.js"></script>
+    <script>
+        let scene, camera, renderer, geometry, material, mesh;
+        let particles = [];
+        let mouseX = 0, mouseY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
+        
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Create complex geometry
+            geometry = new THREE.DodecahedronGeometry(2, 1);
+            material = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                metalness: 0.8,
+                roughness: 0.3,
+                transparent: true,
+                opacity: 0.9,
+                clearcoat: 0.5
+            });
+
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // Create particle system
+            const particleGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+            
+            for(let i = 0; i < 500; i++) {
+                const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                particle.position.set(
+                    Math.random() * 10 - 5,
+                    Math.random() * 10 - 5,
+                    Math.random() * 10 - 5
+                );
+                particles.push(particle);
+                scene.add(particle);
+            }
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xff00ff, 2, 100);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            const hemiLight = new THREE.HemisphereLight(0x00ff00, 0xff0000, 1);
+            scene.add(hemiLight);
+
+            camera.position.z = 8;
+
+            // GUI Controls
+            const gui = new dat.GUI();
+            gui.add(material, 'metalness', 0, 1);
+            gui.add(material, 'roughness', 0, 1);
+            gui.add(material, 'clearcoat', 0, 1);
+            gui.addColor({ color: 0x00ffff }, 'color').onChange(val => {
+                particles.forEach(p => p.material.color.set(val));
+            });
+
+            // Event listeners
+            document.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            targetRotationX = mouseY * 0.5;
+            targetRotationY = mouseX * 0.5;
+            
+            pointLight.position.x = mouseX * 10;
+            pointLight.position.y = mouseY * 10;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate main geometry
+            mesh.rotation.x += (targetRotationX - mesh.rotation.x) * 0.05;
+            mesh.rotation.y += (targetRotationY - mesh.rotation.y) * 0.05;
+            mesh.scale.set(1 + Math.sin(Date.now() * 0.001) * 0.2, 1, 1);
+
+            // Animate particles
+            particles.forEach((particle, i) => {
+                particle.position.x += Math.sin(Date.now() * 0.001 + i) * 0.01;
+                particle.position.y += Math.cos(Date.now() * 0.001 + i) * 0.01;
+                particle.position.z += Math.sin(Date.now() * 0.001 + i * 2) * 0.01;
+            });
+
+            // Rotate camera
+            camera.position.x = Math.sin(Date.now() * 0.0005) * 8;
+            camera.position.z = Math.cos(Date.now() * 0.0005) * 8;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>

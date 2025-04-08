@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Virtual Assistant | Jane Doe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .calendar {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .color-legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .meeting { background-color: #e8f4ff; }
+        .deadline { background-color: #ffe8e8; }
+        .research { background-color: #f8ffe8; }
+        .travel { background-color: #e8fff1; }
+        .personal { background-color: #f5e8ff; }
+        .buffer { background-color: #f0f0f0; }
+
+        .itinerary {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f3f3f3;
+        }
+
+        .contact {
+            text-align: center;
+            padding: 50px 0;
+            background: #2c3e50;
+            color: white;
+            margin-top: 40px;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 25px;
+            border-left: 4px solid #3498db;
+            margin: 25px 0;
+        }
+
+        .client-logo {
+            max-width: 150px;
+            height: auto;
+            margin: 15px;
+        }
+
+        .pricing-table {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .price-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Jane Doe</h1>
+            <p>Certified Professional Virtual Assistant | 8+ Years Experience</p>
+            <p>Specializing in Executive Support & Operational Efficiency</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="skills">
+            <div class="skill-card">
+                <h3>🗓️ Organization & Time Management</h3>
+                <ul>
+                    <li>Expert in Google Workspace & Microsoft 365</li>
+                    <li>Advanced calendar management for 10+ executives</li>
+                    <li>Complex travel coordination across time zones</li>
+                    <li>Document management systems optimization</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>📢 Communication & Liaison</h3>
+                <ul>
+                    <li>Bilingual support (English/Spanish)</li>
+                    <li>Client relationship management (CRM)</li>
+                    <li>Executive correspondence drafting</li>
+                    <li>Meeting minute & action item tracking</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>💡 Research & Problem Solving</h3>
+                <ul>
+                    <li>Market trend analysis reports</li>
+                    <li>Vendor negotiation & cost comparison</li>
+                    <li>Process automation solutions</li>
+                    <li>Data visualization & reporting</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="calendar">
+            <h2>Detailed Schedule Management Example</h2>
+            <div class="color-legend">
+                <div class="legend-item">
+                    <div class="color-box meeting"></div>
+                    <span>Meetings & Appointments</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box deadline"></div>
+                    <span>Deadlines & Deliverables</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box research"></div>
+                    <span>Research & Analysis</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box travel"></div>
+                    <span>Travel Coordination</span>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                </tr>
+                <tr class="meeting">
+                    <td>8-9 AM</td>
+                    <td>Daily Priority Review</td>
+                    <td>Client Onboarding Call</td>
+                    <td>Team Strategy Meeting</td>
+                    <td>Vendor Negotiations</td>
+                    <td>Weekly Recap Session</td>
+                </tr>
+                <tr class="research">
+                    <td>9-10:30 AM</td>
+                    <td>Market Analysis Report</td>
+                    <td>Travel Cost Comparison</td>
+                    <td>Software Research</td>
+                    <td>Competitor Analysis</td>
+                    <td>Industry Trends Update</td>
+                </tr>
+                <tr class="travel">
+                    <td>10:30-12 PM</td>
+                    <td>International Flight Booking</td>
+                    <td>Conference Accommodations</td>
+                    <td>Ground Transportation</td>
+                    <td>VIP Airport Services</td>
+                    <td>Travel Insurance Review</td>
+                </tr>
+                <tr class="buffer">
+                    <td>12-1 PM</td>
+                    <td colspan="5">Buffer Time & Lunch</td>
+                </tr>
+                <tr class="deadline">
+                    <td>1-2:30 PM</td>
+                    <td>Report Finalization</td>
+                    <td>Presentation Design</td>
+                    <td>Client Deliverables</td>
+                    <td>Budget Submission</td>
+                    <td>Project Wrap-up</td>
+                </tr>
+                <tr class="personal">
+                    <td>2:30-3 PM</td>
+                    <td colspan="5">Client Personal Errands</td>
+                </tr>
+                <tr class="meeting">
+                    <td>3-4 PM</td>
+                    <td>New Client Consultation</td>
+                    <td>Team Check-in</td>
+                    <td>Stakeholder Update</td>
+                    <td>Training Session</td>
+                    <td>Feedback Meeting</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="itinerary">
+            <h2>International Business Trip Itinerary</h2>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Details</th>
+                    <th>Cost</th>
+                    <th>Savings</th>
+                </tr>
+                <tr>
+                    <td>Flights</td>
+                    <td>JFK-LHR-HKG-JFK Business Class<br>
+                        <em>Priority boarding + Lounge access</em></td>
+                    <td>$8,500.00</td>
+                    <td>$1,200 saved through advance booking</td>
+                </tr>
+                <tr>
+                    <td>Accommodation</td>
+                    <td>The Ritz London (3 nights)<br>
+                        Grand Hyatt Hong Kong (4 nights)<br>
+                        <em>Executive suites with meeting facilities</em></td>
+                    <td>$6,200.00</td>
+                    <td>$800 corporate discount</td>
+                </tr>
+                <tr>
+                    <td>Ground Transport</td>
+                    <td>Private car service + Metro passes<br>
+                        Inter-city train tickets</td>
+                    <td>$1,450.00</td>
+                    <td>15% volume discount</td>
+                </tr>
+                <tr>
+                    <td>Meetings & Events</td>
+                    <td>Conference hall rental<br>
+                        Catering for 50 guests<br>
+                        Translation services</td>
+                    <td>$4,300.00</td>
+                    <td>Package deal savings $1,100</td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="2">Total Cost</td>
+                    <td>$20,450.00</td>
+                    <td>Total Savings: $3,100.00</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="pricing-table">
+            <div class="price-card">
+                <h3>Basic Support</h3>
+                <p>$35/hour</p>
+                <ul>
+                    <li>Email Management</li>
+                    <li>Calendar Maintenance</li>
+                    <li>Basic Research</li>
+                    <li>Travel Arrangements</li>
+                </ul>
+            </div>
+            <div class="price-card">
+                <h3>Executive Support</h3>
+                <p>$55/hour</p>
+                <ul>
+                    <li>Full Suite Services</li>
+                    <li>Project Management</li>
+                    <li>Advanced Reporting</li>
+                    <li>Priority Support</li>
+                </ul>
+            </div>
+            <div class="price-card">
+                <h3>Enterprise Package</h3>
+                <p>Custom Pricing</p>
+                <ul>
+                    <li>Dedicated Team</li>
+                    <li>24/7 Availability</li>
+                    <li>Custom Solutions</li>
+                    <li>Security Protocols</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="testimonial">
+            <p>"Jane's exceptional organizational skills transformed our operations. She reduced our executive team's administrative time by 40% while improving meeting efficiency. Her travel coordination alone saved us over $15k last quarter!"</p>
+            <p>- Michael Chen, COO @ TechInnovate</p>
+        </section>
+
+        <section class="tools">
+            <h2>Technical Proficiencies</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin: 25px 0;">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="client-logo" alt="Google Workspace">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="client-logo" alt="Microsoft Office">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="client-logo" alt="Slack">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="client-logo" alt="Zoom">
+            </div>
+        </section>
+    </div>
+
+    <section class="contact">
+        <div class="container">
+            <h2>Ready to Enhance Your Productivity?</h2>
+            <p>📧 Email: jane.doe@provaassist.com</p>
+            <p>📱 Phone: +1 (555) 123-4567</p>
+            <p>📍 Based in New York | Serving Clients Worldwide</p>
+            <p style="margin-top: 20px;">
+                <a href="#" style="color: #fff; text-decoration: none;">LinkedIn</a> | 
+                <a href="#" style="color: #fff; text-decoration: none;">Upwork</a> | 
+                <a href="#" style="color: #fff; text-decoration: none;">Portfolio</a>
+            </p>
+        </div>
+    </section>
+</body>
+</html>

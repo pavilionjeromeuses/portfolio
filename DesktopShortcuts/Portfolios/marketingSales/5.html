@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2B Outreach Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-white">
+    <div x-data="{ activeTab: 'overview' }" class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                Outreach Campaign Dashboard
+            </h1>
+            <div class="flex justify-center gap-4">
+                <button class="glass-card px-6 py-2 rounded-lg hover:bg-white/10 transition">New Campaign</button>
+                <button class="glass-card px-6 py-2 rounded-lg hover:bg-white/10 transition">Import Leads</button>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="text-gray-400 mb-2">Total Outreach</h3>
+                <p class="text-3xl font-bold">1,240</p>
+                <span class="text-green-400 text-sm">↑ 12% this week</span>
+            </div>
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="text-gray-400 mb-2">Response Rate</h3>
+                <p class="text-3xl font-bold">22%</p>
+                <span class="text-green-400 text-sm">↑ 8% from last</span>
+            </div>
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="text-gray-400 mb-2">Booked Demos</h3>
+                <p class="text-3xl font-bold">34</p>
+                <span class="text-red-400 text-sm">↓ 2 pending</span>
+            </div>
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="text-gray-400 mb-2">Conversion Rate</h3>
+                <p class="text-3xl font-bold">8.7%</p>
+                <span class="text-green-400 text-sm">↑ 3.2% target</span>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="text-xl font-semibold mb-4">Response Rate Trend</h3>
+                <canvas id="responseChart"></canvas>
+            </div>
+            <div class="glass-card p-6 rounded-xl">
+                <h3 class="text-xl font-semibold mb-4">Template Performance</h3>
+                <canvas id="templateChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Outreach Templates -->
+        <div class="glass-card p-6 rounded-xl mb-12">
+            <div class="flex justify-between mb-6">
+                <h3 class="text-xl font-semibold">Top Performing Templates</h3>
+                <button class="text-blue-400 hover:text-blue-300">View All →</button>
+            </div>
+            <div class="grid gap-4">
+                <div class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
+                    <h4 class="font-medium mb-2">Tech Partnership Pitch</h4>
+                    <p class="text-gray-400 text-sm mb-2">45% open rate • 18% reply rate</p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-1 bg-gray-900 rounded text-xs">SaaS</span>
+                        <span class="px-2 py-1 bg-gray-900 rounded text-xs">CTO</span>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
+                    <h4 class="font-medium mb-2">Enterprise Sales Intro</h4>
+                    <p class="text-gray-400 text-sm mb-2">38% open rate • 12% reply rate</p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-1 bg-gray-900 rounded text-xs">Enterprise</span>
+                        <span class="px-2 py-1 bg-gray-900 rounded text-xs">VP Sales</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Follow-up Strategy -->
+        <div class="glass-card p-6 rounded-xl">
+            <h3 class="text-xl font-semibold mb-6">Follow-up Sequence</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg">
+                    <div class="text-sm mb-2">Day 1</div>
+                    <h4 class="font-medium mb-2">Initial Outreach</h4>
+                    <p class="text-sm opacity-75">Personalized connection request</p>
+                </div>
+                <div class="p-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg">
+                    <div class="text-sm mb-2">Day 3</div>
+                    <h4 class="font-medium mb-2">Value Proposition</h4>
+                    <p class="text-sm opacity-75">Case study + call-to-action</p>
+                </div>
+                <div class="p-4 bg-gradient-to-br from-green-500 to-yellow-500 rounded-lg">
+                    <div class="text-sm mb-2">Day 7</div>
+                    <h4 class="font-medium mb-2">Final Follow-up</h4>
+                    <p class="text-sm opacity-75">Social proof + urgency</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for charts
+        const responseData = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Response Rate',
+                data: [15, 22, 19, 27],
+                borderColor: '#818cf8',
+                tension: 0.4,
+                fill: false
+            }]
+        };
+
+        const templateData = {
+            labels: ['Template A', 'Template B', 'Template C'],
+            datasets: [{
+                label: 'Reply Rate',
+                data: [22, 18, 12],
+                backgroundColor: ['#4f46e5', '#6366f1', '#818cf8']
+            }]
+        };
+
+        // Initialize charts
+        window.onload = function() {
+            new Chart(document.getElementById('responseChart'), {
+                type: 'line',
+                data: responseData,
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            new Chart(document.getElementById('templateChart'), {
+                type: 'bar',
+                data: templateData,
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographics</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        .chart-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <!-- Header -->
+        <div class="text-center animate-fade-in">
+            <h1 class="text-4xl font-bold text-white mb-4">Business Analytics Dashboard</h1>
+            <p class="text-gray-200">Interactive data visualization with real-time insights</p>
+        </div>
+
+        <!-- Chart Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Sales Chart -->
+            <div class="chart-card p-6 animate-fade-in">
+                <h2 class="text-white text-xl mb-4">Monthly Sales</h2>
+                <div id="salesChart" class="h-64"></div>
+            </div>
+
+            <!-- Market Share Pie Chart -->
+            <div class="chart-card p-6 animate-fade-in">
+                <h2 class="text-white text-xl mb-4">Market Share</h2>
+                <div id="marketChart" class="h-64"></div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="chart-card p-6 animate-fade-in">
+                <h2 class="text-white text-xl mb-4">Revenue Growth</h2>
+                <div id="revenueChart" class="h-64"></div>
+            </div>
+        </div>
+
+        <!-- Data Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="chart-card p-6 animate-fade-in">
+                <div class="text-white">
+                    <p class="text-gray-300">Total Customers</p>
+                    <p class="text-3xl font-bold">2.4K</p>
+                    <div class="h-1 bg-purple-300 mt-2 w-1/3"></div>
+                </div>
+            </div>
+            <div class="chart-card p-6 animate-fade-in">
+                <div class="text-white">
+                    <p class="text-gray-300">Active Users</p>
+                    <p class="text-3xl font-bold">1.8K</p>
+                    <div class="h-1 bg-blue-300 mt-2 w-1/3"></div>
+                </div>
+            </div>
+            <div class="chart-card p-6 animate-fade-in">
+                <div class="text-white">
+                    <p class="text-gray-300">Conversion Rate</p>
+                    <p class="text-3xl font-bold">34%</p>
+                    <div class="h-1 bg-pink-300 mt-2 w-1/3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const salesData = {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            series: [{
+                name: 'Sales',
+                data: [30, 40, 35, 50, 49, 60]
+            }]
+        };
+
+        const marketData = {
+            categories: ['Product A', 'Product B', 'Product C'],
+            series: [44, 55, 41]
+        };
+
+        const revenueData = {
+            categories: ['2018', '2019', '2020', '2021', '2022'],
+            series: [{
+                name: 'Revenue',
+                data: [45, 52, 38, 45, 65]
+            }]
+        };
+
+        // Initialize Charts
+        function initCharts() {
+            // Sales Chart
+            new ApexCharts(document.querySelector("#salesChart"), {
+                series: salesData.series,
+                chart: {
+                    type: 'bar',
+                    height: '100%',
+                    toolbar: { show: false }
+                },
+                colors: ['#4F46E5'],
+                xaxis: { categories: salesData.categories },
+                plotOptions: { bar: { borderRadius: 10 } }
+            }).render();
+
+            // Market Share Chart
+            new ApexCharts(document.querySelector("#marketChart"), {
+                series: marketData.series,
+                chart: {
+                    type: 'donut',
+                    height: '100%'
+                },
+                labels: marketData.categories,
+                colors: ['#3B82F6', '#6366F1', '#10B981'],
+                plotOptions: { pie: { donut: { size: '65%' } } }
+            }).render();
+
+            // Revenue Chart
+            new ApexCharts(document.querySelector("#revenueChart"), {
+                series: revenueData.series,
+                chart: {
+                    type: 'line',
+                    height: '100%',
+                    toolbar: { show: false }
+                },
+                colors: ['#10B981'],
+                xaxis: { categories: revenueData.categories },
+                stroke: { curve: 'smooth', width: 3 }
+            }).render();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initCharts);
+    </script>
+</body>
+</html>

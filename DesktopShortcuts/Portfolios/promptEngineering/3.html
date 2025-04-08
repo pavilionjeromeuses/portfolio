@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroTeach AI - Adaptive Learning Tutor</title>
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --deep-space: #0a192f;
+            --cyber-purple: #6c63ff;
+            --matrix-green: #00ff9d;
+            --terminal-text: #20c20e;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--deep-space);
+            color: var(--neon-blue);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .cyber-border {
+            border: 3px solid var(--cyber-purple);
+            border-image: linear-gradient(45deg, var(--neon-blue), var(--cyber-purple)) 1;
+            box-shadow: 0 0 15px var(--cyber-purple);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+        }
+
+        .neuro-header {
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px var(--neon-blue);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .learning-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .matrix-cell {
+            padding: 1.5rem;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .matrix-cell:hover {
+            transform: translateY(-5px);
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .active-style {
+            background: rgba(0, 243, 255, 0.15);
+            border: 2px solid var(--neon-blue);
+        }
+
+        #topicInput {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: transparent;
+            border: 2px solid var(--cyber-purple);
+            color: var(--matrix-green);
+            font-size: 1.1rem;
+            border-radius: 5px;
+        }
+
+        #explanationOutput {
+            padding: 2rem;
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--cyber-purple);
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+
+        .cyber-button {
+            background: linear-gradient(45deg, var(--cyber-purple), var(--neon-blue));
+            color: black;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-button:hover {
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .sample-topics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .topic-card {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-card:hover {
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .prompt-engine {
+            border-top: 2px solid var(--cyber-purple);
+            margin-top: 2rem;
+            padding-top: 2rem;
+        }
+
+        .neon-text {
+            color: var(--matrix-green);
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='none'/%3E%3Cpath d='M20 20h60v60H20z' stroke='%2300f3ff' stroke-width='2'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div class="circuit-bg"></div>
+    <div class="container cyber-border">
+        <h1 class="neuro-header">NEUROTEACH AI ⚡</h1>
+        
+        <div class="learning-matrix">
+            <div class="matrix-cell active-style" onclick="selectStyle('visual')">
+                <h2>🌌 Visual Synthesis</h2>
+                <p>Spatial reasoning & pattern recognition</p>
+            </div>
+            <div class="matrix-cell" onclick="selectStyle('analytical')">
+                <h2>🔬 Analytical Deconstruction</h2>
+                <p>Structural analysis & logical sequencing</p>
+            </div>
+            <div class="matrix-cell" onclick="selectStyle('auditory')">
+                <h2>🎧 Cognitive Resonance</h2>
+                <p>Verbal patterning & rhythmic mnemonics</p>
+            </div>
+        </div>
+
+        <div class="sample-topics">
+            <div class="topic-card" onclick="loadTopic('quantum_mechanics')">
+                <h3>Quantum Superposition</h3>
+                <p>Physics | Advanced</p>
+            </div>
+            <div class="topic-card" onclick="loadTopic('neural_networks')">
+                <h3>Backpropagation</h3>
+                <p>AI | Intermediate</p>
+            </div>
+            <div class="topic-card" onclick="loadTopic('photosynthesis')">
+                <h3>Light Reactions</h3>
+                <p>Biology | Fundamental</p>
+            </div>
+            <div class="topic-card" onclick="loadTopic('blockchain')">
+                <h3>Consensus Algorithms</h3>
+                <p>Computer Science | Advanced</p>
+            </div>
+        </div>
+
+        <input type="text" id="topicInput" placeholder="ENTER LEARNING TOPIC...">
+
+        <button class="cyber-button" onclick="generateExplanation()">GENERATE COGNITIVE PROTOCOL</button>
+
+        <div id="explanationOutput" class="neon-text"></div>
+
+        <div class="prompt-engine">
+            <h2>🧠 Active Prompt Engineering</h2>
+            <div id="promptStructure"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentStyle = 'analytical';
+        const sampleTopics = {
+            quantum_mechanics: {
+                visual: {
+                    explanation: `🌀 Visualizing Quantum States:\n\nImagine electron orbitals as probability clouds with varying density.\n\n- Wavefunction ψ represented as 3D hologram\n- Superposition shown as overlapping translucent spheres\n- Collapse visualized through gradual opacity shifts`,
+                    prompt: "Create visual analogy using fluid dynamics and holographic projection principles"
+                },
+                analytical: {
+                    explanation: `📐 Mathematical Framework:\n\n1. State Vector: |ψ⟩ ∈ Hilbert Space\n2. Schrödinger Equation: iℏ∂/∂t|ψ⟩ = Ĥ|ψ⟩\n3. Operators: Observable ↔ Hermitian matrix\n4. Measurement: ⟨ψ|Â|ψ⟩ = expectation value`,
+                    prompt: "Break down into axiomatic framework with mathematical notation"
+                },
+                auditory: {
+                    explanation: `🎵 Quantum Rhythmics:\n\n"Think of quantum states as musical chords - individual notes (basis states) combine to create harmonic probabilities. Measurement is like focusing on one instrument in the orchestra."`,
+                    prompt: "Use musical metaphors with tempo variations representing probability amplitudes"
+                }
+            },
+            neural_networks: {
+                visual: {
+                    explanation: `🕸️ Network Topology Visualization:\n\n- Input layer as light receptors\n- Hidden layers as interconnected neurons firing in patterns\n- Backpropagation shown as reverse gradient flow\n- Loss landscape as 3D terrain with optimization path`,
+                    prompt: "Map neural architecture to biological systems with dynamic flow visualization"
+                },
+                analytical: {
+                    explanation: `🧮 Mathematical Backpropagation:\n\n1. Forward Pass: aⁱ = σ(wⁱaⁱ⁻¹ + bⁱ)\n2. Loss Compute: L = ½||y - ŷ||²\n3. Gradient Calculation: ∂L/∂wⁱ = δⁱ(aⁱ⁻¹)ᵀ\n4. Weight Update: wⁱ ← wⁱ - η∂L/∂wⁱ`,
+                    prompt: "Present as computational graph with partial derivatives"
+                },
+                auditory: {
+                    explanation: `🎶 Learning Symphony:\n\n"Imagine each epoch as a musical phrase - forward pass creates the melody, backprop adjusts the harmony, weight updates refine the rhythm. Overfitting sounds like repetitive motifs."`,
+                    prompt: "Use orchestral composition metaphors for training dynamics"
+                }
+            },
+            photosynthesis: {
+                visual: {
+                    explanation: `🌿 Chloroplast Light Show:\n\n- Photon absorption as color explosions\n- Electron transport chain visualized as waterfall\n- ATP synthase rotation shown as molecular motor\n- Calvin cycle as 3D puzzle assembly`,
+                    prompt: "Create interactive chloroplast model with particle animations"
+                },
+                analytical: {
+                    explanation: `🔍 Biochemical Process Flow:\n\n1. Light Reactions:\n   - H₂O → 2H⁺ + ½O₂ + 2e⁻\n   - NADP⁺ + H⁺ + 2e⁻ → NADPH\n2. Calvin Cycle:\n   - RuBP + CO₂ → 2 PGA\n   - ATP/NADPH drive sugar synthesis`,
+                    prompt: "Present as chemical equations with stoichiometric ratios"
+                },
+                auditory: {
+                    explanation: `🌱 Photosynthesis Symphony:\n\n"Morning light starts the rhythm - water splitting provides percussion, electron transport creates melody, ATP synthesis adds bassline. Night brings diminuendo."`,
+                    prompt: "Use musical terms to describe metabolic pathways"
+                }
+            }
+        };
+
+        function selectStyle(style) {
+            currentStyle = style;
+            document.querySelectorAll('.matrix-cell').forEach(cell => {
+                cell.classList.remove('active-style');
+            });
+            event.target.closest('.matrix-cell').classList.add('active-style');
+        }
+
+        function loadTopic(topicId) {
+            const topic = sampleTopics[topicId];
+            document.getElementById('explanationOutput').textContent = 
+                topic[currentStyle].explanation;
+            document.getElementById('promptStructure').innerHTML = `
+                <h3>Engineered Prompt:</h3>
+                <div class="neon-text">${topic[currentStyle].prompt}</div>
+            `;
+        }
+
+        function generateExplanation() {
+            const topic = document.getElementById('topicInput').value.trim();
+            if (!topic) return;
+            
+            // Simulated AI response generation
+            const response = `🧪 ${topic.toUpperCase()} ANALYSIS:\n\n` + 
+                `[${currentStyle.toUpperCase()} FRAMEWORK]\n` +
+                sampleTopics[Object.keys(sampleTopics)[0]][currentStyle].explanation;
+            
+            document.getElementById('explanationOutput').textContent = response;
+            document.getElementById('promptStructure').innerHTML = `
+                <h3>Generated Prompt Structure:</h3>
+                <div class="neon-text">${sampleTopics[Object.keys(sampleTopics)[0]][currentStyle].prompt}</div>
+            `;
+        }
+
+        // Initialize with first topic
+        loadTopic('quantum_mechanics');
+    </script>
+</body>
+</html>

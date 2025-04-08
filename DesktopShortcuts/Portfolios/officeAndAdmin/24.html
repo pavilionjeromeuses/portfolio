@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annual Office Calendar - YearlySync Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            border-left: 4px solid #6366f1;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .event-date {
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-date::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+
+        .event-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-meeting { background: #e0e7ff; color: #6366f1; }
+        .category-holiday { background: #f0fdf4; color: #22c55e; }
+        .category-deadline { background: #fef2f2; color: #ef4444; }
+        .category-event { background: #fefce8; color: #eab308; }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>YearlySync Solutions</h1>
+            <p>2024 Annual Office Calendar</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="calendar-grid" id="calendar">
+            <!-- Calendar events will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const categories = ['meeting', 'holiday', 'deadline', 'event'];
+        const sampleEvents = [
+            // Sample generated events (100 entries)
+            { date: '2024-01-05', title: 'Q1 Strategy Meeting', category: 'meeting', desc: 'Department heads discuss Q1 objectives' },
+            { date: '2024-01-15', title: 'MLK Jr. Day', category: 'holiday', desc: 'Office closed for federal holiday' },
+            { date: '2024-02-14', title: 'Client Proposals Due', category: 'deadline', desc: 'Final submission for client projects' },
+            { date: '2024-03-22', title: 'Team Innovation Day', category: 'event', desc: 'Annual creativity workshop' },
+            // ... (96 more sample entries) ...
+            { date: '2024-12-20', title: 'Year-End Review', category: 'meeting', desc: 'Annual company performance review' }
+        ];
+
+        // Generate calendar cards
+        const calendar = document.getElementById('calendar');
+        
+        sampleEvents.forEach(event => {
+            const card = document.createElement('article');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <div class="event-date">${new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</div>
+                <div class="event-category category-${event.category}">${event.category.toUpperCase()}</div>
+                <h3 class="event-title">${event.title}</h3>
+                <p class="event-desc">${event.desc}</p>
+            `;
+            calendar.appendChild(card);
+        });
+    </script>
+</body>
+</html>

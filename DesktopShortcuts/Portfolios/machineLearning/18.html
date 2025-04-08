@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberShield - IoT Anomaly Detection</title>
+    <style>
+        :root {
+            --cyber-teal: #00ffcc;
+            --matrix-green: #00ff5e;
+            --dark-bg: #0a1929;
+            --neon-red: #ff073a;
+            --cyber-purple: #bc13fe;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--cyber-teal);
+            line-height: 1.6;
+        }
+
+        .cyber-border {
+            border: 2px solid var(--cyber-teal);
+            position: relative;
+            box-shadow: 0 0 15px var(--cyber-teal);
+        }
+
+        .navbar {
+            background: rgba(10, 25, 41, 0.95);
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .hero {
+            padding: 8rem 2rem 4rem;
+            background: radial-gradient(circle at center, #001d3d 0%, #000814 100%);
+            text-align: center;
+            border-bottom: 3px solid var(--cyber-purple);
+        }
+
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background: #00000020;
+        }
+
+        .dashboard {
+            padding: 2rem;
+            margin: 2rem;
+            background: #00000040;
+            border-radius: 5px;
+        }
+
+        .glow {
+            text-shadow: 0 0 10px var(--cyber-teal);
+        }
+
+        .cyber-button {
+            background: none;
+            border: 2px solid var(--matrix-green);
+            color: var(--matrix-green);
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cyber-button:hover {
+            background: var(--matrix-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--matrix-green);
+        }
+
+        .threat-indicator {
+            height: 20px;
+            background: linear-gradient(90deg, #00ff00 0%, #ff0000 100%);
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .attack-log {
+            border-left: 3px solid var(--neon-red);
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+
+        .iot-device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .device-card {
+            background: #001933;
+            padding: 1rem;
+            border: 1px solid #003366;
+            transition: transform 0.3s;
+        }
+
+        .device-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyber-teal);
+        }
+
+        .alert-panel {
+            background: #330000;
+            border: 2px solid var(--neon-red);
+            padding: 1rem;
+            margin: 2rem;
+            animation: alert-pulse 1s infinite;
+        }
+
+        @keyframes alert-pulse {
+            0% { box-shadow: 0 0 5px var(--neon-red); }
+            50% { box-shadow: 0 0 20px var(--neon-red); }
+            100% { box-shadow: 0 0 5px var(--neon-red); }
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #004466;
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        .model-architecture {
+            background: #000d1a;
+            padding: 2rem;
+            margin: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-architecture::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 204, 0.1),
+                transparent
+            );
+            animation: flow 3s infinite;
+        }
+
+        @keyframes flow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar cyber-border">
+        <h1 class="glow">CYBER_SHIELD v2.3.1</h1>
+    </nav>
+
+    <section class="hero">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="var(--cyber-teal)" style="margin-bottom: 1rem;">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+            </svg>
+            <h2 class="glow">IoT NETWORK PROTECTION SYSTEM</h2>
+            <p style="margin: 1rem 0;">Real-time anomaly detection powered by Deep Neural Networks</p>
+            <div class="threat-indicator">
+                <div style="position: absolute; right: 30%; top: -25px; color: var(--neon-red);">▲ THREAT THRESHOLD</div>
+            </div>
+            <button class="cyber-button">INITIATE NETWORK SCAN</button>
+        </div>
+    </section>
+
+    <section class="network-grid">
+        <div class="dashboard cyber-border">
+            <h3>LIVE TRAFFIC MONITOR</h3>
+            <canvas id="trafficChart"></canvas>
+            <div class="attack-log">
+                <h4>RECENT INCIDENTS</h4>
+                <p>2023-12-20 14:23:11 | DDoS Attack Detected (98.7% confidence)</p>
+                <p>2023-12-20 14:21:56 | Suspicious Port Scanning</p>
+            </div>
+        </div>
+
+        <div class="dashboard cyber-border">
+            <h3>SYSTEM STATUS</h3>
+            <div class="iot-device-grid">
+                <div class="device-card">
+                    <h4>📶 Smart Cameras</h4>
+                    <p>32 devices</p>
+                    <p>Status: <span style="color: var(--matrix-green);">Secure</span></p>
+                </div>
+                <div class="device-card">
+                    <h4>🏭 Industrial Sensors</h4>
+                    <p>89 devices</p>
+                    <p>Status: <span style="color: var(--neon-red);">Compromised</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="model-architecture">
+        <h2>NEURAL NETWORK ARCHITECTURE</h2>
+        <pre style="margin: 1rem 0;">
+Input Layer (42 nodes)
+│
+├─ Convolutional Layer (32 filters)
+│
+├─ LSTM Layer (64 units)
+│
+├─ Attention Mechanism
+│
+└─ Output Layer (Sigmoid Activation)
+        </pre>
+        <p>Training Accuracy: 98.2% | F1-Score: 0.963</p>
+    </section>
+
+    <section class="dashboard cyber-border" style="margin: 2rem;">
+        <h3>ATTACK TYPE ANALYSIS</h3>
+        <table class="data-table">
+            <tr>
+                <th>Attack Type</th>
+                <th>Frequency</th>
+                <th>Pattern</th>
+                <th>Mitigation</th>
+            </tr>
+            <tr>
+                <td>DDoS</td>
+                <td>42%</td>
+                <td>High-volume SYN floods</td>
+                <td>Rate limiting + IP blacklisting</td>
+            </tr>
+            <tr>
+                <td>Malware</td>
+                <td>23%</td>
+                <td>Encrypted payload delivery</td>
+                <td>Payload inspection</td>
+            </tr>
+            <tr>
+                <td>Data Exfiltration</td>
+                <td>18%</td>
+                <td>Stealthy low-volume transfers</td>
+                <td>Data loss prevention</td>
+            </tr>
+        </table>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Advanced Traffic Visualization
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        const trafficChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                datasets: [{
+                    label: 'Normal Traffic',
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 300 + 100)),
+                    borderColor: '#00ffcc',
+                    tension: 0.3
+                },
+                {
+                    label: 'Attack Traffic',
+                    data: Array.from({length: 24}, (_, i) => i % 3 === 0 ? Math.random() * 800 + 200 : null),
+                    borderColor: '#ff073a',
+                    tension: 0.3,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#00ffcc' }
+                    }
+                },
+                scales: {
+                    x: { 
+                        grid: { color: '#004466' },
+                        ticks: { color: '#00ffcc' }
+                    },
+                    y: {
+                        grid: { color: '#004466' },
+                        ticks: { color: '#00ffcc' }
+                    }
+                }
+            }
+        });
+
+        // Real-time updates simulation
+        setInterval(() => {
+            const newData = trafficChart.data.datasets[0].data.slice(1);
+            newData.push(Math.random() * 300 + 100);
+            trafficChart.data.labels = trafficChart.data.labels.slice(1);
+            trafficChart.data.labels.push(new Date().toLocaleTimeString());
+            trafficChart.update();
+        }, 5000);
+
+        // Threat level simulation
+        let threatLevel = 0;
+        setInterval(() => {
+            threatLevel = Math.min(100, Math.max(0, threatLevel + (Math.random() - 0.5) * 10));
+            document.querySelector('.threat-indicator').style.background = 
+                `linear-gradient(90deg, #00ff00 ${100 - threatLevel}%, #ff0000 ${threatLevel}%)`;
+        }, 3000);
+    </script>
+</body>
+</html>

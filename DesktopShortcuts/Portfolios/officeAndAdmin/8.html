@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Tracking Spreadsheet - StockFlow Logistics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px 15px 0 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .in-stock { background: #e8f5e9; color: #2e7d32; }
+        .low-stock { background: #fff3e0; color: #ef6c00; }
+        .out-of-stock { background: #ffebee; color: #c62828; }
+        .on-order { background: #e3f2fd; color: #1565c0; }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>StockFlow Logistics</h1>
+            <div class="subtitle">Supply Tracking Dashboard</div>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Supplier</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Last Restock</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="data">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const categories = ['Packaging', 'Office Supplies', 'Shipping Materials', 'Safety Gear', 'Tech Equipment'];
+        const suppliers = ['GlobalSupplies Co.', 'UrbanTech Logistics', 'SafePack Industries', 'EcoSupply Solutions', 'QuickShip Partners'];
+        const locations = ['Warehouse A', 'Warehouse B', 'Warehouse C', 'Main Storage', 'Cross-Dock Facility'];
+        
+        function generateData() {
+            const data = [];
+            const statusColors = {
+                'In Stock': 'in-stock',
+                'Low Stock': 'low-stock',
+                'Out of Stock': 'out-of-stock',
+                'On Order': 'on-order'
+            };
+
+            for(let i = 1; i <= 100; i++) {
+                const quantity = Math.floor(Math.random() * 200);
+                let status;
+                if(quantity > 50) status = 'In Stock';
+                else if(quantity > 10) status = 'Low Stock';
+                else if(quantity > 0) status = 'Low Stock';
+                else status = Math.random() > 0.5 ? 'Out of Stock' : 'On Order';
+
+                data.push({
+                    id: `SF-${1000 + i}`,
+                    name: `Supply Item ${i}`,
+                    category: categories[Math.floor(Math.random() * categories.length)],
+                    supplier: suppliers[Math.floor(Math.random() * suppliers.length)],
+                    quantity: quantity,
+                    location: locations[Math.floor(Math.random() * locations.length)],
+                    lastRestock: new Date(Date.now() - Math.random() * 31536000000).toLocaleDateString(),
+                    status: status
+                });
+            }
+            return data;
+        }
+
+        function populateTable() {
+            const data = generateData();
+            const tbody = document.getElementById('data');
+            
+            data.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td>${item.supplier}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.location}</td>
+                        <td>${item.lastRestock}</td>
+                        <td><span class="status ${item.status === 'In Stock' ? 'in-stock' : 
+                                              item.status === 'Low Stock' ? 'low-stock' : 
+                                              item.status === 'Out of Stock' ? 'out-of-stock' : 'on-order'}">
+                            ${item.status}
+                        </span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        populateTable();
+    </script>
+</body>
+</html>

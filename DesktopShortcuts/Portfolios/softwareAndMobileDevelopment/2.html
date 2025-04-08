@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCraft Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #00ff00;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Terminal-like Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff00;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-bottom: 2px solid #00ff00;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            text-shadow: 0 0 10px #00ff00;
+            margin-bottom: 1rem;
+            animation: typing 3s steps(40) 1s 1 normal both;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* Content Sections */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: #0d0d0d;
+            padding: 1.5rem;
+            border: 1px solid #00ff00;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Skills */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .skill-badge {
+            background: #004d00;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #00ff00;
+        }
+
+        /* Animations */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: #00ff00 }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">CODE</h1>
+        <p>// Software Engineer & Mobile Developer</p>
+    </header>
+
+    <main class="container">
+        <section class="section">
+            <h2>About My Code</h2>
+            <p>>_ I transform complex problems into elegant solutions through:</p>
+            <div class="skills">
+                <span class="skill-badge">Mobile Development</span>
+                <span class="skill-badge">Web Applications</span>
+                <span class="skill-badge">Cloud Architecture</span>
+                <span class="skill-badge">UI/UX Design</span>
+                <span class="skill-badge">API Development</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Portfolio Projects</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>CodeVault Mobile</h3>
+                    <p>Secure code storage app with biometric authentication</p>
+                    <div class="skills">
+                        <span class="skill-badge">Flutter</span>
+                        <span class="skill-badge">Firebase</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3>DevOps Dashboard</h3>
+                    <p>Real-time deployment monitoring system</p>
+                    <div class="skills">
+                        <span class="skill-badge">React</span>
+                        <span class="skill-badge">Node.js</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3>AI Code Review</h3>
+                    <p>Machine learning-powered code analysis tool</p>
+                    <div class="skills">
+                        <span class="skill-badge">Python</span>
+                        <span class="skill-badge">TensorFlow</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Code Toolkit</h2>
+            <div class="skills">
+                <span class="skill-badge"><i class="fab fa-android"></i> Android</span>
+                <span class="skill-badge"><i class="fab fa-apple"></i> iOS</span>
+                <span class="skill-badge"><i class="fab fa-react"></i> React Native</span>
+                <span class="skill-badge"><i class="fab fa-aws"></i> AWS</span>
+                <span class="skill-badge"><i class="fab fa-docker"></i> Docker</span>
+            </div>
+        </section>
+    </main>
+
+    <footer class="section" style="text-align: center; margin-top: 4rem;">
+        <p>CONNECT WITH MY CODE:</p>
+        <div style="margin: 1rem 0;">
+            <a href="#" style="color: #00ff00; margin: 0 1rem;"><i class="fab fa-github"></i></a>
+            <a href="#" style="color: #00ff00; margin: 0 1rem;"><i class="fab fa-linkedin"></i></a>
+            <a href="#" style="color: #00ff00; margin: 0 1rem;"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>© 2023 CodeCraft. All rights reserved.</p>
+    </footer>
+</body>
+</html>

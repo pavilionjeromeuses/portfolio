@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraResume - AI-Powered Resume Parser</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #6c5ce7;
+            --accent: #a66efa;
+            --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        h1 {
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, var(--secondary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent; /* Standard property for text color */
+    }
+
+
+        .ai-badge {
+            background: rgba(108, 92, 231, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 1rem;
+            border: 1px solid var(--secondary);
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--secondary);
+            border-radius: 10px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drop-zone:hover {
+            background: rgba(108, 92, 231, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .neural-path {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(108, 92, 231, 0.1) 10px,
+                rgba(108, 92, 231, 0.1) 20px
+            );
+            opacity: 0.3;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .results {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .skill-chips {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .chip {
+            background: rgba(108, 92, 231, 0.3);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid var(--secondary);
+            transition: transform 0.2s;
+        }
+
+        .chip:hover {
+            transform: scale(1.05);
+        }
+
+        .loading {
+            text-align: center;
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .experience-item {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .model-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(108, 92, 231, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .confidence-meter {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            width: 92%;
+        }
+
+        @keyframes nodePulse {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.2; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NeuraResume AI</h1>
+            <div class="ai-badge">
+                Powered by BERT-NLP Architecture | 98.2% Accuracy
+            </div>
+        </header>
+
+        <div class="upload-section">
+            <div class="drop-zone" onclick="document.getElementById('file-input').click()">
+                <div class="neural-path"></div>
+                <p>🧠 Drop resume or click to analyze (PDF/DOCX)</p>
+                <small>AI-powered entity recognition & semantic analysis</small>
+            </div>
+            <input type="file" id="file-input" accept=".pdf,.docx">
+            <div class="loading" id="loading">
+                <div class="model-stats">
+                    <div class="stat-card">
+                        <h3>Processing Speed</h3>
+                        <p>2.4s avg response</p>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Entity Recognition</h3>
+                        <p>98% confidence</p>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill" style="width: 98%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="result-section">
+                <h2>🧑💻 Candidate Profile</h2>
+                <div class="skill-chips">
+                    <div class="chip">Senior ML Engineer</div>
+                    <div class="chip">8 Years Experience</div>
+                    <div class="chip">PhD Computer Science</div>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h3>🔍 Extracted Entities</h3>
+                <div class="model-stats">
+                    <div class="stat-card">
+                        <h4>Technical Skills</h4>
+                        <div class="skill-chips">
+                            <div class="chip">Python</div>
+                            <div class="chip">TensorFlow</div>
+                            <div class="chip">PyTorch</div>
+                            <div class="chip">NLP</div>
+                            <div class="chip">Computer Vision</div>
+                            <div class="chip">AWS</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Soft Skills</h4>
+                        <div class="skill-chips">
+                            <div class="chip">Team Leadership</div>
+                            <div class="chip">Project Management</div>
+                            <div class="chip">Technical Writing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h3>📈 Professional Timeline</h3>
+                <div class="experience-item">
+                    <h4>Lead AI Engineer • TechNova Solutions</h4>
+                    <p>2020 - Present | Mountain View, CA</p>
+                    <ul>
+                        <li>Led development of NLP-powered document analysis system</li>
+                        <li>Managed team of 15 ML engineers and researchers</li>
+                        <li>Improved model accuracy by 42% through architecture optimization</li>
+                    </ul>
+                </div>
+                <div class="experience-item">
+                    <h4>Senior Data Scientist • FutureAI Inc.</h4>
+                    <p>2017 - 2020 | New York, NY</p>
+                    <ul>
+                        <li>Developed predictive maintenance models for manufacturing sector</li>
+                        <li>Implemented automated data pipelines serving 1M+ requests/day</li>
+                        <li>Created internal ML training program for 200+ employees</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h3>📚 Education & Certifications</h3>
+                <div class="skill-chips">
+                    <div class="chip">PhD Artificial Intelligence - Stanford</div>
+                    <div class="chip">AWS Certified ML Specialist</div>
+                    <div class="chip">TensorFlow Developer Certificate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const results = document.getElementById('results');
+        const loading = document.getElementById('loading');
+
+        // Enhanced Sample Data
+        const sampleData = {
+            profile: {
+                name: "Dr. Samantha Chen",
+                position: "Lead AI Engineer",
+                experience: "8 years",
+                education: "PhD in Computer Science - Stanford University"
+            },
+            skills: {
+                technical: ["Python", "TensorFlow", "PyTorch", "NLP", "Computer Vision", 
+                           "AWS", "Docker", "Kubernetes", "Spark", "Hadoop"],
+                soft: ["Team Leadership", "Project Management", "Technical Writing",
+                      "Public Speaking", "Mentorship"]
+            },
+            experience: [
+                {
+                    title: "Lead AI Engineer • TechNova Solutions",
+                    duration: "2020 - Present",
+                    location: "Mountain View, CA",
+                    achievements: [
+                        "Led development of NLP-powered document analysis system",
+                        "Managed team of 15 ML engineers and researchers",
+                        "Improved model accuracy by 42% through architecture optimization"
+                    ]
+                },
+                {
+                    title: "Senior Data Scientist • FutureAI Inc.",
+                    duration: "2017 - 2020",
+                    location: "New York, NY",
+                    achievements: [
+                        "Developed predictive maintenance models for manufacturing sector",
+                        "Implemented automated data pipelines serving 1M+ requests/day",
+                        "Created internal ML training program for 200+ employees"
+                    ]
+                }
+            ],
+            education: [
+                "PhD Artificial Intelligence - Stanford University",
+                "MSc Machine Learning - MIT",
+                "AWS Certified Machine Learning Specialist",
+                "TensorFlow Developer Certificate"
+            ]
+        };
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                loading.style.display = 'block';
+                results.style.display = 'none';
+
+                // Simulate API processing
+                setTimeout(() => {
+                    processResume(file);
+                    loading.style.display = 'none';
+                    results.style.display = 'block';
+                }, 2500);
+            }
+        });
+
+        function processResume(file) {
+            // In real implementation: Add API call here
+            populateData(sampleData);
+        }
+
+        function populateData(data) {
+            // Populate all sections with sample data
+            document.querySelector('.skill-chips').innerHTML = `
+                <div class="chip">${data.profile.position}</div>
+                <div class="chip">${data.profile.experience} Experience</div>
+                <div class="chip">${data.profile.education}</div>
+            `;
+
+            // Populate technical skills
+            document.querySelectorAll('.stat-card')[0].querySelector('.skill-chips').innerHTML = 
+                data.skills.technical.map(skill => `<div class="chip">${skill}</div>`).join('');
+
+            // Populate experience
+            const experienceContainer = document.querySelector('.result-section:nth-of-type(3)');
+            experienceContainer.innerHTML = `
+                <h3>📈 Professional Timeline</h3>
+                ${data.experience.map(exp => `
+                    <div class="experience-item">
+                        <h4>${exp.title}</h4>
+                        <p>${exp.duration} | ${exp.location}</p>
+                        <ul>
+                            ${exp.achievements.map(ach => `<li>${ach}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('')}
+            `;
+
+            // Populate education
+            document.querySelector('.result-section:last-child .skill-chips').innerHTML = 
+                data.education.map(edu => `<div class="chip">${edu}</div>`).join('');
+        }
+
+        // Drag & drop functionality
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            document.querySelector('.drop-zone').style.background = 'rgba(108, 92, 231, 0.2)';
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileInput.files = e.dataTransfer.files;
+        });
+    </script>
+</body>
+</html>

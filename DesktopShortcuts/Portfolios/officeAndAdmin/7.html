@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaperlessVault Inc. - Digital Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2A5CFF;
+            --secondary: #FF6B6B;
+            --background: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.05em;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            border-radius: 12px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .document-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .document-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .doc-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .doc-type {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .doc-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .document-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PaperlessVault Inc.</h1>
+            <p>Digital Document Archive</p>
+        </header>
+
+        <input type="text" class="search-bar" placeholder="Search documents...">
+
+        <div class="filter-buttons">
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">Contracts</button>
+            <button class="filter-btn">Invoices</button>
+            <button class="filter-btn">Reports</button>
+            <button class="filter-btn">Policies</button>
+        </div>
+
+        <div class="document-grid" id="documentGrid">
+            <!-- Documents will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        const documentTypes = ['Contract', 'Invoice', 'Report', 'Policy', 'Proposal'];
+        const departments = ['Finance', 'HR', 'Legal', 'Operations', 'Sales'];
+        
+        const generateDocuments = () => {
+            const documentGrid = document.getElementById('documentGrid');
+            let html = '';
+
+            for(let i = 1; i <= 100; i++) {
+                const type = documentTypes[Math.floor(Math.random() * documentTypes.length)];
+                const department = departments[Math.floor(Math.random() * departments.length)];
+                
+                html += `
+                    <div class="document-card">
+                        <div class="doc-icon">${type[0]}</div>
+                        <div class="doc-type">${type}</div>
+                        <h3 class="doc-title">${department} Document #PV-${i.toString().padStart(3, '0')}</h3>
+                        <div class="doc-date">Created: ${new Date().toLocaleDateString()}</div>
+                    </div>
+                `;
+            }
+
+            documentGrid.innerHTML = html;
+        }
+
+        // Generate documents on load
+        generateDocuments();
+
+        // Add filter functionality
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                button.classList.add('active');
+                // Add actual filtering logic here
+            });
+        });
+    </script>
+</body>
+</html>

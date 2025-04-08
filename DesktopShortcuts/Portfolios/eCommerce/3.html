@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSimplified - Electronics & Gadgets Catalog</title>
+    <style>
+        :root {
+            --primary: #2d3436;
+            --accent: #0984e3;
+            --light: #f5f6fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        header {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            margin: 1rem 0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .spec-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .spec-table td:first-child {
+            font-weight: bold;
+        }
+
+        .demo-container {
+            position: relative;
+            margin: 2rem 0;
+            height: 400px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .accessories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .review-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .rating {
+            color: #fdcb6e;
+            margin: 0.5rem 0;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            margin: 0.2rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .warranty-badge {
+            background: #00b894;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TechSimplified</h1>
+        <p>Complex Tech Made Simple</p>
+    </header>
+
+    <main>
+        <section class="product-grid">
+            <!-- Laptop -->
+            <div class="product-card">
+                <h2>UltraBook Pro Laptop</h2>
+                <img src="https://picsum.photos/id/180/400/300" alt="UltraBook Pro" class="product-image">
+                <div class="warranty-badge">3-Year Warranty</div>
+                <table class="spec-table">
+                    <tr><td>Processor</td><td>Core i7 12th Gen</td></tr>
+                    <tr><td>RAM</td><td>16GB DDR5</td></tr>
+                    <tr><td>Storage</td><td>1TB SSD</td></tr>
+                    <tr><td>Weight</td><td>1.2 kg</td></tr>
+                </table>
+                <button onclick="showDemo('laptop')">360° View</button>
+                <button>Add to Cart ($1499)</button>
+            </div>
+
+            <!-- Smartphone -->
+            <div class="product-card">
+                <h2>Phantom X5 Pro</h2>
+                <img src="https://picsum.photos/id/160/400/300" alt="Phantom X5 Pro" class="product-image">
+                <div class="warranty-badge">2-Year Warranty</div>
+                <table class="spec-table">
+                    <tr><td>Display</td><td>6.7" AMOLED</td></tr>
+                    <tr><td>Camera</td><td>108MP Triple Lens</td></tr>
+                    <tr><td>Battery</td><td>5000mAh</td></tr>
+                    <tr><td>Waterproof</td><td>IP68</td></tr>
+                </table>
+                <button onclick="showDemo('phone')">360° View</button>
+                <button>Add to Cart ($899)</button>
+            </div>
+
+            <!-- Wireless Headphones -->
+            <div class="product-card">
+                <h2>NovaSound Pro X</h2>
+                <img src="https://picsum.photos/id/1080/400/300" alt="Wireless Headphones" class="product-image">
+                <div class="warranty-badge">2-Year Warranty</div>
+                <table class="spec-table">
+                    <tr><td>Battery Life</td><td>40 Hours</td></tr>
+                    <tr><td>Noise Canceling</td><td>Active Pro+</td></tr>
+                    <tr><td>Connectivity</td><td>Bluetooth 5.3</td></tr>
+                    <tr><td>Weight</td><td>256g</td></tr>
+                </table>
+                <button onclick="showDemo('headphones')">360° View</button>
+                <button>Add to Cart ($299)</button>
+            </div>
+
+            <!-- Smart Watch -->
+            <div class="product-card">
+                <h2>HealthGuard Pro 3</h2>
+                <img src="https://picsum.photos/id/367/400/300" alt="Smart Watch" class="product-image">
+                <div class="warranty-badge">1-Year Warranty</div>
+                <table class="spec-table">
+                    <tr><td>Display</td><td>1.9" AMOLED</td></tr>
+                    <tr><td>Sensors</td><td>Heart Rate, SpO2</td></tr>
+                    <tr><td>Waterproof</td><td>5ATM</td></tr>
+                    <tr><td>Battery</td><td>7 Days</td></tr>
+                </table>
+                <button onclick="showDemo('watch')">360° View</button>
+                <button>Add to Cart ($199)</button>
+            </div>
+        </section>
+
+        <!-- Comparison Chart -->
+        <section style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+            <h2>Smartphone Comparison</h2>
+            <table class="spec-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Phantom X5</th>
+                    <th>Galaxy Ultra</th>
+                    <th>iMobile 14 Pro</th>
+                </tr>
+                <tr><td>Price</td><td>$899</td><td>$1099</td><td>$1299</td></tr>
+                <tr><td>Camera</td><td>108MP</td><td>200MP</td><td>48MP</td></tr>
+                <tr><td>Refresh Rate</td><td>120Hz</td><td>144Hz</td><td>120Hz</td></tr>
+            </table>
+        </section>
+
+        <!-- Accessories Cross-Sell -->
+        <section style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+            <h2>Essential Accessories</h2>
+            <div class="accessories-grid">
+                <div class="product-card">
+                    <img src="https://picsum.photos/id/119/200/150" alt="Wireless Charger" class="product-image">
+                    <h3>Fast Wireless Charger</h3>
+                    <p>$39.99</p>
+                    <button>Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://picsum.photos/id/1025/200/150" alt="USB-C Hub" class="product-image">
+                    <h3>6-in-1 USB-C Hub</h3>
+                    <p>$49.99</p>
+                    <button>Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://picsum.photos/id/177/200/150" alt="Camera Lens Kit" class="product-image">
+                    <h3>Pro Camera Lens Kit</h3>
+                    <p>$89.99</p>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Reviews -->
+        <section style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+            <h2>Customer Reviews</h2>
+            <div class="review-card">
+                <div class="rating">★★★★★</div>
+                <p>"The best tech shopping experience I've ever had. Clear comparisons made choosing easy!"</p>
+                <p>- Michael T.</p>
+            </div>
+            <div class="review-card">
+                <div class="rating">★★★★☆</div>
+                <p>"Great product variety, wish there were more accessory options for older models."</p>
+                <p>- Sarah L.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showDemo(type) {
+            const demos = {
+                laptop: 'https://picsum.photos/id/180/800/600',
+                phone: 'https://picsum.photos/id/160/800/600',
+                headphones: 'https://picsum.photos/id/1080/800/600',
+                watch: 'https://picsum.photos/id/367/800/600'
+            };
+            
+            const demoWindow = window.open('', '_blank');
+            demoWindow.document.write(`<img src="${demos[type]}" style="width:100%;height:100%">`);
+        }
+    </script>
+
+    <footer style="text-align: center; padding: 2rem; color: #666;">
+        <p>© 2023 TechSimplified. All rights reserved.</p>
+        <p>Compatibility guaranteed with Windows 11, macOS Ventura, and Android 13+</p>
+    </footer>
+</body>
+</html>

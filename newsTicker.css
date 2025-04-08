@@ -1,0 +1,45 @@
+/* News Ticker Styles */
+.news-ticker {
+    position: fixed;
+    bottom: 40px; /* Moved higher above taskbar */
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: #000080;
+    color: white;
+    border-top: 2px solid #ffffff;
+    border-bottom: 2px solid #808080;
+    overflow: hidden;
+    z-index: 0; /* Lower than start menu */
+}
+
+.ticker-content {
+    position: absolute;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 25px;
+    padding-left: 100%;
+}
+
+.ticker-item {
+    display: inline-block;
+    margin-right: 40px;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Pause on hover */
+.news-ticker:hover .ticker-content {
+    animation-play-state: paused;
+}
+
+/* Add to your existing start menu CSS */
+.start-menu {
+    z-index: 1000; /* Higher than news ticker */
+    bottom: 40px !important; /* Ensure original position */
+}

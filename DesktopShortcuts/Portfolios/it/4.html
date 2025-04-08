@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud-Native CI/CD Pipeline Platform</title>
+    <style>
+        :root {
+            --devops-blue: #0078d4;
+            --cloud-orange: #ff6b35;
+            --iac-green: #00b294;
+            --monitoring-red: #e63946;
+            --terminal-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Consolas', 'Courier New', monospace;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .pipeline-container {
+            background: #161b22;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #30363d;
+        }
+
+        .stage-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .stage-card::before {
+            content: '▶';
+            color: var(--devops-blue);
+            position: absolute;
+            left: -30px;
+            top: 1.2rem;
+        }
+
+        .terminal {
+            background: var(--terminal-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: 'Consolas', monospace;
+            white-space: pre-wrap;
+            border: 1px solid #404040;
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin: 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .pipeline-visual {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: #161b22;
+            border-radius: 8px;
+        }
+
+        .pipeline-node {
+            text-align: center;
+            padding: 1rem;
+            background: #0d1117;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            width: 180px;
+            position: relative;
+        }
+
+        .pipeline-node::after {
+            content: '➔';
+            position: absolute;
+            right: -30px;
+            top: 40%;
+            color: var(--devops-blue);
+            font-size: 1.5rem;
+        }
+
+        .pipeline-node:last-child::after {
+            display: none;
+        }
+
+        h1, h2 {
+            color: #58a6ff;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 0.5rem;
+        }
+
+        .alert-rule {
+            color: var(--monitoring-red);
+            border-left: 3px solid var(--monitoring-red);
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+
+        .metric-dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: #161b22;
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cloud-Native CI/CD Pipeline Platform</h1>
+    
+    <div class="pipeline-container">
+        <h2>End-to-End Pipeline Architecture</h2>
+        <div class="pipeline-visual">
+            <div class="pipeline-node">
+                <h3>Source Control</h3>
+                <span class="tech-badge" style="background: #4078c0; color: white;">GitHub</span>
+                <div class="terminal" style="margin-top: 1rem;">
+                    $ git push origin main
+                    [OK] Pushed 3 commits
+                </div>
+            </div>
+            
+            <div class="pipeline-node">
+                <h3>CI/CD Engine</h3>
+                <span class="tech-badge" style="background: #2088FF; color: white;">GitHub Actions</span>
+                <div class="terminal" style="margin-top: 1rem;">
+                    jobs:
+                      build:
+                        runs-on: ubuntu-latest
+                        steps:
+                          - name: Build & Test
+                            run: make all
+                </div>
+            </div>
+
+            <div class="pipeline-node">
+                <h3>Containerization</h3>
+                <span class="tech-badge" style="background: #2496ed; color: white;">Docker</span>
+                <div class="terminal" style="margin-top: 1rem;">
+                    FROM alpine:3.14
+                    COPY target/app /app
+                    EXPOSE 8080
+                    CMD ["/app"]
+                </div>
+            </div>
+
+            <div class="pipeline-node">
+                <h3>Orchestration</h3>
+                <span class="tech-badge" style="background: #326ce5; color: white;">K8s</span>
+                <div class="terminal" style="margin-top: 1rem;">
+                    apiVersion: apps/v1
+                    kind: Deployment
+                    spec:
+                      replicas: 3
+                      template:
+                        spec:
+                          containers:
+                          - name: app
+                            image: registry/app:v1.2
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pipeline-container">
+        <h2>Infrastructure as Code Implementation</h2>
+        <div class="architecture-grid">
+            <div class="stage-card">
+                <h3>Terraform: AWS ECS Cluster</h3>
+                <div class="terminal">
+resource "aws_ecs_cluster" "main" {
+  name = "prod-cluster"
+  
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+}
+
+resource "aws_alb" "main" {
+  name               = "prod-alb"
+  load_balancer_type = "application"
+  subnets            = var.public_subnets
+}
+                </div>
+            </div>
+
+            <div class="stage-card">
+                <h3>Ansible: Server Configuration</h3>
+                <div class="terminal">
+- name: Configure Docker hosts
+  hosts: docker_nodes
+  become: yes
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: latest
+    
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pipeline-container">
+        <h2>Monitoring & Observability</h2>
+        <div class="metric-dashboard">
+            <div class="metric-card">
+                <div class="status-indicator" style="background: #2ecc71;"></div>
+                CPU Usage
+                <h3>24.7%</h3>
+            </div>
+            <div class="metric-card">
+                <div class="status-indicator" style="background: #f1c40f;"></div>
+                Memory Usage
+                <h3>68.2%</h3>
+            </div>
+            <div class="metric-card">
+                <div class="status-indicator" style="background: #e74c3c;"></div>
+                Error Rate
+                <h3>1.23%</h3>
+            </div>
+            <div class="metric-card">
+                <div class="status-indicator" style="background: #2ecc71;"></div>
+                Uptime
+                <h3>99.98%</h3>
+            </div>
+        </div>
+
+        <div class="stage-card">
+            <h3>Prometheus Alert Rules</h3>
+            <div class="alert-rule">
+                ALERT HighMemoryUsage
+                IF (node_memory_MemAvailable_bytes / 
+                    node_memory_MemTotal_bytes) < 0.2
+                FOR 5m
+                LABELS { severity="critical" }
+            </div>
+        </div>
+    </div>
+
+    <div class="pipeline-container">
+        <h2>Auto-Scaling Configuration</h2>
+        <div class="architecture-grid">
+            <div class="stage-card">
+                <h3>Kubernetes HPA</h3>
+                <div class="terminal">
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-app-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
+                </div>
+            </div>
+
+            <div class="stage-card">
+                <h3>AWS Auto Scaling Group</h3>
+                <div class="terminal">
+resource "aws_autoscaling_policy" "web_scale_up" {
+  name                   = "web-scale-up"
+  scaling_adjustment    = 2
+  adjustment_type       = "ChangeInCapacity"
+  cooldown              = 300
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
+resource "aws_cloudwatch_metric_alarm" "high_cpu" {
+  alarm_name          = "high-cpu-utilization"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "75"
+  alarm_actions       = [aws_autoscaling_policy.web_scale_up.arn]
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pipeline-container">
+        <h2>Pipeline Execution Simulation</h2>
+        <div class="terminal" style="white-space: pre;">
+[Pipeline] Starting CI/CD workflow
+[1/5] Source Code Analysis ................. PASSED
+[2/5] Unit Tests ........................... PASSED (12s)
+[3/5] Container Build ..................... 
+ => Building Docker image 'registry/app:v1.2'
+ => Pushing image to registry ............. SUCCESS
+[4/5] Deployment Validation ............... 
+ ✓ Rolling update initiated
+ ✓ 3/3 pods healthy
+[5/5] Post-Deployment Checks .............. 
+ ✓ Smoke tests passed
+ ✓ Performance baseline met
+
+[Monitoring] New deployment detected: v1.2
+[AutoScaling] Current load: 65% → Maintaining 3 replicas
+[Security] Vulnerability scan passed
+        </div>
+    </div>
+</body>
+</html>

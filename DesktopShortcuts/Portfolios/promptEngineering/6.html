@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroPrompt Optimizer</title>
+    <style>
+        :root {
+            --primary: #0a192f;
+            --secondary: #64ffda;
+            --accent: #8892b0;
+            --background: #020c1b;
+            --text-primary: #ccd6f6;
+            --success: #64ffda;
+            --warning: #f9d877;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--background));
+            border-bottom: 1px solid var(--secondary);
+        }
+
+        .input-section {
+            background: rgba(100, 255, 218, 0.05);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--accent);
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(136, 146, 176, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--text-primary);
+            font-family: inherit;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: 2px solid var(--secondary);
+            background: rgba(100, 255, 218, 0.02);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: rgba(100, 255, 218, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--secondary);
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .test-variation {
+            background: rgba(136, 146, 176, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .test-variation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.1);
+        }
+
+        button {
+            background: var(--primary);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        .results-panel {
+            background: rgba(100, 255, 218, 0.05);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            border: 1px solid var(--accent);
+        }
+
+        .llm-feedback {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .sample-prompts {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(136, 146, 176, 0.05);
+            border-radius: 8px;
+        }
+
+        .history-log {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(100, 255, 218, 0.02);
+            border: 1px dashed var(--accent);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8em;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid var(--secondary);
+            margin: 0.25rem;
+        }
+
+        .token-count {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        .optimization-path {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(136, 146, 176, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>🦾 NeuroPrompt Optimizer</h1>
+            <p>AI-Powered Prompt Engineering Workbench</p>
+        </div>
+
+        <div class="input-section">
+            <h2>🔧 Base Prompt Input</h2>
+            <textarea id="original-prompt">Analyze the impact of climate change on coastal ecosystems...</textarea>
+            <div class="optimization-path">
+                <button onclick="generateVariations('clarity')">Clarity Optimization</button>
+                <button onclick="generateVariations('creativity')">Creativity Enhancement</button>
+                <button onclick="generateVariations('structure')">Structural Refinement</button>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>⚡ Performance Metrics</h3>
+                <div class="metric">
+                    <p>Response Latency: <span class="badge">2.4s ↓ 15%</span></p>
+                    <p>Token Efficiency: <span class="badge">87/128 → 92%</span></p>
+                    <p>Coherence Score: <span class="badge">4.8/5.0 ★★★★☆</span></p>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <h3>🧠 AI Evaluation</h3>
+                <div class="metric">
+                    <p>GPT-4 Relevance: <span class="badge">92%</span></p>
+                    <p>Claude Creativity: <span class="badge">88%</span></p>
+                    <p>PaLM Efficiency: <span class="badge">94%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-grid" id="ab-test-section">
+            <!-- Generated variations will appear here -->
+        </div>
+
+        <div class="results-panel">
+            <h2>📈 Optimization Report</h2>
+            <div class="llm-feedback">
+                <div>
+                    <h4>🤖 AI Analysis</h4>
+                    <p id="ai-analysis">Current variations show 15% improvement in specificity but 8% decrease in conciseness. Recommendation: Hybrid approach combining Version 1's structure with Version 3's examples.</p>
+                </div>
+                <div>
+                    <h4>📋 User Feedback</h4>
+                    <p id="user-feedback">82% preferred Version 2 for clarity • 67% found Version 3 more engaging • Average rating: 4.2/5.0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-log">
+            <h4>📅 Optimization History</h4>
+            <p>2023-11-15: Increased specificity metrics by 22% using domain-specific terminology</p>
+            <p>2023-11-14: Reduced token count by 18% while maintaining coherence</p>
+        </div>
+    </div>
+
+    <script>
+        const sampleVariations = {
+            clarity: [
+                `Analyze the impact of climate change on coastal ecosystems between 2000-2023. 
+                Focus on:
+                - Sea level rise measurements
+                - Biodiversity changes in mangrove forests
+                - Economic impacts on fishing industries
+                Provide statistical comparisons and peer-reviewed sources.`,
+                
+                `Examine climate change effects on coastal ecosystems (2000-2023) with:
+                1. Quantitative data visualization requirements
+                2. Case studies from 3 distinct geographical regions
+                3. Mitigation strategy effectiveness analysis`
+            ],
+            
+            creativity: [
+                `Imagine you're a marine biologist writing a National Geographic article. 
+                Describe climate change impacts on coastal ecosystems through:
+                • Personal narratives from local communities
+                • Metaphors comparing ecosystem changes to familiar concepts
+                • Future projections presented as vivid scenarios`,
+                
+                `Create an interactive thought experiment: 
+                "If coastal ecosystems could speak, what would their 20-year diary entries reveal about climate change?"
+                Include emotional tone analysis and environmental turning points.`
+            ],
+            
+            structure: [
+                `[Objective] Analyze climate change impact on coastal ecosystems
+                [Parameters] 
+                - Timeframe: 2000-2023
+                - Key metrics: Temperature rise, species decline, economic loss
+                [Output Format]
+                1. Executive summary
+                2. Data visualization
+                3. Actionable recommendations`,
+                
+                `Task: Coastal ecosystem climate analysis
+                Phase 1: Data collection (NOAA, IPCC reports)
+                Phase 2: Trend identification (statistical analysis)
+                Phase 3: Impact projection (machine learning models)
+                Deliverables: PDF report + interactive dashboard prototype`
+            ]
+        };
+
+        function generateVariations(strategy) {
+            const variations = sampleVariations[strategy];
+            currentVariations = variations;
+            renderABTest(strategy);
+            updateAnalytics();
+        }
+
+        function renderABTest(strategy) {
+            const container = document.getElementById('ab-test-section');
+            container.innerHTML = currentVariations.map((variation, index) => `
+                <div class="test-variation" onclick="selectVariation(${index})">
+                    <div class="token-count">${Math.floor(variation.length/4)} tokens</div>
+                    <h3>Variant ${index+1} • ${strategy.toUpperCase()}</h3>
+                    <pre>${variation}</pre>
+                    <div class="badge">${getOptimizationTags(strategy)}</div>
+                </div>
+            `).join('');
+        }
+
+        function getOptimizationTags(strategy) {
+            const tags = {
+                clarity: ['Precision', 'Specificity', 'Conciseness'],
+                creativity: ['Novelty', 'Engagement', 'Narrative'],
+                structure: ['Organization', 'Modularity', 'Scaffolding']
+            };
+            return tags[strategy].map(t => `<span class="badge">#${t}</span>`).join('');
+        }
+
+        function updateAnalytics() {
+            document.getElementById('ai-analysis').textContent = 
+                getRandomAnalysis();
+            
+            document.getElementById('user-feedback').innerHTML = 
+                `User preference: ${Math.floor(Math.random()*40+60)}% • ` +
+                `Engagement score: ${Math.floor(Math.random()*3+7)}/10 • ` +
+                `Clarity rating: ${(Math.random()*0.8+4.2).toFixed(1)}/5.0`;
+        }
+
+        function getRandomAnalysis() {
+            const analyses = [
+                "Structural analysis shows improved information hierarchy but reduced narrative flow. Recommendation: Combine modular sections with transitional phrases.",
+                "Creativity metrics increased by 18% but with 12% longer response times. Suggestion: Implement controlled creativity parameters.",
+                "Clarity optimizations reduced ambiguity by 22% while maintaining 95% of original content coverage."
+            ];
+            return analyses[Math.floor(Math.random()*analyses.length)];
+        }
+
+        function selectVariation(index) {
+            document.querySelectorAll('.test-variation').forEach(el => 
+                el.style.background = 'rgba(136, 146, 176, 0.05)');
+            event.target.closest('.test-variation').style.background = 
+                'rgba(100, 255, 218, 0.1)';
+        }
+
+        // Initialize with first variation
+        generateVariations('clarity');
+    </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Funnel Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.1);
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1, h2 {
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .email-sequence {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .email-stage {
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+            background: var(--surface);
+            border-radius: 0.5rem;
+        }
+
+        canvas {
+            width: 100%!important;
+            height: 400px!important;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>📧 Email Funnel Analytics</h1>
+        
+        <div class="metric-grid">
+            <div class="card metric-card">
+                <div class="metric-value">5,230</div>
+                <div>Total Leads</div>
+            </div>
+            <div class="card metric-card">
+                <div class="metric-value">62%</div>
+                <div>Open Rate</div>
+            </div>
+            <div class="card metric-card">
+                <div class="metric-value">18%</div>
+                <div>Click Rate</div>
+            </div>
+            <div class="card metric-card">
+                <div class="metric-value">9.2%</div>
+                <div>Conversion</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Campaign Performance</h2>
+            <canvas id="performanceChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Email Sequence</h2>
+            <div class="email-sequence">
+                <div class="email-stage">
+                    <h3>Day 0: Welcome Template</h3>
+                    <p>Open Rate: 68% | CTR: 22%</p>
+                    <details>
+                        <summary>View Email Copy</summary>
+                        <pre>
+Subject: 🎁 Your Free Social Media Template + Next Steps
+
+Hi {First Name},
+
+Thanks for grabbing our "10 Viral Post Templates" kit! 
+Included in this email:
+✅ Download link (valid 48hrs)
+✅ Video tutorial
+✅ Case studies
+
+[Download Now Button]
+
+Looking forward to helping you grow!
+                        </pre>
+                    </details>
+                </div>
+                <div class="email-stage">
+                    <h3>Day 3: Case Study</h3>
+                    <p>Open Rate: 54% | CTR: 18%</p>
+                </div>
+                <div class="email-stage">
+                    <h3>Day 7: Limited Offer</h3>
+                    <p>Open Rate: 61% | CTR: 24%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>A/B Test Results</h2>
+            <canvas id="abTestChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Performance Chart
+        new Chart(document.getElementById('performanceChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Open Rate',
+                    data: [58, 63, 61, 66],
+                    borderColor: '#6366f1',
+                    tension: 0.4
+                }, {
+                    label: 'Click Rate',
+                    data: [15, 17, 19, 22],
+                    borderColor: '#10b981',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+
+        // A/B Test Chart
+        new Chart(document.getElementById('abTestChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Subject Line A', 'Subject Line B'],
+                datasets: [{
+                    label: 'Open Rate %',
+                    data: [58, 67],
+                    backgroundColor: ['#6366f1', '#10b981']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Autonomous Vehicle Simulation Suite</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #ecf0f1;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .simulation-view {
+            background: #2c2c2c;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .control-panel {
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        canvas {
+            border: 2px solid #34495e;
+            border-radius: 4px;
+            background: #000;
+        }
+
+        .sensor-data {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .sensor-card {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        button {
+            background: var(--secondary-color);
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .warning {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="simulation-view">
+            <canvas id="simCanvas" width="1000" height="600"></canvas>
+            <div class="sensor-data">
+                <div class="sensor-card">
+                    <h3>LIDAR (64 Channel)</h3>
+                    <div id="lidar-data">Loading...</div>
+                </div>
+                <div class="sensor-card">
+                    <h3>RADAR</h3>
+                    <div id="radar-data">Loading...</div>
+                </div>
+                <div class="sensor-card">
+                    <h3>Camera Feed</h3>
+                    <div id="camera-feed">Simulated RGB Feed</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h2>Vehicle Controls</h2>
+            <button onclick="toggleSimulation()">Start/Stop</button>
+            <button onclick="emergencyStop()">E-Stop</button>
+            <button onclick="toggleSensors()">Toggle Sensors</button>
+            
+            <h3 style="margin-top: 30px;">Telemetry</h3>
+            <div id="telemetry">
+                <p>Speed: <span id="speed">0</span> km/h</p>
+                <p>Steering Angle: <span id="steering">0</span>°</p>
+                <p>System Status: <span id="status">INACTIVE</span></p>
+            </div>
+
+            <h3>Simulation Parameters</h3>
+            <div id="simulation-stats">
+                <p>Frame Rate: <span id="fps">0</span> FPS</p>
+                <p>Collision Count: <span id="collisions">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SIMULATION_CONFIG = {
+            MAX_SPEED: 60,         // km/h
+            ACCELERATION: 0.5,     // m/s²
+            DECELERATION: 2.5,     // m/s²
+            SENSOR_RANGE: 150,     // meters
+            UPDATE_INTERVAL: 100   // ms
+        };
+
+        class AutonomousVehicle {
+            constructor() {
+                this.x = 500;
+                this.y = 300;
+                this.speed = 0;
+                this.steeringAngle = 0;
+                this.sensors = {
+                    lidar: this.generateLidarData(),
+                    radar: this.generateRadarData(),
+                    camera: this.generateCameraData()
+                };
+                this.collisions = 0;
+                this.isActive = false;
+            }
+
+            generateLidarData() {
+                return Array.from({length: 64}, () => ({
+                    distance: Math.random() * SIMULATION_CONFIG.SENSOR_RANGE,
+                    intensity: Math.random()
+                }));
+            }
+
+            generateRadarData() {
+                return {
+                    velocity: (Math.random() - 0.5) * 50,
+                    distance: Math.random() * SIMULATION_CONFIG.SENSOR_RANGE,
+                    angle: (Math.random() - 0.5) * Math.PI/4
+                };
+            }
+
+            generateCameraData() {
+                return {
+                    objects: Array.from({length: 5}, () => ({
+                        type: ['vehicle', 'pedestrian', 'cyclist', 'unknown'][Math.floor(Math.random()*4)],
+                        position: {
+                            x: Math.random() * 1000,
+                            y: Math.random() * 600
+                        },
+                        confidence: Math.random().toFixed(2)
+                    }))
+                };
+            }
+
+            updateSensors() {
+                this.sensors.lidar = this.generateLidarData();
+                this.sensors.radar = this.generateRadarData();
+                this.sensors.camera = this.generateCameraData();
+            }
+        }
+
+        class SimulationRenderer {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.vehicleImg = new Image();
+                this.vehicleImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMzQ5OGRiIi8+PC9zdmc+';
+            }
+
+            drawRoad() {
+                const ctx = this.ctx;
+                ctx.fillStyle = '#34495e';
+                ctx.fillRect(0, 250, this.canvas.width, 200);
+                
+                // Lane markings
+                ctx.strokeStyle = '#ecf0f1';
+                ctx.setLineDash([20, 30]);
+                ctx.beginPath();
+                ctx.moveTo(this.canvas.width/2 - 100, 250);
+                ctx.lineTo(this.canvas.width/2 - 100, 450);
+                ctx.moveTo(this.canvas.width/2 + 100, 250);
+                ctx.lineTo(this.canvas.width/2 + 100, 450);
+                ctx.stroke();
+            }
+
+            drawVehicle(vehicle) {
+                this.ctx.save();
+                this.ctx.translate(vehicle.x, vehicle.y);
+                this.ctx.rotate(vehicle.steeringAngle * Math.PI/180);
+                this.ctx.drawImage(this.vehicleImg, -15, -10, 30, 20);
+                this.ctx.restore();
+            }
+
+            drawSensors(vehicle) {
+                this.ctx.strokeStyle = '#e74c3c55';
+                vehicle.sensors.lidar.forEach((_, i) => {
+                    const angle = (i/64) * Math.PI * 2;
+                    const dx = Math.cos(angle) * SIMULATION_CONFIG.SENSOR_RANGE;
+                    const dy = Math.sin(angle) * SIMULATION_CONFIG.SENSOR_RANGE;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(vehicle.x, vehicle.y);
+                    this.ctx.lineTo(vehicle.x + dx, vehicle.y + dy);
+                    this.ctx.stroke();
+                });
+            }
+        }
+
+        // Simulation Core
+        const canvas = document.getElementById('simCanvas');
+        const vehicle = new AutonomousVehicle();
+        const renderer = new SimulationRenderer(canvas);
+        let simulationInterval;
+        let lastUpdate = Date.now();
+
+        function updateDashboard() {
+            document.getElementById('speed').textContent = vehicle.speed.toFixed(1);
+            document.getElementById('steering').textContent = vehicle.steeringAngle.toFixed(1);
+            document.getElementById('status').textContent = vehicle.isActive ? 'ACTIVE' : 'INACTIVE';
+            document.getElementById('collisions').textContent = vehicle.collisions;
+        }
+
+        function simulationLoop() {
+            const now = Date.now();
+            const delta = (now - lastUpdate) / 1000;
+            
+            // Update physics
+            if(vehicle.isActive) {
+                vehicle.speed = Math.min(vehicle.speed + SIMULATION_CONFIG.ACCELERATION * delta, SIMULATION_CONFIG.MAX_SPEED);
+                vehicle.x += vehicle.speed * delta * Math.cos(vehicle.steeringAngle * Math.PI/180);
+                vehicle.y += vehicle.speed * delta * Math.sin(vehicle.steeringAngle * Math.PI/180);
+                vehicle.updateSensors();
+            }
+
+            // Render
+            renderer.ctx.clearRect(0, 0, canvas.width, canvas.height);
+            renderer.drawRoad();
+            renderer.drawSensors(vehicle);
+            renderer.drawVehicle(vehicle);
+            updateDashboard();
+            lastUpdate = now;
+        }
+
+        function toggleSimulation() {
+            vehicle.isActive = !vehicle.isActive;
+            if(vehicle.isActive) {
+                simulationInterval = setInterval(simulationLoop, SIMULATION_CONFIG.UPDATE_INTERVAL);
+            } else {
+                clearInterval(simulationInterval);
+            }
+        }
+
+        function emergencyStop() {
+            vehicle.speed = 0;
+            vehicle.isActive = false;
+            clearInterval(simulationInterval);
+            document.getElementById('status').classList.add('warning');
+            setTimeout(() => document.getElementById('status').classList.remove('warning'), 1000);
+        }
+
+        function toggleSensors() {
+            const sensors = document.querySelectorAll('.sensor-card');
+            sensors.forEach(s => s.style.display = s.style.display === 'none' ? 'block' : 'none');
+        }
+
+        // Initialize simulation
+        simulationLoop();
+    </script>
+</body>
+</html>

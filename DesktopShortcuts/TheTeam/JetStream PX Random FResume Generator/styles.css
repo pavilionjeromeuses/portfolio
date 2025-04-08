@@ -1,0 +1,28 @@
+body {
+    background-color: #f7f7f7;
+  }
+  
+  .card {
+    border-radius: 15px; /* Increased border-radius for a smoother, rounder card */
+    min-height: 500px; /* Increased minimum height of the card */
+    background-color: #ffffff; /* Ensuring a white background to contrast with the page */
+  }
+  
+  #profilePic {
+    max-width: 200px; /* Increased the profile picture size */
+    height: 200px; /* Increased the profile picture height */
+    object-fit: cover;
+  }
+  
+  .card-body {
+    padding: 40px; /* Increased padding inside the card */
+  }
+  
+  h2 {
+    font-size: 3rem; /* Increased font size for the name */
+  }
+  
+  .fs-4 {
+    font-size: 1.25rem; /* Increased font size for additional text */
+  }
+  

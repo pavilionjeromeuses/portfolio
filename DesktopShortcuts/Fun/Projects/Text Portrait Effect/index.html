@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I2TC</title>
+    <link rel="icon" type="image/x-icon" href="_d784d698-2c2f-49be-90bd-3d846e537da4-removebg-preview.png">
+    <link rel="stylesheet" href="dist\styles.css">
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" target="_self">
+            <div class="logo">IMAGE TO TEXT CONVERTER</div>
+        </a>
+    </header>
+
+    <div id="imgHere" style="text-align:center; margin-top:20px;"></div>
+    <div id="textHere" style="text-align:center; margin-top:20px; color: white"></div>
+    <div id="img&text" style="text-align:center; margin-top:20px; color: white"></div>
+
+    <footer class="footer">
+        <div class="footer-text">© 2024 <a href="https://linktr.ee/jeromespavilion" target="_blank">MORE STUFF</a></div>
+        <div class="footer-buttons">
+            <label class="footer-button" for="upload">image/</label>
+            <input type="file" id="upload" class="upload-input" accept="image/*">
+            <label class="footer-button" for="uploadText">.txt</label>
+            <input type="file" id="uploadText" class="upload-input" accept=".txt">
+            <label class="footer-button" id="combine">CMBN</label>
+            <label class="footer-button" id="downloadBtn" for="downloadBothAsOne">DL</label>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

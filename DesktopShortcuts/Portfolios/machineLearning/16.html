@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Point Cloud Object Detection System | KITTI Benchmark</title>
+    <style>
+        :root {
+            --neon-green: #39FF14;
+            --cyber-cyan: #00f7ff;
+            --matrix-green: #00ff9d;
+            --dark-bg: #0a0a0a;
+        }
+        body {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            background: var(--dark-bg);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .cyber-border {
+            border: 2px solid var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(45deg, #001919 0%, #000000 100%);
+            border-bottom: 3px solid var(--matrix-green);
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .visualization-container {
+            position: relative;
+            height: 700px;
+            background: #001515;
+            border-radius: 8px;
+        }
+        .stats-panel {
+            background: #001212;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--cyber-cyan);
+        }
+        .sensor-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background: #000d0d;
+        }
+        .detection-class {
+            color: var(--neon-green);
+            border-left: 3px solid currentColor;
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+        button {
+            background: transparent;
+            color: var(--matrix-green);
+            border: 1px solid var(--matrix-green);
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background: var(--matrix-green);
+            color: #000;
+        }
+        .metric {
+            background: #001a1a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--cyber-cyan);
+        }
+        #pointCloudCanvas {
+            width: 100%;
+            height: 100%;
+        }
+        .camera-info {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0,0,0,0.8);
+            padding: 1rem;
+            border: 1px solid var(--cyber-cyan);
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>3D LIDAR OBJECT DETECTION SYSTEM</h1>
+        <p>PointPillars Architecture | KITTI Dataset Benchmark | Real-time Inference</p>
+    </div>
+
+    <div class="dashboard">
+        <div class="visualization-container cyber-border">
+            <div class="camera-info">
+                <div>FOV: 90° | Resolution: 1920×1080</div>
+                <div>Point Density: 120 pts/m²</div>
+                <div>Frame: 003523 | Sequence: 2011_09_26</div>
+            </div>
+            <div id="pointCloudCanvas"></div>
+        </div>
+
+        <div class="stats-panel">
+            <h2>DETECTION METRICS</h2>
+            <div class="metric">
+                <h3>Current Frame Analysis</h3>
+                <div>Objects Detected: 14</div>
+                <div>Inference Time: 42ms</div>
+                <div>Point Count: 98,432</div>
+            </div>
+            
+            <div class="metric">
+                <h3>Model Performance</h3>
+                <div>mAP@0.7: 76.4%</div>
+                <div>Precision: 82.1% | Recall: 73.8%</div>
+                <div>FPS: 23.8 (Real-time)</div>
+            </div>
+
+            <h2>DETECTION CLASSES</h2>
+            <div class="detection-class">Car (8)</div>
+            <div class="detection-class">Pedestrian (3)</div>
+            <div class="detection-class">Cyclist (2)</div>
+            <div class="detection-class">Truck (1)</div>
+
+            <div class="button-group">
+                <button onclick="toggleClass('car')">Toggle Cars</button>
+                <button onclick="toggleClass('pedestrian')">Toggle Pedestrians</button>
+                <button onclick="exportData()">Export Results</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sensor-data">
+        <div>
+            <h3>LIDAR SPECIFICATIONS</h3>
+            <ul>
+                <li>64 Channels</li>
+                <li>Range: 120m</li>
+                <li>Rotation Rate: 10Hz</li>
+                <li>Points/Second: 1.3M</li>
+            </ul>
+        </div>
+        <div>
+            <h3>DATASET STATISTICS</h3>
+            <ul>
+                <li>7,481 Training Frames</li>
+                <li>7,518 Test Frames</li>
+                <li>80,256 Labeled Objects</li>
+                <li>Class Distribution: Car 65%, Pedestrian 25%, Cyclist 10%</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let pointCloud, detectionBoxes = new THREE.Group();
+        const classVisibility = { car: true, pedestrian: true, cyclist: true };
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(document.querySelector('.visualization-container').clientWidth, 700);
+            document.getElementById('pointCloudCanvas').appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 50, 50);
+            scene.add(ambientLight, directionalLight);
+
+            // Generate sample LIDAR data
+            createStreetScene();
+            createDetectionBoxes();
+            
+            // Camera controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            camera.position.set(-20, 15, 30);
+            controls.update();
+
+            animate();
+        }
+
+        function createStreetScene() {
+            const points = [];
+            const colors = [];
+            
+            // Ground plane
+            for(let x = -30; x < 30; x += 0.2) {
+                for(let z = -20; z < 40; z += 0.2) {
+                    points.push(x, -1.5, z);
+                    colors.push(0.3, 0.3, 0.3);
+                }
+            }
+
+            // Vehicles
+            createVehicle(0, 0, 5, 4, 1.6, 1.8);
+            createVehicle(-3, 0, 15, 4.5, 1.8, 2.2);
+
+            // Pedestrians
+            createPedestrian(2, -1.5, 8);
+            createPedestrian(-1, -1.5, 12);
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.1,
+                vertexColors: true
+            });
+            
+            pointCloud = new THREE.Points(geometry, material);
+            scene.add(pointCloud);
+        }
+
+        function createVehicle(x, y, z, w, h, l) {
+            const geometry = new THREE.BoxGeometry(w, h, l);
+            const edges = new THREE.EdgesGeometry(geometry);
+            const line = new THREE.LineSegments(edges, 
+                new THREE.LineBasicMaterial({ color: 0xff0000 }));
+            line.position.set(x, y + h/2, z);
+            detectionBoxes.add(line);
+        }
+
+        function createPedestrian(x, y, z) {
+            const geometry = new THREE.CylinderGeometry(0.3, 0.3, 1.7, 8);
+            const edges = new THREE.EdgesGeometry(geometry);
+            const line = new THREE.LineSegments(edges,
+                new THREE.LineBasicMaterial({ color: 0x00ff00 }));
+            line.position.set(x, y + 0.85, z);
+            detectionBoxes.add(line);
+        }
+
+        function createDetectionBoxes() {
+            scene.add(detectionBoxes);
+        }
+
+        function toggleClass(cls) {
+            classVisibility[cls] = !classVisibility[cls];
+            detectionBoxes.children.forEach(obj => {
+                if(obj.userData.class === cls) obj.visible = classVisibility[cls];
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        function exportData() {
+            // Simulate data export
+            console.log("Exporting detection results in KITTI format...");
+            alert("Results exported as: detection_003523.txt");
+        }
+
+        // Initialize and handle window resize
+        window.onload = init;
+        window.addEventListener('resize', () => {
+            camera.aspect = document.querySelector('.visualization-container').clientWidth / 700;
+            camera.updateProjectionMatrix();
+            renderer.setSize(document.querySelector('.visualization-container').clientWidth, 700);
+        });
+    </script>
+</body>
+</html>

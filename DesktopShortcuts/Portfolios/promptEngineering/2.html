@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical AI Moderator | Bias Detection Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #4fc3f7;
+            --danger: #d32f2f;
+            --safe: #388e3c;
+            --background: #f8f9ff;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8eaf6 100%);
+            color: #2d3436;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 1.5rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            background: #fcfcfc;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.2);
+            outline: none;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .bias-indicator {
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            background: #fff3f3;
+            border-left: 5px solid var(--danger);
+        }
+
+        .neutral-indicator {
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            background: #f0fff4;
+            border-left: 5px solid var(--safe);
+        }
+
+        .analysis-section {
+            margin-top: 2rem;
+        }
+
+        .bias-category {
+            padding: 1rem;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .sample-prompts {
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .sample-prompt {
+            padding: 1rem;
+            background: #f8f9ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sample-prompt:hover {
+            transform: translateY(-3px);
+            background: var(--secondary);
+            color: white;
+        }
+
+        .severity-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .severity-fill {
+            height: 100%;
+            background: var(--danger);
+            width: 40%;
+        }
+
+        .icon {
+            margin-right: 0.5rem;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            padding: 1.5rem;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sample-prompts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-shield-alt icon"></i>Ethical AI Moderator</h1>
+        <p>Advanced Bias Detection & Mitigation System</p>
+    </div>
+
+    <div class="container">
+        <!-- Input Section -->
+        <div class="panel">
+            <h2><i class="fas fa-comment-medical icon"></i>Input Prompt Analyzer</h2>
+            <div class="sample-prompts">
+                <div class="sample-prompt" onclick="loadSample(1)">"Why are certain racial groups more prone to criminal behavior?"</div>
+                <div class="sample-prompt" onclick="loadSample(2)">"Women shouldn't pursue STEM careers because..."</div>
+                <div class="sample-prompt" onclick="loadSample(3)">"People from [country] are naturally better at..."</div>
+                <div class="sample-prompt" onclick="loadSample(4)">"Explain why political ideology X is destroying society"</div>
+            </div>
+            <textarea id="inputPrompt" placeholder="Enter AI prompt for ethical analysis..."></textarea>
+            <button onclick="analyzePrompt()"><i class="fas fa-search icon"></i>Analyze Content</button>
+            
+            <div class="statistics">
+                <div class="stat-box">
+                    <h3>12,304</h3>
+                    <p>Prompts Analyzed</p>
+                </div>
+                <div class="stat-box">
+                    <h3>89.7%</h3>
+                    <p>Bias Detection Accuracy</p>
+                </div>
+                <div class="stat-box">
+                    <h3>42</h3>
+                    <p>Bias Categories Tracked</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="panel">
+            <h2><i class="fas fa-file-prescription icon"></i>Ethical Analysis Report</h2>
+            <div id="biasResults"></div>
+            
+            <div class="analysis-section">
+                <h3><i class="fas fa-brain icon"></i>Mitigation Strategy</h3>
+                <div id="neutralResponse"></div>
+            </div>
+
+            <div class="analysis-section">
+                <h3><i class="fas fa-chart-bar icon"></i>Bias Breakdown</h3>
+                <div id="biasBreakdown"></div>
+            </div>
+
+            <div class="analysis-section">
+                <h3><i class="fas fa-lightbulb icon"></i>Prompt Optimization</h3>
+                <div id="optimizedPrompt"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const biasDatabase = {
+            categories: {
+                stereotypes: {
+                    pattern: /\b(gender\sroles|racial\s.*|stereotypes?|ethnic\sgroups)\b/gi,
+                    severity: 0.8,
+                    explanation: "Reduces complex social groups to oversimplified characteristics",
+                    mitigation: "Suggest specifying concrete behaviors rather than generalizations"
+                },
+                harmfulContent: {
+                    pattern: /\b(violence|hate\sspeech|discriminat(e|ion)|extremism)\b/gi,
+                    severity: 0.95,
+                    explanation: "Potential to incite harm or promote dangerous ideologies",
+                    mitigation: "Recommend focusing on constructive problem-solving approaches"
+                },
+                culturalBias: {
+                    pattern: /\b(western\svalues|superior\sculture|developing\snations)\b/gi,
+                    severity: 0.7,
+                    explanation: "Assumes cultural hierarchy or ethnocentric worldview",
+                    mitigation: "Suggest multicultural perspective with historical context"
+                },
+                abilityBias: {
+                    pattern: /\b(normal\speople|disabled\slimitations|able-bodied)\b/gi,
+                    severity: 0.6,
+                    explanation: "Marginalizes individuals based on physical/mental abilities",
+                    mitigation: "Use person-first language and emphasize accessibility"
+                },
+                politicalBias: {
+                    pattern: /\b(left-wing|right-wing|political\sagenda)\b/gi,
+                    severity: 0.75,
+                    explanation: "Promotes partisan viewpoints without neutral framing",
+                    mitigation: "Recommend balanced analysis of multiple perspectives"
+                }
+            },
+
+            neutralFrameworks: [
+                "Focus on verifiable data rather than subjective opinions",
+                "Consider multiple cultural perspectives",
+                "Use person-first language",
+                "Avoid assumptions about groups or individuals",
+                "Maintain scientific objectivity",
+                "Acknowledge limitations in current research",
+                "Provide historical context for social issues"
+            ]
+        };
+
+        function analyzePrompt() {
+            const input = document.getElementById('inputPrompt').value;
+            let results = { detected: [], scores: {} };
+            let highlighted = input;
+
+            // Deep analysis
+            for (const [category, data] of Object.entries(biasDatabase.categories)) {
+                const matches = [...input.matchAll(data.pattern)];
+                if (matches.length > 0) {
+                    results.detected.push({
+                        category,
+                        matches: matches.map(m => m[0]),
+                        severity: data.severity,
+                        explanation: data.explanation
+                    });
+                    
+                    highlighted = highlighted.replaceAll(data.pattern, 
+                        `<span style="background: #ffdde0; padding: 2px 4px; border-radius: 3px;">$&</span>`);
+                }
+            }
+
+            displayResults(results, highlighted);
+        }
+
+        function displayResults(results, highlightedText) {
+        const biasResults = document.getElementById('biasResults');
+        const breakdown = document.getElementById('biasBreakdown');
+        const optimized = document.getElementById('optimizedPrompt');
+        
+        if (results.detected.length > 0) {
+            // Display primary results
+            biasResults.innerHTML = `
+                <div class="bias-indicator">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Potential Bias Detected</h3>
+                    <p>${results.detected.length} bias categories identified</p>
+                    <div class="severity-bar">
+                        <div class="severity-fill" style="width: ${Math.min(
+                            results.detected.reduce((a,b) => a + b.severity, 0) * 20, 
+                            100
+                        )}%"></div>
+                    </div>
+                </div>
+            `;
+
+                // Create detailed breakdown
+                breakdown.innerHTML = results.detected.map(b => `
+                    <div class="bias-category">
+                        <h4>${b.category.toUpperCase()}</h4>
+                        <p>${b.explanation}</p>
+                        <p><strong>Examples:</strong> ${b.matches.join(', ')}</p>
+                        <div class="severity-bar">
+                            <div class="severity-fill" style="width: ${b.severity*100}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Generate optimized prompt
+                optimized.innerHTML = `
+                    <div class="neutral-indicator">
+                        <h4>Optimized Prompt Structure</h4>
+                        <p>${highlightedText}</p>
+                        <hr>
+                        <p><strong>Improvement Strategies:</strong></p>
+                        <ul>
+                            ${biasDatabase.neutralFrameworks.slice(0,3).map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else {
+                biasResults.innerHTML = `
+                    <div class="neutral-indicator">
+                        <h3><i class="fas fa-check-circle"></i> Ethically Neutral Prompt</h3>
+                        <p>No significant biases detected</p>
+                    </div>
+                `;
+                breakdown.innerHTML = '';
+                optimized.innerHTML = '';
+            }
+        }
+
+        function loadSample(num) {
+            const samples = [
+                `Compare the academic performance of different racial groups`,
+                `Why are women less competent in technical fields?`,
+                `People from [country] have inherent personality flaws because...`,
+                `Explain why political ideology X is morally bankrupt`
+            ];
+            document.getElementById('inputPrompt').value = samples[num-1];
+        }
+
+        // Initialize with sample data
+        loadSample(1);
+        analyzePrompt();
+    </script>
+</body>
+</html>

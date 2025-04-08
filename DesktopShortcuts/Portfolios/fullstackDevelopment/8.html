@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NextGen LMS - Premium Learning Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #4f46e5;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .role-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            background: #e2e8f0;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .in-progress { background: #dbeafe; color: var(--primary); }
+        .completed { background: #dcfce7; color: #16a34a; }
+        .beginner { background: #fef3c7; color: #d97706; }
+        .advanced { background: #fee2e2; color: #dc2626; }
+
+        .forum-post {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .subscription-tier {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .subscription-tier:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .price {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fa-check {
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: var(--primary); margin-bottom: 10px;">
+            <i class="fas fa-graduation-cap"></i> NextGen LMS
+        </h1>
+        
+        <div class="role-selector">
+            <button class="role-btn" onclick="setRole('student')">Student</button>
+            <button class="role-btn" onclick="setRole('instructor')">Instructor</button>
+            <button class="role-btn" onclick="setRole('admin')">Admin</button>
+        </div>
+
+        <div class="dashboard" id="dashboard">
+            <div class="sidebar">
+                <nav>
+                    <h3 style="margin-top: 0;">Navigation</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="#courses" class="nav-link active"><i class="fas fa-book-open"></i> My Courses</a></li>
+                        <li class="admin-only"><a href="#users" class="nav-link"><i class="fas fa-users-cog"></i> User Management</a></li>
+                        <li><a href="#forum" class="nav-link"><i class="fas fa-comments"></i> Discussions</a></li>
+                        <li><a href="#certificates" class="nav-link"><i class="fas fa-award"></i> Certificates</a></li>
+                        <li><a href="#subscriptions" class="nav-link"><i class="fas fa-gem"></i> Subscriptions</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="main-content">
+                <!-- Course List -->
+                <div id="courses">
+                    <h2>Your Active Courses</h2>
+                    <div class="course-grid">
+                        <!-- Sample Course 1 -->
+                        <div class="course-card">
+                            <img src="https://picsum.photos/400/300?random=1" class="course-thumbnail" alt="Course thumbnail">
+                            <div class="badge in-progress">In Progress</div>
+                            <h3>Web Development Bootcamp 2024</h3>
+                            <p>Master HTML, CSS, JavaScript and modern frameworks</p>
+                            <div class="course-meta">
+                                <span class="badge beginner">Beginner Friendly</span>
+                                <span><i class="fas fa-clock"></i> 32 Hours</span>
+                                <span><i class="fas fa-video"></i> 45 Lessons</span>
+                            </div>
+                            <div class="progress-bar" style="margin: 15px 0;">
+                                <div class="progress-fill" style="width: 65%;"></div>
+                            </div>
+                            <button class="course-action" onclick="startCourse(this)">Continue Learning</button>
+                        </div>
+
+                        <!-- Sample Course 2 -->
+                        <div class="course-card">
+                            <img src="https://picsum.photos/400/300?random=2" class="course-thumbnail" alt="Course thumbnail">
+                            <div class="badge completed">Completed</div>
+                            <h3>Digital Marketing Mastery</h3>
+                            <p>SEO, Social Media Marketing, and Google Analytics</p>
+                            <div class="course-meta">
+                                <span class="badge advanced">Advanced</span>
+                                <span><i class="fas fa-clock"></i> 18 Hours</span>
+                                <span><i class="fas fa-trophy"></i> Certificate Ready</span>
+                            </div>
+                            <div class="progress-bar" style="margin: 15px 0;">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                            <button class="course-action" onclick="viewCertificate(this)">View Certificate</button>
+                        </div>
+
+                        <!-- Sample Course 3 -->
+                        <div class="course-card">
+                            <img src="https://picsum.photos/400/300?random=3" class="course-thumbnail" alt="Course thumbnail">
+                            <div class="badge in-progress">In Progress</div>
+                            <h3>Python for Data Science</h3>
+                            <p>Data analysis, visualization, and machine learning</p>
+                            <div class="course-meta">
+                                <span class="badge beginnner">Intermediate</span>
+                                <span><i class="fas fa-clock"></i> 45 Hours</span>
+                                <span><i class="fas fa-chart-line"></i> Trending</span>
+                            </div>
+                            <div class="progress-bar" style="margin: 15px 0;">
+                                <div class="progress-fill" style="width: 42%;"></div>
+                            </div>
+                            <button class="course-action" onclick="startCourse(this)">Continue Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discussion Forum -->
+                <div id="forum" class="hidden">
+                    <h2>Latest Discussions</h2>
+                    <div class="forum-post">
+                        <div class="post-header">
+                            <strong>John Doe</strong> · <span class="post-time">2 hours ago</span>
+                            <span class="badge in-progress">Web Development</span>
+                        </div>
+                        <p>Can someone explain the difference between REST and GraphQL APIs?</p>
+                        <div class="post-replies">
+                            <div class="reply">
+                                <strong>Sarah Wilson (Instructor)</strong>
+                                <p>Great question! REST is a standard architecture style while GraphQL is a query language...</p>
+                            </div>
+                        </div>
+                        <textarea class="reply-input" placeholder="Write your reply..."></textarea>
+                        <button class="post-btn" onclick="postReply(this)">Post Reply</button>
+                    </div>
+
+                    <div class="forum-post">
+                        <div class="post-header">
+                            <strong>Emma Johnson</strong> · <span class="post-time">5 hours ago</span>
+                            <span class="badge completed">Digital Marketing</span>
+                        </div>
+                        <p>What's the best strategy for Instagram growth in 2024?</p>
+                        <div class="post-replies">
+                            <div class="reply">
+                                <strong>Mike Chen</strong>
+                                <p>Focus on Reels content and collaborate with micro-influencers...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Tiers -->
+                <div id="subscriptions" class="hidden">
+                    <h2>Choose Your Plan</h2>
+                    <div class="subscription-grid">
+                        <div class="subscription-tier">
+                            <h3>Basic</h3>
+                            <div class="price">$19<span>/mo</span></div>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check"></i> Access to basic courses</li>
+                                <li><i class="fas fa-check"></i> Community support</li>
+                                <li><i class="fas fa-check"></i> 1 active course</li>
+                            </ul>
+                            <button class="subscribe-btn">Start Learning</button>
+                        </div>
+
+                        <div class="subscription-tier" style="background: #f8fafc;">
+                            <h3>Professional</h3>
+                            <div class="price">$49<span>/mo</span></div>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check"></i> All courses unlocked</li>
+                                <li><i class="fas fa-check"></i> Priority support</li>
+                                <li><i class="fas fa-check"></i> 5 active courses</li>
+                                <li><i class="fas fa-check"></i> Certificates</li>
+                            </ul>
+                            <button class="subscribe-btn">Most Popular</button>
+                        </div>
+
+                        <div class="subscription-tier">
+                            <h3>Enterprise</h3>
+                            <div class="price">Custom</div>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check"></i> Team management</li>
+                                <li><i class="fas fa-check"></i> Custom content</li>
+                                <li><i class="fas fa-check"></i> Analytics dashboard</li>
+                                <li><i class="fas fa-check"></i> 24/7 support</li>
+                            </ul>
+                            <button class="subscribe-btn">Contact Sales</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced JavaScript with sample data
+        const sampleCourses = [
+            {
+                title: "Advanced JavaScript Concepts",
+                category: "Development",
+                progress: 28,
+                duration: "24 Hours",
+                difficulty: "Intermediate"
+            },
+            {
+                title: "UI/UX Design Fundamentals",
+                category: "Design",
+                progress: 75,
+                duration: "18 Hours",
+                difficulty: "Beginner"
+            }
+        ];
+
+        function setRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide role-specific content
+            document.querySelectorAll('.admin-only, .instructor-only').forEach(el => {
+                el.style.display = role === 'admin' || role === 'instructor' ? 'block' : 'none';
+            });
+            
+            // Update UI based on role
+            if(role === 'instructor') {
+                document.getElementById('courses').innerHTML = `
+                    <h2>Your Created Courses</h2>
+                    <div class="course-grid">
+                        ${sampleCourses.map(course => `
+                            <div class="course-card">
+                                <h3>${course.title}</h3>
+                                <p>Category: ${course.category}</p>
+                                <p>Students Enrolled: 1,234</p>
+                                <p>Rating: 4.8/5</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function postReply(btn) {
+            const replyText = btn.previousElementSibling.value;
+            if(replyText.trim()) {
+                const replyDiv = document.createElement('div');
+                replyDiv.className = 'reply';
+                replyDiv.innerHTML = `
+                    <strong>You</strong>
+                    <p>${replyText}</p>
+                `;
+                btn.closest('.forum-post').querySelector('.post-replies').appendChild(replyDiv);
+                btn.previousElementSibling.value = '';
+            }
+        }
+
+        function startCourse(btn) {
+            const courseCard = btn.closest('.course-card');
+            courseCard.querySelector('.progress-fill').style.width = '75%';
+            courseCard.querySelector('.badge').className = 'badge in-progress';
+            btn.textContent = 'Continue Learning';
+        }
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            setRole('student');
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

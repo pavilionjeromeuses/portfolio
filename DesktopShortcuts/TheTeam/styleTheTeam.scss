@@ -1,0 +1,153 @@
+$grey: #4d4d4c;
+$yellow: #efc371;
+$purple: #ae94c0;
+$green: #b5bc67;
+$orange: #dd925f;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    position: relative;
+    font-weight: 400;
+    list-style-type: none;
+    font-style: normal;
+}
+
+/* Animated Gradient Background */
+body {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    min-height: 100vh;
+    overflow: auto;
+    position: relative;
+}
+
+/* Scanline Effect for Retro Feel */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Updated Window Styles */
+nav {
+    line-height: 1.4;
+    font-family: "Space Mono", monospace;
+    background: white;
+    backdrop-filter: blur(5px);
+    border: 3px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    padding: 25px 35px;
+    width: 300px;
+    top: calc(50vh - 350px);
+    left: calc(50vw - 150px);
+    position: fixed;
+    box-shadow: 0 0 60px -15px black;
+    transform: scale(0) rotate(360deg);
+    transition: all 0.75s;
+    font-size: 12px;
+    z-index: 2;
+}
+
+nav.menu_active {
+    transform: scale(1) rotate(0deg);
+}
+
+nav > ol > li {
+    margin: 20px 0;
+    color: black;
+}
+
+nav > ol > li:first-of-type {
+    color: black;
+}
+
+nav > ol > li > ol {
+    margin: 10px 0 0 20px;
+    border-left: 1px solid $grey;
+    color: black;
+}
+
+nav > ol > li > ol > li {
+    margin: 7px 0;
+    padding-left: 20px;
+}
+
+nav a:hover {
+    color: blue;
+}
+
+h3 {
+    position: fixed;
+    font-family: "Roboto Mono", monospace;
+    font-size: 60px;
+    color: #cfd8dc;
+    top: calc(50vh - 40px);
+    left: calc(50vw - 126px);
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 2;
+}
+
+h3:hover {
+    border-bottom: 6px dotted #cfd8dc;
+    padding-bottom: 10px;
+    top: calc(50vh - 50px);
+}
+
+p {
+    font-family: "Roboto Mono", monospace;
+    float: right;
+    cursor: pointer;
+    font-size: 16px;
+    color: #cfd8dc;
+    transition: all 0.2s;
+}
+
+p:hover {
+    border-bottom: 2px dotted #cfd8dc;
+    padding-bottom: 5px;
+}
+
+/* Taskbar Styles */
+.taskbar {
+    background: rgba(192, 192, 192, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    z-index: 2;
+}

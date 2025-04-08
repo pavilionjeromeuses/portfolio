@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroCanvas - GAN Art Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-purple: #bc13fe;
+            --ai-blue: #00f3ff;
+            --deep-space: #0b081b;
+            --cyber-gray: #1a1b26;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: #fff;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        .cyber-border {
+            position: relative;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .cyber-border::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            z-index: -1;
+            background: linear-gradient(45deg, 
+                var(--neon-purple), 
+                var(--ai-blue), 
+                var(--neon-purple));
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 6rem 0;
+            background: radial-gradient(circle at center, 
+                var(--neon-purple) 0%, 
+                var(--deep-space) 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="%2300f3ff" stroke-width="2" opacity="0.2"/></svg>');
+            opacity: 0.1;
+        }
+
+        h1 {
+    font-size: 4rem;
+    text-shadow: 0 0 20px var(--ai-blue);
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #bc13fe, #00f3ff);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+        .gan-process {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .process-step {
+            padding: 2rem;
+            background: var(--cyber-gray);
+            border-left: 4px solid var(--neon-purple);
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tab-button {
+            background: none;
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: var(--neon-purple);
+            color: var(--deep-space);
+        }
+
+        .model-architecture {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--cyber-gray);
+            margin: 3rem 0;
+        }
+
+        .model-layer {
+            padding: 1.5rem;
+            border: 1px solid var(--ai-blue);
+            position: relative;
+        }
+
+        .model-layer::before {
+            content: '⇄';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neon-purple);
+            font-size: 1.5rem;
+        }
+
+        .model-layer:last-child::before {
+            display: none;
+        }
+
+        .dataset-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--cyber-gray);
+        }
+
+        .training-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--cyber-gray);
+            border-top: 4px solid var(--neon-purple);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            color: var(--ai-blue);
+            margin: 1rem 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .art-card {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--neon-purple);
+        }
+
+        .art-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .art-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .art-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .art-card:hover .art-info {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            margin-top: 5rem;
+            border-top: 2px solid var(--neon-purple);
+        }
+
+        /* Additional interactive elements */
+        .neural-connection {
+            position: fixed;
+            width: 2px;
+            background: var(--neon-purple);
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="cyber-border">
+        <div class="container">
+            <h1>NEURO-CANVAS</h1>
+            <p>Generative Adversarial Networks in Digital Art Production</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Technical Specifications -->
+        <section class="training-metrics">
+            <div class="metric-card">
+                <div class="metric-value">512x512</div>
+                <h3>Output Resolution</h3>
+                <p>StyleGAN2-ADA Configuration</p>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">1.4M</div>
+                <h3>Training Images</h3>
+                <p>Combined Dataset Size</p>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4.82</div>
+                <h3>FID Score</h3>
+                <p>Fréchet Inception Distance</p>
+            </div>
+        </section>
+
+        <!-- Model Architecture -->
+        <section class="model-architecture cyber-border">
+            <div class="model-layer">
+                <h4>Input Layer</h4>
+                <p>512-D Latent Vector</p>
+                <p>Normal Distribution Sampling</p>
+            </div>
+            <div class="model-layer">
+                <h4>Generator Core</h4>
+                <p>8 Residual Blocks</p>
+                <p>Learned Constant Input</p>
+            </div>
+            <div class="model-layer">
+                <h4>Discriminator</h4>
+                <p>Adaptive Augmentation</p>
+                <p>Mini-batch Standard Deviation</p>
+            </div>
+        </section>
+
+        <!-- Dataset Section -->
+        <section class="dataset-card cyber-border">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Great_Wave_off_Kanagawa.jpg/640px-The_Great_Wave_off_Kanagawa.jpg" alt="WikiArt Sample">
+            <div>
+                <h2>WikiArt Dataset</h2>
+                <p>Curated collection of 81,449 fine art paintings across 27 style categories:</p>
+                <ul>
+                    <li>Baroque, Rococo, Renaissance</li>
+                    <li>Impressionism, Post-Impressionism</li>
+                    <li>Cubism, Surrealism, Abstract</li>
+                </ul>
+                <div class="training-metrics" style="margin: 1rem 0;">
+                    <div class="metric-card">
+                        <div class="metric-value">56hr</div>
+                        <p>Training Time</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">256</div>
+                        <p>Batch Size</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Gallery -->
+        <section>
+            <div class="gallery-tabs">
+                <button class="tab-button active" onclick="switchTab('portraits')">Portraits</button>
+                <button class="tab-button" onclick="switchTab('abstract')">Abstract</button>
+                <button class="tab-button" onclick="switchTab('landscape')">Landscape</button>
+            </div>
+
+            <div class="gallery-grid" id="portraits-gallery">
+                <div class="art-card">
+                    <img src="https://aiartists.org/sites/default/files/styles/image_1024/public/2021-05/ai-generated-portrait-art-examples.jpg" alt="Generated Portrait 1">
+                    <div class="art-info">
+                        <h4>Synthetic Baroque</h4>
+                        <p>DCGAN | 256px | Epoch 450</p>
+                        <p>Latent Space Exploration: [-0.43, 1.22, ...]</p>
+                    </div>
+                </div>
+                <!-- Add 5 more portrait cards -->
+            </div>
+
+            <div class="gallery-grid" id="abstract-gallery" style="display: none;">
+                <!-- Add abstract art cards -->
+            </div>
+        </section>
+
+        <!-- Technical Process -->
+        <section class="gan-process">
+            <div class="process-step">
+                <h3>1. Latent Space Sampling</h3>
+                <p>Random noise vector z ∈ ℝ⁵¹² sampled from normal distribution</p>
+                <code>z = torch.randn(batch_size, 512)</code>
+            </div>
+            <div class="process-step">
+                <h3>2. Style Mixing</h3>
+                <p>AdaIN (Adaptive Instance Normalization) for style transfer between layers</p>
+                <code>style = self.style(z).unsqueeze(1)</code>
+            </div>
+            <div class="process-step">
+                <h3>3. Discriminator Loss</h3>
+                <p>Non-saturating logistic loss with R1 regularization</p>
+                <code>loss_D = softplus(D_fake) + softplus(-D_real)</code>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>NeuroCanvas v2.3 | StyleGAN2-ADA Implementation | Training Hardware: 4x NVIDIA A100</p>
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.gallery-grid').forEach(g => g.style.display = 'none');
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`${tabName}-gallery`).style.display = 'grid';
+            event.target.classList.add('active');
+        }
+
+        // Create animated neural connections
+        function createNeuralNetwork() {
+            const container = document.createElement('div');
+            for(let i=0; i<50; i++) {
+                const connection = document.createElement('div');
+                connection.className = 'neural-connection';
+                connection.style.left = `${Math.random()*100}%`;
+                connection.style.height = `${Math.random()*200+50}px`;
+                connection.style.animation = `pulse ${Math.random()*2+1}s infinite`;
+                container.appendChild(connection);
+            }
+            document.body.appendChild(container);
+        }
+        createNeuralNetwork();
+    </script>
+</body>
+</html>

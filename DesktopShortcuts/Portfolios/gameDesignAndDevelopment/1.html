@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChronoShift - Temporal Odyssey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Orbitron', sans-serif;
+        }
+        #gameCanvas {
+            border: 3px solid #00f7ff;
+            box-shadow: 0 0 20px #00f7ff33;
+            border-radius: 5px;
+            image-rendering: crisp-edges;
+        }
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00f7ff;
+            font-size: 1.2em;
+            text-shadow: 0 0 10px #00f7ff;
+        }
+        #tutorial {
+            position: absolute;
+            bottom: 20px;
+            color: #00f7ff66;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="hud">
+        <div>TIME ENERGY: <span id="energy">100</span>%</div>
+        <div>CLONE STATUS: <span id="cloneStatus">INACTIVE</span></div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="tutorial">[ARROWS] Move | [R] Rewind | [F] Fast-Forward | [P] Pause | [C] Create Clone</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 1024;
+canvas.height = 768;
+
+// Neon color palette
+const COLORS = {
+    player: '#00f7ff',
+    platform: '#ff00ff',
+    energy: '#00f7ff',
+    clone: '#ff00ff66',
+    rewind: '#00f7ff33',
+    fastForward: '#ff990033'
+};
+
+// Game State
+const state = {
+    player: {
+        x: 100,
+        y: 600,
+        width: 28,
+        height: 42,
+        velocityY: 0,
+        isGrounded: false,
+        history: [],
+        trail: [],
+        canJump: true
+    },
+    clone: {
+        active: false,
+        path: [],
+        currentStep: 0
+    },
+    platforms: createPlatformLayout(),
+    timeEnergy: 100,
+    timeEffects: {
+        rewind: false,
+        fastForward: false,
+        pause: false
+    },
+    particles: [],
+    chronoEffects: []
+};
+
+// Procedural platform layout
+function createPlatformLayout() {
+    const platforms = [];
+    // Base platform
+    platforms.push({ x: 0, y: 750, width: 1024, height: 18, type: 'normal' });
+    
+    // Generate floating platforms
+    for(let i = 0; i < 20; i++) {
+        platforms.push({
+            x: Math.random() * 900,
+            y: 500 - (i * 150),
+            width: 80 + Math.random() * 80,
+            height: 16,
+            type: ['normal', 'moving', 'fragile', 'phase'][i % 4],
+            dx: Math.random() * 3 - 1.5,
+            phase: Math.random() * Math.PI * 2
+        });
+    }
+    return platforms;
+}
+
+// Input Handling
+const keys = {};
+document.addEventListener('keydown', e => {
+    if (!keys[e.key]) keys[e.key] = true;
+});
+document.addEventListener('keyup', e => keys[e.key] = false);
+
+// Time Manipulation Functions
+function createTimeClone() {
+    if (state.timeEnergy < 30 || state.clone.active) return;
+    
+    state.clone.active = true;
+    state.clone.path = [...state.player.history];
+    state.clone.currentStep = 0;
+    state.timeEnergy -= 30;
+}
+
+function rewindTime() {
+    if (state.timeEnergy <= 0 || state.player.history.length === 0) return;
+    
+    const pastState = state.player.history.pop();
+    Object.assign(state.player, pastState);
+    state.timeEnergy -= 0.8;
+    state.timeEffects.rewind = true;
+    addChronoEffect(state.player.x, state.player.y, 'rewind');
+}
+
+function fastForward() {
+    if (state.timeEnergy <= 0) return;
+    
+    state.player.x += 12;
+    state.timeEnergy -= 0.4;
+    state.timeEffects.fastForward = true;
+    addChronoEffect(state.player.x, state.player.y, 'fastForward');
+}
+
+function toggleTimePause() {
+    state.timeEffects.pause = !state.timeEffects.pause;
+    state.timeEnergy -= state.timeEffects.pause ? 25 : 0;
+}
+
+// Special Effects
+function addParticle(x, y, type) {
+    state.particles.push({
+        x,
+        y,
+        size: Math.random() * 4 + 2,
+        life: 1,
+        velocity: {
+            x: (Math.random() - 0.5) * 5,
+            y: (Math.random() - 0.5) * 5
+        },
+        color: type === 'jump' ? COLORS.player : COLORS.platform
+    });
+}
+
+function addChronoEffect(x, y, type) {
+    state.chronoEffects.push({
+        x,
+        y,
+        radius: 0,
+        maxRadius: type === 'rewind' ? 50 : 30,
+        color: type === 'rewind' ? COLORS.rewind : COLORS.fastForward,
+        life: 1
+    });
+}
+
+// Physics Engine
+function updatePhysics() {
+    if (state.timeEffects.pause) return;
+
+    // Horizontal movement
+    if (keys['ArrowLeft']) state.player.x -= 6;
+    if (keys['ArrowRight']) state.player.x += 6;
+
+    // Jumping with coyote time
+    if (keys['ArrowUp'] && (state.player.canJump || state.player.isGrounded)) {
+        state.player.velocityY = -16;
+        state.player.isGrounded = false;
+        state.player.canJump = false;
+        addParticle(state.player.x + state.player.width/2, state.player.y + state.player.height, 'jump');
+    }
+
+    // Gravity
+    state.player.velocityY += 0.7;
+    state.player.y += state.player.velocityY;
+
+    // Platform interactions
+    state.player.isGrounded = false;
+    state.platforms.forEach(platform => {
+        if (checkCollision(state.player, platform)) {
+            if (state.player.velocityY > 0) {
+                state.player.isGrounded = true;
+                state.player.velocityY = 0;
+                state.player.y = platform.y - state.player.height;
+                state.player.canJump = true;
+                
+                if (platform.type === 'fragile' && !state.timeEffects.pause) {
+                    platform.width *= 0.85;
+                    addParticle(state.player.x, platform.y, 'impact');
+                }
+            }
+        }
+
+        // Update moving platforms
+        if (platform.type === 'moving' && !state.timeEffects.pause) {
+            platform.x += platform.dx;
+            if (platform.x < 0 || platform.x + platform.width > canvas.width) {
+                platform.dx *= -1;
+            }
+        }
+
+        // Phase platforms
+        if (platform.type === 'phase') {
+            platform.phase += 0.03;
+            platform.opacity = Math.abs(Math.sin(platform.phase));
+        }
+    });
+
+    // Store movement history
+    state.player.history.push({ x: state.player.x, y: state.player.y });
+    if (state.player.history.length > 120) state.player.history.shift();
+
+    // Update clone path
+    if (state.clone.active) {
+        state.clone.currentStep++;
+        if (state.clone.currentStep >= state.clone.path.length) {
+            state.clone.active = false;
+        }
+    }
+
+    // Boundary constraints
+    state.player.x = Math.max(0, Math.min(canvas.width - state.player.width, state.player.x));
+}
+
+// Rendering Functions
+function drawPlayer() {
+    // Main player
+    ctx.fillStyle = COLORS.player;
+    ctx.shadowColor = COLORS.player;
+    ctx.shadowBlur = 15;
+    ctx.fillRect(state.player.x, state.player.y, state.player.width, state.player.height);
+    ctx.shadowBlur = 0;
+
+    // Motion trail
+    state.player.trail.forEach((pos, index) => {
+        ctx.globalAlpha = index / state.player.trail.length;
+        ctx.fillStyle = COLORS.player;
+        ctx.fillRect(pos.x, pos.y, state.player.width, state.player.height);
+    });
+    ctx.globalAlpha = 1;
+
+    // Clone rendering
+    if (state.clone.active) {
+        const clonePos = state.clone.path[state.clone.currentStep];
+        if (clonePos) {
+            ctx.fillStyle = COLORS.clone;
+            ctx.fillRect(clonePos.x, clonePos.y, state.player.width, state.player.height);
+        }
+    }
+}
+
+function drawPlatforms() {
+    state.platforms.forEach(platform => {
+        if (platform.type === 'phase') {
+            ctx.globalAlpha = platform.opacity;
+        }
+        
+        ctx.fillStyle = COLORS.platform;
+        ctx.shadowColor = COLORS.platform;
+        ctx.shadowBlur = platform.type === 'phase' ? 20 : 10;
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+    });
+}
+
+function drawEffects() {
+    // Chrono effects
+    state.chronoEffects.forEach((effect, index) => {
+        ctx.beginPath();
+        ctx.arc(effect.x, effect.y, effect.radius, 0, Math.PI * 2);
+        ctx.fillStyle = effect.color;
+        ctx.globalAlpha = effect.life;
+        ctx.fill();
+        
+        effect.radius += 2;
+        effect.life -= 0.02;
+        if (effect.life <= 0) state.chronoEffects.splice(index, 1);
+    });
+    ctx.globalAlpha = 1;
+
+    // Particles
+    state.particles.forEach((particle, index) => {
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(
+            particle.x - particle.size/2,
+            particle.y - particle.size/2,
+            particle.size,
+            particle.size
+        );
+        
+        particle.x += particle.velocity.x;
+        particle.y += particle.velocity.y;
+        particle.life -= 0.03;
+        if (particle.life <= 0) state.particles.splice(index, 1);
+    });
+}
+
+function updateHUD() {
+    document.getElementById('energy').textContent = Math.floor(state.timeEnergy);
+    document.getElementById('cloneStatus').textContent = 
+        state.clone.active ? `ACTIVE (${Math.floor((state.clone.currentStep/state.clone.path.length)*100)}%)` : 'INACTIVE';
+}
+
+// Game Loop
+function update() {
+    if (keys['r']) rewindTime();
+    if (keys['f']) fastForward();
+    if (keys['p']) toggleTimePause();
+    if (keys['c']) createTimeClone();
+    
+    if (!state.timeEffects.pause) updatePhysics();
+    
+    // Regenerate time energy
+    state.timeEnergy = Math.min(state.timeEnergy + 0.15, 100);
+    
+    // Maintain motion trail
+    state.player.trail.push({ x: state.player.x, y: state.player.y });
+    if (state.player.trail.length > 15) state.player.trail.shift();
+}
+
+function draw() {
+    // Background
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Time distortion effect
+    if (state.timeEffects.pause) {
+        ctx.filter = 'hue-rotate(90deg) blur(2px)';
+    } else {
+        ctx.filter = 'none';
+    }
+
+    drawPlatforms();
+    drawPlayer();
+    drawEffects();
+    updateHUD();
+
+    // Reset filter
+    ctx.filter = 'none';
+
+    requestAnimationFrame(gameLoop);
+}
+
+function gameLoop() {
+    update();
+    draw();
+}
+
+// Collision Detection
+function checkCollision(rect1, rect2) {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+}
+
+// Start the game
+gameLoop();
+</script>
+</body>
+</html>

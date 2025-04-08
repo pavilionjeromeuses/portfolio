@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aqua Metropolis</title>
+    <link rel="stylesheet" href="dist\oceaniaStyle.css">
+    <link rel="icon" type="image/x-icon" href="images\_40fdbaa1-95d8-45c7-8e7c-6bda09adf50c-removebg-preview.png">
+</head>
+
+<body>
+    <header>
+        <nav class="cyberpunk-nav">
+            <a href="index.html"><div class="logo">Cyberpunk Timezones&nbsp;サイバーパンク・タイムゾーン<br><b>Aqua Metropolis</b>&nbsp;<i>(Oceania)</i>&nbsp;アクア・メトロポリス</div></a>
+            <div class="origin">ORIG. PT.: 116° 40' 126° 34' E 4° 40' 21° 10' N 114,830mi2</div>
+        </nav>
+    </header>
+
+    <div class="cyberpunk-container">
+        <button id="neon1"  onclick="addTimezone('Austroplex',              'Australia',                ['AEST, ACST, ACDT, AEDT'], 3,)"><b>Austroplex</b>&nbsp;            <i>(Australia)</i>&nbsp;                  オーストロプレックス  <p>Latitude -25.2744, Longitude 133.7751, Size 7,692,024 sq km</p>&nbsp;</button>
+        <button id="neon2"  onclick="addTimezone('Marshall Nexus',          'Marshall Islands',         ['MHT'],                    2,)"><b>Marshall Nexus</b>&nbsp;        <i>(Marshall Islands)</i>&nbsp;           マーシャル・ネクサス  <p>Latitude 7.1315, Longitude 171.1845, Size 181 sq km</p>&nbsp;</button>
+        <button id="neon3"  onclick="addTimezone('Papua NeuNet',            'Papua New Guinea',         ['PGT'],                    2,)"><b>Papua NeuNet</b>&nbsp;          <i>(Papua New Guinea)</i>&nbsp;           パプアニューネット  <p>Latitude -6.314993, Longitude 143.95555, Size 462,840 sq km</p>&nbsp;</button>
+        <button id="neon4"  onclick="addTimezone('VanuaTech',               'Vanuatu',                  ['VUT'],                    2,)"><b>VanuaTech</b>&nbsp;             <i>(Vanuatu)</i>&nbsp;                    バヌアテック  <p>Latitude -15.3767, Longitude 166.9592, Size 12,189 sq km</p>&nbsp;</button>
+        <button id="neon5"  onclick="addTimezone('TongoScape',              'Tonga',                    ['TOT'],                    4,)"><b>TongoScape</b>&nbsp;            <i>(Tonga)</i>&nbsp;                      トンゴスケープ  <p>Latitude -21.1784, Longitude -175.1982, Size 747 sq km</p>&nbsp;</button>
+        <button id="neon6"  onclick="addTimezone('Nuetropolis',             'Niue',                     ['NUT'],                    6,)"><b>Nuetropolis</b>&nbsp;           <i>(Niue)</i>&nbsp;                       ヌエトロポリス  <p>Latitude -19.0544, Longitude -169.8672, Size 260 sq km</p>&nbsp;</button>
+        <button id="neon7"  onclick="addTimezone('Tekelink',                'Tokelau',                  ['TKT'],                    6,)"><b>Tekelink</b>&nbsp;              <i>(Tokelau)</i>&nbsp;                    テケリンク  <p>Latitude -9.2019, Longitude -171.8484, Size 12 sq km</p>&nbsp;</button>
+        <button id="neon8"  onclick="addTimezone('Neo Caledonix',           'New Caledonia',            ['NCT'],                    2,)"><b>Neo Caledonix</b>&nbsp;         <i>(New Caledonia)</i>&nbsp;              ネオ・カレドニクス  <p>Latitude -20.9043, Longitude 165.6180, Size 18,576 sq km</p>&nbsp;</button>
+        <button id="neon9"  onclick="addTimezone('Norfnet Enclave',         'Norfolk Island',           ['NFT'],                    2,)"><b>Norfnet Enclave</b>&nbsp;       <i>(Norfolk Island)</i>&nbsp;             ノルフネット・エンクレイブ  <p>Latitude -29.0408, Longitude 167.9543, Size 35 sq km</p>&nbsp;</button>
+        <button id="neon10" onclick="addTimezone('Indonexus',               'Indonesia',                ['WIB, WITA, WIT'],         1,)"><b>Indonexus</b>&nbsp;             <i>(Indonesia)</i>&nbsp;                  インドネクサス  <p>Latitude -0.7893, Longitude 113.9213, Size 1,904,569 sq km</p>&nbsp;</button>
+        <button id="neon11" onclick="addTimezone('Kiribyte',                'Kiribati',                 ['GILT, TKT'],              2,)"><b>Kiribyte</b>&nbsp;              <i>(Kiribati)</i>&nbsp;                   キリバイト  <p>Latitude 1.8709, Longitude -157.3626, Size 811 sq km</p>&nbsp;</button>
+        <button id="neon12" onclick="addTimezone('Neo ZeaLand',             'New Zealand',              ['NZST, NZDT'],             5,)"><b>Neo ZeaLand</b>&nbsp;           <i>(New Zealand)</i>&nbsp;                ネオ・ゼアランド  <p>Latitude -40.9006, Longitude 174.8860, Size 268,021 sq km</p>&nbsp;</button>
+        <button id="neon13" onclick="addTimezone('Palau SynthCity',         'Palau',                    ['PWT'],                    2,)"><b>Palau SynthCity</b>&nbsp;       <i>(Palau)</i>&nbsp;                      パラオ・シンセシティ  <p>Latitude 7.5150, Longitude 134.5825, Size 459 sq km</p>&nbsp;</button>
+        <button id="neon14" onclick="addTimezone('Fiji Synapse',            'Fiji',                     ['FJT'],                    4,)"><b>Fiji Synapse</b>&nbsp;          <i>(Fiji)</i>&nbsp;                       フィジー・シナプス  <p>Latitude -17.7134, Longitude 178.0650, Size 18,274 sq km</p>&nbsp;</button>
+        <button id="neon15" onclick="addTimezone('SamoGrid',                'Samoa',                    ['WST'],                    5,)"><b>SamoGrid</b>&nbsp;              <i>(Samoa)</i>&nbsp;                      サモグリッド  <p>Latitude -13.7590, Longitude -172.1046, Size 2,842 sq km</p>&nbsp;</button>
+        <button id="neon16" onclick="addTimezone('North MariNet',           'Northern Mariana Islands', ['ChST'],                   2,)"><b>North MariNet</b>&nbsp;         <i>(Northern Mariana Islands)</i>&nbsp;   ノースマリネット  <p>Latitude 15.0979, Longitude 145.6739, Size 464 sq km</p>&nbsp;</button>
+        <button id="neon17" onclick="addTimezone('AmeriCyber Samoa',        'American Samoa',           ['SST'],                    5,)"><b>AmeriCyber Samoa</b>&nbsp;      <i>(American Samoa)</i>&nbsp;             アメリサイバーサモア  <p>Latitude -14.3064, Longitude -170.6950, Size 199 sq km</p>&nbsp;</button>
+        <button id="neon18" onclick="addTimezone('Wallis and CyberTuna',    'Wallis and Futuna',        ['WFT'],                    4,)"><b>Wallis and CyberTuna</b>&nbsp;  <i>(Wallis and Futuna)</i>&nbsp;          ウォリス・サイバーツナ  <p>Latitude -13.7687, Longitude -177.1561, Size 142 sq km</p>&nbsp;</button>
+        <button id="neon19" onclick="addTimezone('ChristMatrix Isle',       'Christmas Island',         ['CXT'],                    1,)"><b>ChristMatrix Isle</b>&nbsp;     <i>(Christmas Island)</i>&nbsp;           クライストマトリックス・アイル  <p>Latitude -10.4475, Longitude 105.6904, Size 135 sq km</p>&nbsp;</button>
+        <button id="neon20" onclick="addTimezone('Micronetia',              'Micronesia',               ['ChST'],                   2,)"><b>Micronetia</b>&nbsp;            <i>(Micronesia)</i>&nbsp;                 ミクロネシア  <p>Latitude 7.4256, Longitude 150.5508, Size 702 sq km</p>&nbsp;</button>
+        <button id="neon21" onclick="addTimezone('NauruLink',               'Nauru',                    ['NRT'],                    2,)"><b>NauruLink</b>&nbsp;             <i>(Nauru)</i>&nbsp;                      ナウルリンク  <p>Latitude -0.5228, Longitude 166.9315, Size 21 sq km</p>&nbsp;</button>
+        <button id="neon22" onclick="addTimezone('Solnet Isles',            'Solomon Islands',          ['SBT'],                    2,)"><b>Solnet Isles</b>&nbsp;          <i>(Solomon Islands)</i>&nbsp;            ソルネット諸島  <p>Latitude -9.6457, Longitude 160.1562, Size 28,400 sq km</p>&nbsp;</button>
+        <button id="neon23" onclick="addTimezone('TuvaLink',                'Tuvalu',                   ['TVT'],                    4,)"><b>TuvaLink</b>&nbsp;              <i>(Tuvalu)</i>&nbsp;                     トゥバリンク  <p>Latitude -7.1095, Longitude 177.6493, Size 26 sq km</p>&nbsp;</button>
+        <button id="neon24" onclick="addTimezone('Guavatar',                'Guam',                     ['ChST'],                   2,)"><b>Guavatar</b>&nbsp;              <i>(Guam)</i>&nbsp;                       グアバター  <p>Latitude 13.4443, Longitude 144.7937, Size 544 sq km</p>&nbsp;</button>
+        <button id="neon25" onclick="addTimezone('Cook Circuit',            'Cook Islands',             ['CKT'],                    6,)"><b>Cook Circuit</b>&nbsp;          <i>(Cook Islands)</i>&nbsp;               クック・サーキット  <p>Latitude -21.2367, Longitude -159.7777, Size 236 sq km</p>&nbsp;</button>
+        <button id="neon26" onclick="addTimezone('Polyneura',               'French Polynesia',         ['TAHT'],                   6,)"><b>Polyneura</b>&nbsp;             <i>(French Polynesia)</i>&nbsp;           ポリネウラ  <p>Latitude -17.6797, Longitude -149.4068, Size 4,167 sq km</p>&nbsp;</button>
+        <button id="neon27" onclick="addTimezone('Pitcode Archipelago',     'Pitcairn Islands',         ['PST'],                    8,)"><b>Pitcode Archipelago</b>&nbsp;   <i>(Pitcairn Islands)</i>&nbsp;           ピットコード群島  <p>Latitude -25.0661, Longitude -130.1006, Size 47 sq km</p>&nbsp;</button>
+        <button id="neon28" onclick="addTimezone('CyberCocos Isles',        'Cocos Islands',            ['CCT'],                    1,)"><b>CyberCocos Isles</b>&nbsp;      <i>(Cocos Islands)</i>&nbsp;              サイバーココス諸島  <p>Latitude -12.1642, Longitude 96.8709, Size 14 sq km</p>&nbsp;</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

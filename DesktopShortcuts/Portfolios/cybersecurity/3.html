@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ThreatBloom - AI-Powered Phishing Defense</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a2b3c;
+            --alert: #ff4757;
+            --safe: #2ed573;
+            --background: #0f172a;
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            background: var(--background);
+            color: var(--text);
+            min-width: 400px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--alert);
+            padding-bottom: 15px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .threat-card {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid var(--alert);
+        }
+
+        .analysis-section {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .email-sample {
+            background: #2d3748;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .threat-tag {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: var(--alert);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            display: none;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: var(--alert);
+        }
+
+        .risk-meter {
+            height: 10px;
+            background: #2d3748;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .risk-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--safe), var(--alert));
+            transition: width 0.5s;
+        }
+
+        .scan-animation {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .security-stats {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: #1e293b;
+            border-radius: 8px;
+            flex: 1;
+        }
+
+        .domain-analysis {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .phishing-indicators {
+            list-style: none;
+            padding: 0;
+        }
+
+        .phishing-indicators li {
+            margin: 8px 0;
+            padding: 10px;
+            background: #2d3748;
+            border-radius: 4px;
+        }
+
+        .warning-icon {
+            color: var(--alert);
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <i class="fas fa-shield-alt warning-icon" style="font-size: 32px;"></i>
+        <h1>ThreatBloom Phishing Defense System</h1>
+    </div>
+
+    <div class="dashboard">
+        <div class="threat-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Active Threats</h3>
+            <div class="risk-meter">
+                <div class="risk-fill" id="riskLevel"></div>
+            </div>
+            <p>Current Threat Level: <span id="threatStatus">Analyzing...</span></p>
+        </div>
+
+        <div class="threat-card">
+            <h3><i class="fas fa-search"></i> Recent Detections</h3>
+            <div id="detectionLogs">
+                <p>No threats detected</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="analysis-section">
+        <h2><i class="fas fa-envelope"></i> Email Analysis</h2>
+        
+        <div class="email-sample">
+            <div class="threat-tag" id="email1Alert">PHISHING DETECTED</div>
+            <p><strong>From:</strong> "Security Alert" &lt;noreply@bank-security.com&gt;</p>
+            <p><strong>Subject:</strong> IMMEDIATE ACTION REQUIRED: Account Suspension</p>
+            <p><strong>Content:</strong> Dear customer, your account will be suspended within 24 hours unless you verify your identity here: http://secure-bank-verify.com/login</p>
+            <button onclick="analyzeEmail(1)"><i class="fas fa-search"></i> Scan Email</button>
+        </div>
+
+        <div class="email-sample">
+            <div class="threat-tag" id="email2Alert">SAFE</div>
+            <p><strong>From:</strong> "Your Bank" &lt;support@yourbank.com&gt;</p>
+            <p><strong>Subject:</strong> Monthly Statement Available</p>
+            <p><strong>Content:</strong> Your monthly statement is now available in our secure portal: https://secure.yourbank.com</p>
+            <button onclick="analyzeEmail(2)"><i class="fas fa-search"></i> Scan Email</button>
+        </div>
+
+        <div class="domain-analysis">
+            <h3><i class="fas fa-link"></i> URL Analysis</h3>
+            <input type="text" id="urlInput" placeholder="Enter URL to analyze" style="width: 300px; padding: 8px;">
+            <button onclick="analyzeURL()"><i class="fas fa-search"></i> Scan URL</button>
+            <div id="urlResults" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <div class="analysis-section">
+        <h2><i class="fas fa-brain"></i> Threat Analysis Report</h2>
+        <div class="security-stats">
+            <div class="stat-box">
+                <h4><i class="fas fa-clock"></i> Domain Age</h4>
+                <p id="domainAge">23 days</p>
+            </div>
+            <div class="stat-box">
+                <h4><i class="fas fa-lock"></i> HTTPS</h4>
+                <p id="httpsStatus">Not Detected</p>
+            </div>
+            <div class="stat-box">
+                <h4><i class="fas fa-redo"></i> Redirects</h4>
+                <p id="redirectCount">3</p>
+            </div>
+        </div>
+
+        <h3>Phishing Indicators Found:</h3>
+        <ul class="phishing-indicators" id="indicatorsList">
+            <li>⏳ New domain registration (less than 1 year)</li>
+            <li>🔗 Multiple redirects detected</li>
+            <li>⚠️ Suspicious keyword: "verify your identity"</li>
+        </ul>
+    </div>
+
+    <script>
+       // Enhanced ML Model Configuration
+       let phishingModel;
+        let detectionLogs = [];
+        
+        async function initializeModel() {
+            phishingModel = tf.sequential({
+                layers: [
+                    tf.layers.dense({units: 16, activation: 'relu', inputShape: [8]}),
+                    tf.layers.dropout({rate: 0.2}),
+                    tf.layers.dense({units: 8, activation: 'relu'}),
+                    tf.layers.dense({units: 1, activation: 'sigmoid'})
+                ]
+            });
+            
+            phishingModel.compile({
+                optimizer: tf.train.adam(0.001),
+                loss: 'binaryCrossentropy',
+                metrics: ['accuracy']
+            });
+
+            // Simulated training with phishing data patterns
+            const xs = tf.randomNormal([100, 8]);
+            const ys = tf.randomUniform([100, 1]);
+            await phishingModel.fit(xs, ys, {epochs: 10});
+            
+            document.getElementById('threatStatus').textContent = "System Ready";
+        }
+        // Advanced Feature Extraction
+        function extractFeatures(content) {
+            const text = content.toLowerCase();
+            return [
+                text.includes('http:') ? 1 : 0,          // Insecure protocol
+                text.includes('verify') ? 1 : 0,          // Verification request
+                text.includes('urgent') ? 1 : 0,          // Urgency language
+                (text.match(/http/g) || []).length,       // Number of links
+                (text.match(/@/g) || []).length > 1 ? 1 : 0, // Multiple @ symbols
+                text.includes('bank') ? 1 : 0,            // Impersonation keyword
+                text.length > 120 ? 1 : 0,                 // Message length
+                (text.match(/[^\w\s]/g) || []).length     // Special characters
+            ];
+        }
+
+        // Threat Analysis Engine
+        async function analyzeContent(content) {
+            const features = extractFeatures(content);
+            const tensor = tf.tensor2d([features]);
+            const prediction = await phishingModel.predict(tensor).data();
+            return prediction[0];
+        }
+
+         // Email Analysis Handler
+         async function analyzeEmail(emailId) {
+            const emailContent = document.querySelector(`#email${emailId}Alert`).parentNode.textContent;
+            const confidence = await analyzeContent(emailContent);
+            
+            const alertTag = document.getElementById(`email${emailId}Alert`);
+            const rootStyles = getComputedStyle(document.documentElement);
+            const alertColor = rootStyles.getPropertyValue('--alert');
+            const safeColor = rootStyles.getPropertyValue('--safe');
+
+            alertTag.style.display = 'block';
+            alertTag.style.backgroundColor = confidence > 0.7 ? alertColor : safeColor;
+            alertTag.textContent = confidence > 0.7 ? `PHISHING (${Math.round(confidence*100)}%)` : 'SAFE';
+
+            updateThreatDashboard(confidence);
+            logDetection(`Email ${emailId} analyzed - ${confidence > 0.7 ? 'Malicious' : 'Clean'}`);
+        }
+
+        // URL Analysis Handler
+        async function analyzeURL() {
+            const url = document.getElementById('urlInput').value;
+            const features = analyzeURLStructure(url);
+            const tensor = tf.tensor2d([features]);
+            const prediction = await phishingModel.predict(tensor).data();
+            
+            const rootStyles = getComputedStyle(document.documentElement);
+            const alertColor = rootStyles.getPropertyValue('--alert');
+            const safeColor = rootStyles.getPropertyValue('--safe');
+            
+            const resultDiv = document.getElementById('urlResults');
+            resultDiv.innerHTML = `
+                <div style="background: ${prediction[0] > 0.6 ? alertColor : safeColor}; 
+                            padding: 10px; border-radius: 5px;">
+                    Security Status: ${prediction[0] > 0.6 ? 'Dangerous' : 'Safe'}
+                    (Confidence: ${Math.round(prediction[0] * 100)}%)
+                </div>
+            `;
+        }
+
+        function analyzeURLStructure(url) {
+            return [
+                url.startsWith('https') ? 0 : 1,           // Insecure protocol
+                (url.match(/\./g) || []).length > 3 ? 1 : 0, // Subdomain depth
+                url.includes('@') ? 1 : 0,                 // Contains @ symbol
+                url.length > 50 ? 1 : 0,                    // Long URL
+                (url.match(/-/g) || []).length > 2 ? 1 : 0, // Multiple hyphens
+                url.includes('login') ? 1 : 0,             // Sensitive path
+                (url.match(/\d/g) || []).length > 5 ? 1 : 0, // Many numbers
+                url.includes('.php') ? 1 : 0               // Suspicious extension
+            ];
+        }
+
+        // Dashboard Updates
+        function updateThreatDashboard(confidence) {
+            document.getElementById('riskLevel').style.width = `${confidence * 100}%`;
+            document.getElementById('threatStatus').textContent = 
+                confidence > 0.7 ? "High Risk" : confidence > 0.4 ? "Suspicious" : "Low Risk";
+        }
+
+        function logDetection(message) {
+            detectionLogs.push(new Date().toLocaleTimeString() + ': ' + message);
+            document.getElementById('detectionLogs').innerHTML = detectionLogs
+                .map(log => `<p>${log}</p>`)
+                .join('');
+        }
+
+        // Initialize Security System
+        window.onload = initializeModel;
+    </script>
+</body>
+</html>

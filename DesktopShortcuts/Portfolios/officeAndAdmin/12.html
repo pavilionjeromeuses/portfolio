@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcessPro Consultants - Standard Operating Procedures</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #4f46e5;
+            --accent: #7c3aed;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .sop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .sop-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .sop-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .sop-id {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .sop-department {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+        }
+
+        .sop-date {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .sop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>ProcessPro Consultants</h1>
+        <p>Standard Operating Procedures</p>
+    </header>
+
+    <div class="container">
+        <input type="text" class="search-bar" placeholder="Search SOPs...">
+        <div class="sop-count" id="count">100 SOPs Found</div>
+        <div class="sop-grid" id="sopGrid">
+            <!-- SOP Cards will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        const departments = ['HR', 'IT', 'Operations', 'Finance', 'Client Services', 'Compliance'];
+        const owners = ['Alex Taylor', 'Sam Rivera', 'Jordan Chen', 'Morgan Smith', 'Casey Kim'];
+        
+        // Generate sample SOP data
+        const sops = Array.from({length: 100}, (_, i) => ({
+            id: `PPC-SOP-${String(i+1).padStart(3, '0')}`,
+            title: `SOP: ${[
+                'Remote Work Policy',
+                'Data Backup Protocol',
+                'Client Onboarding Process',
+                'Cybersecurity Measures',
+                'Invoice Processing',
+                'Equipment Maintenance',
+                'Quality Assurance Check',
+                'Incident Reporting',
+                'Social Media Policy',
+                'Business Continuity Plan'
+            ][i%10]} v${Math.floor(i/10)+1}.0`,
+            department: departments[i%6],
+            date: new Date(2023 + Math.floor(i/12), i%12, 15).toLocaleDateString('en-US', 
+                { month: 'long', day: 'numeric', year: 'numeric' }),
+            owner: owners[i%5]
+        }));
+
+        // Render SOP cards
+        const sopGrid = document.getElementById('sopGrid');
+        const searchBar = document.querySelector('.search-bar');
+        const count = document.getElementById('count');
+
+        function renderSOPs(filter = '') {
+            const filtered = sops.filter(sop => 
+                sop.title.toLowerCase().includes(filter.toLowerCase()) ||
+                sop.department.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            count.textContent = `${filtered.length} SOPs Found`;
+            
+            sopGrid.innerHTML = filtered.map(sop => `
+                <div class="sop-card">
+                    <div class="sop-id">${sop.id}</div>
+                    <h3>${sop.title}</h3>
+                    <div class="sop-department">${sop.department}</div>
+                    <p class="sop-date">Effective: ${sop.date}</p>
+                    <p style="margin-top: 1rem; color: var(--dark);">
+                        <strong>Owner:</strong> ${sop.owner}
+                    </p>
+                </div>
+            `).join('');
+        }
+
+        // Initial render
+        renderSOPs();
+
+        // Search functionality
+        searchBar.addEventListener('input', (e) => {
+            renderSOPs(e.target.value);
+        });
+    </script>
+</body>
+</html>

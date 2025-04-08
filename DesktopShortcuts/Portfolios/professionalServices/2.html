@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Automation Engine | Accounting Solutions</title>
+    <style>
+        /* Existing styles from previous version */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f5f7fa; color: #333; }
+        .header { text-align: center; padding: 40px; background-color: #2c3e50; color: white; border-radius: 10px; margin-bottom: 30px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); }
+        .btn { background-color: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+        .btn:hover { background-color: #219a52; }
+        .status { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; }
+        .processing { background-color: #f1c40f; color: #2c3e50; }
+        .completed { background-color: #27ae60; color: white; }
+        .metrics { margin-top: 40px; text-align: center; }
+        .metric-box { display: inline-block; padding: 20px; margin: 10px; background-color: white; border-radius: 10px; min-width: 200px; border-left: 5px solid #27ae60; }
+
+        /* New styles */
+        .testimonial-section { margin: 40px 0; background: #ffffff; padding: 30px; border-radius: 10px; }
+        .client-logo { height: 50px; margin: 15px; opacity: 0.7; }
+        .process-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px 0; }
+        .timeline-step { text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px; }
+        .feature-details { margin: 20px 0; padding: 20px; background: #ffffff; border-radius: 10px; }
+        .pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .pricing-card { background: white; padding: 30px; border-radius: 10px; text-align: center; }
+        .price { font-size: 2.5em; margin: 20px 0; color: #2c3e50; }
+        .faq-section { margin: 40px 0; }
+        .faq-item { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Workflow Automation Engine</h1>
+            <p>Trusted by 150+ Accounting Firms Worldwide</p>
+        </div>
+
+        <!-- Client Logos -->
+        <div style="text-align: center; margin: 40px 0;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Deloitte_Logo.png" class="client-logo" alt="Deloitte">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/KPMG_logo.svg" class="client-logo" alt="KPMG">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/EY_logo_2019.svg" class="client-logo" alt="EY">
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <div class="card">
+                <h2>📄 Automated Invoicing</h2>
+                <ul>
+                    <li>Auto-generate invoices from timesheets</li>
+                    <li>Multi-currency support</li>
+                    <li>Late payment reminders</li>
+                    <li>Tax compliance checks</li>
+                </ul>
+                <button class="btn" onclick="runAutomation('invoice')">Generate Invoices</button>
+            </div>
+
+            <div class="card">
+                <h2>👥 Client Onboarding</h2>
+                <ul>
+                    <li>Automated KYC verification</li>
+                    <li>Document collection workflow</li>
+                    <li>e-Signature integration</li>
+                    <li>Client portal setup</li>
+                </ul>
+                <button class="btn" onclick="runAutomation('onboarding')">Start Onboarding</button>
+            </div>
+
+            <div class="card">
+                <h2>📊 Report Generation</h2>
+                <ul>
+                    <li>Real-time financial dashboards</li>
+                    <li>Custom report templates</li>
+                    <li>Regulatory compliance checks</li>
+                    <li>Automated distribution</li>
+                </ul>
+                <button class="btn" onclick="runAutomation('report')">Generate Reports</button>
+            </div>
+        </div>
+
+        <!-- Process Timeline -->
+        <div class="process-timeline">
+            <div class="timeline-step">
+                <h3>1. Data Integration</h3>
+                <p>Connect with QuickBooks, Xero, and 50+ accounting systems</p>
+            </div>
+            <div class="timeline-step">
+                <h3>2. Rule Configuration</h3>
+                <p>Set up automation rules using simple drag-and-drop interface</p>
+            </div>
+            <div class="timeline-step">
+                <h3>3. Automated Processing</h3>
+                <p>System handles repetitive tasks 24/7</p>
+            </div>
+            <div class="timeline-step">
+                <h3>4. Human Review</h3>
+                <p>Final approval before client delivery</p>
+            </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="testimonial-section">
+            <h2>Client Success Stories</h2>
+            <div class="testimonial">
+                <blockquote>
+                    "Reduced our monthly processing time by 300 hours and decreased errors by 45%."
+                </blockquote>
+                <p>- Sarah Johnson, CFO at Smith & Partners Accounting</p>
+            </div>
+            <div class="testimonial">
+                <blockquote>
+                    "The automation engine paid for itself within the first 3 months of implementation."
+                </blockquote>
+                <p>- Michael Chen, Operations Director at Global Tax Solutions</p>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$299<span>/mo</span></div>
+                <ul>
+                    <li>Up to 500 transactions</li>
+                    <li>3 users included</li>
+                    <li>Basic reporting</li>
+                </ul>
+            </div>
+            <div class="pricing-card" style="background: #2c3e50; color: white;">
+                <h3>Professional</h3>
+                <div class="price">$799<span>/mo</span></div>
+                <ul>
+                    <li>Unlimited transactions</li>
+                    <li>10 users included</li>
+                    <li>Advanced analytics</li>
+                </ul>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <ul>
+                    <li>Dedicated support</li>
+                    <li>Custom integrations</li>
+                    <li>White-label solution</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>How secure is the system?</h3>
+                <p>All data is encrypted with AES-256 and we maintain SOC 2 Type II compliance.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can we customize workflows?</h3>
+                <p>Yes, our visual workflow editor allows complete customization of all processes.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What integrations are supported?</h3>
+                <p>We integrate with all major accounting software including QuickBooks, Xero, and Sage.</p>
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics">
+            <div class="metric-box">
+                <h3>25%</h3>
+                <p>Reduction in Operational Costs</p>
+            </div>
+            <div class="metric-box">
+                <h3>45%</h3>
+                <p>Fewer Processing Errors</p>
+            </div>
+            <div class="metric-box">
+                <h3>300+</h3>
+                <p>Monthly Hours Saved</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runAutomation(processType) {
+            const statusDiv = document.getElementById('status');
+            const processDetails = {
+                invoice: {
+                    steps: ["Collecting time entries", "Applying billing rates", "Generating PDFs", "Sending to clients"],
+                    time: 1500
+                },
+                onboarding: {
+                    steps: ["Creating client portal", "Sending intake forms", "Verifying documents", "Setting up workflows"],
+                    time: 2500
+                },
+                report: {
+                    steps: ["Aggregating data", "Running analytics", "Generating visuals", "Compiling PDF"],
+                    time: 2000
+                }
+            };
+
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status processing';
+            
+            const process = processDetails[processType];
+            for (const step of process.steps) {
+                statusDiv.innerHTML = `⏳ ${step}...`;
+                await new Promise(resolve => setTimeout(resolve, process.time / process.steps.length));
+            }
+            
+            statusDiv.className = 'status completed';
+            statusDiv.innerHTML = `✅ ${processType.replace(/^\w/, c => c.toUpperCase())} Completed Successfully!`;
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

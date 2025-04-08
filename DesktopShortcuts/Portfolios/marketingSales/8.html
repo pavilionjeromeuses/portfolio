@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Sales Playbook 3.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(120deg, #f0f4ff 0%, #fdf6fa 100%); }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="gradient-bg">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <h1 class="text-indigo-600 font-bold text-xl">SaaS Sales Accelerator</h1>
+                <a href="#downloads" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200">Get Playbook</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <p class="text-gray-500">Win Rate</p>
+                <p class="text-3xl font-bold">68%</p>
+                <span class="text-green-500 text-sm">↑ 12% QoQ</span>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <p class="text-gray-500">Avg. Deal Size</p>
+                <p class="text-3xl font-bold">$42K</p>
+                <span class="text-blue-500 text-sm">↑ $8K YoY</span>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <p class="text-gray-500">Sales Cycle</p>
+                <p class="text-3xl font-bold">34d</p>
+                <span class="text-red-500 text-sm">↓ 6d MoM</span>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <p class="text-gray-500">ARPU</p>
+                <p class="text-3xl font-bold">$9.8K</p>
+                <span class="text-green-500 text-sm">↑ 18% YoY</span>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h3 class="font-semibold mb-4">Win/Loss Analysis</h3>
+                <canvas id="winLossChart"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h3 class="font-semibold mb-4">Sales Funnel</h3>
+                <canvas id="funnelChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Playbook Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Buyer Personas -->
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h2 class="text-xl font-semibold mb-4">Key Buyer Personas</h2>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-indigo-500 pl-4">
+                        <h3 class="font-medium">Technical Director Tina</h3>
+                        <p class="text-sm text-gray-600">Tech • 10-500 employees • Focus: Scalability</p>
+                        <p class="text-sm mt-2">"Will this integrate with our existing stack?"</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h3 class="font-medium">CFO Frank</h3>
+                        <p class="text-sm text-gray-600">Finance • Enterprise • Focus: ROI</p>
+                        <p class="text-sm mt-2">"Show me the 3-year cost projection"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objection Handling -->
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h2 class="text-xl font-semibold mb-4">Objection Playbook</h2>
+                <div class="space-y-4">
+                    <div class="bg-indigo-50 p-4 rounded-lg">
+                        <p class="text-indigo-700 font-medium">"We're locked into our current contract"</p>
+                        <p class="text-sm mt-2">"Many of our clients start with a parallel pilot program..."</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <p class="text-green-700 font-medium">"Your price is too high"</p>
+                        <p class="text-sm mt-2">"Let's break down the ROI based on your current spend..."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Best Practices -->
+        <section class="mt-8 bg-white p-6 rounded-xl shadow-sm">
+            <h2 class="text-xl font-semibold mb-4">Demo Framework</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="p-4 bg-indigo-50 rounded-lg">
+                    <h3 class="font-medium text-indigo-700">Discovery</h3>
+                    <ul class="mt-2 text-sm list-disc pl-4">
+                        <li>5 qualifying questions</li>
+                        <li>Pain point mapping</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-purple-50 rounded-lg">
+                    <h3 class="font-medium text-purple-700">Storytelling</h3>
+                    <ul class="mt-2 text-sm list-disc pl-4">
+                        <li>Day-in-the-life scenario</li>
+                        <li>Before/after contrast</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-teal-50 rounded-lg">
+                    <h3 class="font-medium text-teal-700">Closing</h3>
+                    <ul class="mt-2 text-sm list-disc pl-4">
+                        <li>Assumptive language</li>
+                        <li>Time-bound incentive</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Section -->
+        <section id="downloads" class="mt-8 bg-white p-6 rounded-xl shadow-sm">
+            <h2 class="text-xl font-semibold mb-4">Video Resources</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                    <p class="text-gray-500">Demo Walkthrough Example</p>
+                </div>
+                <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                    <p class="text-gray-500">Objection Handling Masterclass</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Win/Loss Chart
+        new Chart(document.getElementById('winLossChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'Wins',
+                    data: [12, 19, 15, 22],
+                    backgroundColor: '#4F46E5'
+                },{
+                    label: 'Losses',
+                    data: [5, 3, 7, 2],
+                    backgroundColor: '#EF4444'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        });
+
+        // Funnel Chart
+        new Chart(document.getElementById('funnelChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Prospects', 'Qualified', 'Demo', 'Proposal', 'Closed'],
+                datasets: [{
+                    data: [1000, 650, 400, 150, 80],
+                    backgroundColor: ['#6366F1', '#818CF8', '#A5B4FC', '#C7D2FE', '#DBEAFE']
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    </script>
+</body>
+</html>

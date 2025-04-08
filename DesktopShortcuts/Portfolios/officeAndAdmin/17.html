@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskBridge HR - Employee Request System</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .ticket-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .ticket-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .ticket-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .priority-low { border-color: var(--success); }
+        .priority-medium { border-color: var(--warning); }
+        .priority-high { border-color: var(--danger); }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .filter-btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            background: none;
+            color: var(--dark);
+        }
+
+        .filter-btn.active {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TaskBridge HR Request System</h1>
+            <p class="text-muted">Employee Support Ticketing Platform</p>
+        </div>
+
+        <div class="grid">
+            <div class="sidebar">
+                <h3>Filters</h3>
+                <button class="btn filter-btn active">All Tickets</button>
+                <button class="btn filter-btn">Open</button>
+                <button class="btn filter-btn">In Progress</button>
+                <button class="btn filter-btn">Resolved</button>
+                <button class="btn filter-btn">Urgent</button>
+            </div>
+
+            <div class="ticket-list" id="ticketContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const departments = ['HR', 'IT', 'Finance', 'Facilities', 'Benefits', 'Payroll'];
+        const statuses = ['Open', 'In Progress', 'Resolved', 'Urgent'];
+        const priorities = ['Low', 'Medium', 'High'];
+        
+        function generateTicket(id) {
+            const randomDept = departments[Math.floor(Math.random() * departments.length)];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            const randomPriority = priorities[Math.floor(Math.random() * priorities.length)];
+            const daysAgo = Math.floor(Math.random() * 14) + 1;
+            
+            return {
+                id: `TICKET-${id.toString().padStart(4, '0')}`,
+                title: `Request for ${['Laptop Setup', 'Document Review', 'Benefits Query', 'Office Repair', 'Password Reset'][Math.floor(Math.random() * 5)]}`,
+                department: randomDept,
+                date: new Date(Date.now() - daysAgo * 86400000).toLocaleDateString(),
+                status: randomStatus,
+                priority: randomPriority
+            };
+        }
+
+        function renderTicket(ticket) {
+            const card = document.createElement('div');
+            card.className = `ticket-card priority-${ticket.priority.toLowerCase()}`;
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span class="status-badge" style="background: ${getStatusColor(ticket.status)}">${ticket.status}</span>
+                    <small>${ticket.date}</small>
+                </div>
+                <h3 style="margin-bottom: 0.5rem;">${ticket.title}</h3>
+                <div style="display: flex; gap: 1rem; color: #64748b;">
+                    <span>${ticket.id}</span>
+                    <span>•</span>
+                    <span>${ticket.department}</span>
+                    <span>•</span>
+                    <span>Priority: ${ticket.priority}</span>
+                </div>
+            `;
+            return card;
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'Open': '#bfdbfe',
+                'In Progress': '#fde68a',
+                'Resolved': '#bbf7d0',
+                'Urgent': '#fecaca'
+            };
+            return colors[status] || '#e2e8f0';
+        }
+
+        // Generate and render 100 tickets
+        const container = document.getElementById('ticketContainer');
+        for (let i = 1; i <= 100; i++) {
+            container.appendChild(renderTicket(generateTicket(i)));
+        }
+
+        // Add filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.textContent;
+                const tickets = document.querySelectorAll('.ticket-card');
+                tickets.forEach(ticket => {
+                    const status = ticket.querySelector('.status-badge').textContent;
+                    ticket.style.display = (filter === 'All Tickets' || filter === status) ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

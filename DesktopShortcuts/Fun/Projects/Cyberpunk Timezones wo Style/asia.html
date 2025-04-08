@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Orient</title>
+    <link rel="stylesheet" href="dist\asiaStyle.css">
+    <link rel="icon" type="image/x-icon" href="images\_40fdbaa1-95d8-45c7-8e7c-6bda09adf50c-removebg-preview.png">
+</head>
+
+<body>
+    <header>
+        <nav class="cyberpunk-nav">
+            <a href="index.html">
+                <div class="logo">Cyberpunk Timezones&nbsp;サイバーパンク・タイムゾーン<br><b>Neon Orient</b>&nbsp;<i>(Asia)</i>&nbsp;ネオン・オリエント</div>
+            </a>
+            <div class="origin">ORIG. PT.: 116° 40' 126° 34' E 4° 40' 21° 10' N 114,830mi2</div>
+        </nav>
+    </header>
+
+    <div class="cyberpunk-container">
+        <button id="yellow1"    onclick="addTimezone('NeoTokyo',        'Japan',        ['JST (Japan Standard Time)'],      1,)"><b>NeoTokyo</b>&nbsp;      <i>(Japan)</i>&nbsp;       ネオトーキョー <p>35.6895° N, 139.6917° E, 377,915 km²</p></button>
+        <button id="yellow2"    onclick="addTimezone('Soulstice',       'South Korea',  ['KST (Korea Standard Time)'],      1,)"><b>Soulstice</b>&nbsp;     <i>(South Korea)</i>&nbsp; ソウルフェス <p>35.9078° N, 127.7669° E, 100,363 km²</p></button>
+        <button id="yellow3"    onclick="addTimezone('DataPyongyang',   'North Korea',  ['KST (Korea Standard Time)'],      1,)"><b>DataPyongyang</b>&nbsp; <i>(North Korea)</i>&nbsp; データ平壌 <p>40.3399° N, 127.5101° E, 120,538 km²</p></button>
+        <button id="yellow4"    onclick="addTimezone('Byteor-East',     'Timor-Leste',  ['TLT (Timor-Leste Time)'],         1,)"><b>Byteor-East</b>&nbsp;   <i>(Timor-Leste)</i>&nbsp; バイトーイースト <p>8.8742° S, 125.7275° E, 14,874 km²</p></button>
+        <button id="yellow5"    onclick="addTimezone('CyberLagoon',     'Palau',        ['PWT (Palau Time)'],               1,)"><b>CyberLagoon</b>&nbsp;   <i>(Palau)</i>&nbsp;       サイバーラグーン <p>7.51498° N, 134.58252° E, 459 km²</p></button>
+        <button id="yellow6"    onclick="addTimezone('CircuitGuam',     'Guam',         ['ChST (Chamorro Standard Time)'],  2,)"><b>CircuitGuam</b>&nbsp;   <i>(Guam)</i>&nbsp;        サーキットグアム <p>13.4443° N, 144.7937° E, 544 km²</p></button>
+
+        <button id="yellow7"    onclick="minusTimezone('NeoShanghai',       'NeoShanghai',      ['(China Standard Time)'],                                                                          0,)">       <b>NeoShanghai</b>&nbsp;    <i>(China)</i>&nbsp;                ネオ上海 <p>35.8617° N, 104.1954° E, 9.597 million km²</p></button>
+        <button id="yellow8"    onclick="minusTimezone('Indocrypt',         'Indocrypt',        ['WIB (Western Indonesian Time), WITA (Central Indonesian Time), WIT (Eastern Indonesian Time)'],   1,)">       <b>Indocrypt</b>&nbsp;      <i>(Indonesia)</i>&nbsp;            インドクリプト <p>-0.7893° S, 113.9213° E, 1.904 million km²</p></button>
+        <button id="yellow9"    onclick="minusTimezone('NeonBangkok',       'NeonBangkok',      ['ICT (Indochina Time)'],                                                                           1,)">       <b>NeonBangkok</b>&nbsp;    <i>(Thailand)</i>&nbsp;             ネオンバンコク <p>15.8700° N, 100.9925° E, 513,120 km²</p></button>
+        <button id="yellow10"   onclick="minusTimezone('VirtuViet',         'VirtuViet',        ['ICT (Indochina Time)'],                                                                           1,)">       <b>VirtuViet</b>&nbsp;      <i>(Vietnam)</i>&nbsp;              バーチュベトナム <p>14.0583° N, 108.2772° E, 331,212 km²</p></button>
+        <button id="yellow11"   onclick="minusTimezone('Cybodia',           'Cybodia',          ['ICT (Indochina Time)'],                                                                           1,)">       <b>Cybodia</b>&nbsp;        <i>(Cambodia)</i>&nbsp;             サイボジア <p>12.5657° N, 104.9910° E, 181,035 km²</p></button>
+        <button id="yellow12"   onclick="minusTimezone('NeoLuang',          'NeoLuang',         ['ICT (Indochina Time)'],                                                                           1,)">       <b>NeoLuang</b>&nbsp;       <i>(Laos)</i>&nbsp;                 ネオルアン <p>20.0000° N, 102.0000° E, 236,800 km²</p></button>
+        <button id="yellow13"   onclick="minusTimezone('ByteDesh',          'ByteDesh',         ['BST (Bangladesh Standard Time)'],                                                                 2,)">       <b>ByteDesh</b>&nbsp;       <i>(Bangladesh)</i>&nbsp;           バイトデッシュ <p>23.6850° N, 90.3563° E, 147,570 km²</p></button>
+        <button id="yellow14"   onclick="minusTimezone('MyraMatrix',        'MyraMatrix',       ['MMT (Myanmar Time)'],                                                                             1.5,)">     <b>MyraMatrix</b>&nbsp;     <i>(Myanmar)</i>&nbsp;              マイラ・マトリックス <p>21.9162° N, 95.9560° E, 676,578 km²</p></button>
+        <button id="yellow15"   onclick="minusTimezone('BituBhutan',        'BituBhutan',       ['BTT (Bhutan Time)'],                                                                              2,)">       <b>BituBhutan</b>&nbsp;     <i>(Bhutan)</i>&nbsp;               ビトゥブータン <p>27.5142° N, 90.4336° E, 38,394 km²</p></button>
+        <button id="yellow16"   onclick="minusTimezone('CyberTaj',          'CyberTaj',         ['TJT (Tajikistan Time)'],                                                                          3,)">       <b>CyberTaj</b>&nbsp;       <i>(Tajikistan)</i>&nbsp;           サイバータジ <p>38.8610° N, 71.2761° E, 143,100 km²</p></button>
+        <button id="yellow17"   onclick="minusTimezone('NeoKathmandu',      'NeoKathmandu',     ['NPT (Nepal Time)'],                                                                               2.2,)">     <b>NeoKathmandu</b>&nbsp;   <i>(Nepal)</i>&nbsp;                ネオカトマンズ <p>28.3949° N, 84.1240° E, 147,516 km²</p></button>
+        <button id="yellow18"   onclick="minusTimezone('DigiDives',         'DigiDives',        ['MVT (Maldives Time)'],                                                                            2,)">       <b>DigiDives</b>&nbsp;      <i>(Maldives)</i>&nbsp;             デジダイブ <p>3.2028° N, 73.2207° E, 298 km²</p></button>
+        <button id="yellow19"   onclick="minusTimezone('Cybermas Isles',    'Cybermas Isles',   ['CXT (Christmas Island Time)'],                                                                    2,)">       <b>Cybermas Isles</b>&nbsp; <i>(Christmas Islands)</i>&nbsp;    サイバマス諸島 <p>-10.4475° S, 105.6904° E, 135 km²</p></button>
+        <button id="yellow20"   onclick="minusTimezone('KryptoKyrgyz',      'KryptoKyrgyz',     ['KGT (Kyrgyzstan Time)'],                                                                          3,)">       <b>KryptoKyrgyz</b>&nbsp;   <i>(Kyrgyzstan)</i>&nbsp;           クリプトキルギス <p>41.2044° N, 74.7661° E, 199,951 km²</p></button>
+        <button id="yellow21"   onclick="minusTimezone('NeonUzbek',         'NeonUzbek',        ['UZT (Uzbekistan Time)'],                                                                          3,)">       <b>NeonUzbek</b>&nbsp;      <i>(Uzbekistan)</i>&nbsp;           ネオンウズベク <p>41.3775° N, 64.5853° E, 448,978 km²</p></button>
+        <button id="yellow22"   onclick="minusTimezone('Cybermenia',        'Cybermenia',       ['AMT (Armenia Time)'],                                                                             4,)">       <b>Cybermenia</b>&nbsp;     <i>(Armenia)</i>&nbsp;              サイバーメニア <p>40.0691° N, 45.0382° E, 29,743 km²</p></button>
+        <button id="yellow23"   onclick="minusTimezone('Omanova',           'Omanova',          ['GST (Gulf Standard Time)'],                                                                       4,)">       <b>Omanova</b>&nbsp;        <i>(Oman)</i>&nbsp;                 オマノバ <p>21.4735° N, 55.9754° E, 309,500 km²</p></button>
+        <button id="yellow24"   onclick="minusTimezone('NeonTurk',          'NeonTurk',         ['TMT (Turkmenistan Time)'],                                                                        4,)">       <b>NeonTurk</b>&nbsp;       <i>(Turkmenistan)</i>&nbsp;         ネオントルク <p>38.9697° N, 59.5563° E, 491,210 km²</p></button>
+        <button id="yellow25"   onclick="minusTimezone('Cyberghan',         'Cyberghan',        ['AFT (Afghanistan Time)'],                                                                         4.5,)">     <b>Cyberghan</b>&nbsp;      <i>(Afghanistan)</i>&nbsp;          サイバーガン <p>33.9391° N, 67.7100° E, 652,864 km²</p></button>
+        <button id="yellow26"   onclick="minusTimezone('Binary Emirates',   'Binary Emirates',  ['GST (Gulf Standard Time)'],                                                                       4,)">       <b>Binary Emirates</b>&nbsp;<i>(United Arab Emirates)</i>&nbsp; バイナリー首長国連邦 <p>23.4241° N, 53.8478° E, 83,600 km²</p></button>
+        <button id="yellow27"   onclick="minusTimezone('NeoTbilisi',        'NeoTbilisi',       ['GET (Georgia Standard Time)'],                                                                    4,)">       <b>NeoTbilisi</b>&nbsp;     <i>(Georgia)</i>&nbsp;              ネオトビリシ <p>42.3154° N, 43.3569° E, 69,700 km²</p></button>
+        <button id="yellow28"   onclick="minusTimezone('AzeriCyber',        'AzeriCyber',       ['AZT (Azerbaijan Time)'],                                                                          4,)">       <b>AzeriCyber</b>&nbsp;     <i>(Azerbaijan)</i>&nbsp;           アゼリサイバー <p>40.1431° N, 47.5769° E, 86,600 km²</p></button>
+        <button id="yellow29"   onclick="minusTimezone('Quantum Qatar',     'Quantum Qatar',    ['AST (Arabia Standard Time)'],                                                                     4,)">       <b>Quantum Qatar</b>&nbsp;  <i>(Qatar)</i>&nbsp;                クォンタム・カタール <p>25.3548° N, 51.1839° E, 11,586 km²</p></button>
+        <button id="yellow30"   onclick="minusTimezone('NeonBahrain',       'NeonBahrain',      ['Bahrain: AST (Arabia Standard Time)'],                                                            4,)">       <b>NeonBahrain</b>&nbsp;    <i>(Bahrain)</i>&nbsp;              ネオンバーレーン <p>26.0667° N, 50.5577° E, 778 km²</p></button>
+        <button id="yellow31"   onclick="minusTimezone('KryptoKuwait',      'KryptoKuwait',     ['Kuwait: AST (Arabia Standard Time)'],                                                             4,)">       <b>KryptoKuwait</b>&nbsp;   <i>(Kuwait)</i>&nbsp;               クリプトクウェート <p>29.3759° N, 47.9774° E, 17,818 km²</p></button>
+        <button id="yellow32"   onclick="minusTimezone('NeoBaghdad',        'NeoBaghdad',       ['Iraq: AST (Arabia Standard Time)'],                                                               4,)">       <b>NeoBaghdad</b>&nbsp;     <i>(Iraq)</i>&nbsp;                 ネオバグダッド <p>33.2232° N, 43.6793° E, 437,072 km²</p></button>
+        <button id="yellow33"   onclick="minusTimezone('JorData',           'JorData',          ['EET (Eastern European Time)'],                                                                    4,)">       <b>JorData</b>&nbsp;        <i>(Jordan)</i>&nbsp;               ジョルデータ <p>30.5852° N, 36.2384° E, 89,342 km²</p></button>
+        <button id="yellow34"   onclick="minusTimezone('NeonBeirut',        'NeonBeirut',       ['EET (Eastern European Time)'],                                                                    4,)">       <b>NeonBeirut</b>&nbsp;     <i>(Lebanon)</i>&nbsp;              ネオンベイルート <p>33.8547° N, 35.8623° E, 10,452 km²</p></button>
+        <button id="yellow35"   onclick="minusTimezone('Syberia',           'Syberia',          ['EET (Eastern European Time)'],                                                                    4,)">       <b>Syberia</b>&nbsp;        <i>(Syria)</i>&nbsp;                シベリア <p>34.8021° N, 38.9968° E, 185,180 km²</p></button>
+        <button id="yellow36"   onclick="minusTimezone('NeonYemen',         'NeonYemen',        ['AST (Arabia Standard Time)'],                                                                     5,)">       <b>NeonYemen</b>&nbsp;      <i>(Yemen)</i>&nbsp;                ネオンイエメン <p>15.5527° N, 48.5164° E, 527,968 km²</p></button>
+        <button id="yellow37"   onclick="minusTimezone('Saudinet',          'Saudinet',         ['AST (Arabia Standard Time)'],                                                                     4,)">       <b>Saudinet</b>&nbsp;       <i>(Saudi Arabia)</i>&nbsp;         サウジネット <p>23.8859° N, 45.0792° E, 2.15 million km²</p></button>
+        <button id="yellow38"   onclick="minusTimezone('CybIran',           'CybIran',          ['IRST (Iran Standard Time)'],                                                                      4,)">       <b>CybIran</b>&nbsp;        <i>(Iran)</i>&nbsp;                 サイイラン <p>32.4279° N, 53.6880° E, 1.648 million km²</p></button>
+        <button id="yellow39"   onclick="minusTimezone('NeonPalestine',     'NeonPalestine',    ['EET (Eastern European Time)'],                                                                    4,)">       <b>NeonPalestine</b>&nbsp;  <i>(Palestine)</i>&nbsp;            ネオンパレスチナ <p>31.9522° N, 35.2332° E, 6,020 km²</p></button>
+        <button id="yellow40"   onclick="minusTimezone('IsraByte',          'IsraByte',         ['IST (Israel Standard Time)'],                                                                     4,)">       <b>IsraByte</b>&nbsp;       <i>(Israel)</i>&nbsp;               イスラバイト <p>31.0461° N, 34.8516° E, 22,072 km²</p></button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

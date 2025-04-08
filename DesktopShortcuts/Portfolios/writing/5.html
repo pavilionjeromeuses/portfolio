@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of Practical Living | Creative Guides</title>
+    <style>
+        :root {
+            --primary: #2A363B;
+            --secondary: #E84A5F;
+            --accent: #FF847C;
+            --light: #FECEAB;
+            --dark: #1A1A1A;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(45deg, #f8f9fa 0%, #f1f3f5 100%);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+            background: linear-gradient(45deg, var(--primary), var(--dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 50px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid var(--light);
+            border-radius: 25px;
+            z-index: -1;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
+        .how-to-steps {
+            display: grid;
+            gap: 30px;
+            counter-reset: step-counter;
+        }
+
+        .step {
+            display: flex;
+            align-items: start;
+            gap: 25px;
+            padding: 30px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            min-width: 60px;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .listicle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .habit-card {
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .habit-card:hover {
+            background: linear-gradient(145deg, #fff0f3, #ffffff);
+            transform: translateY(-3px);
+        }
+
+        .habit-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .decorative-border {
+            position: absolute;
+            width: 120%;
+            height: 80px;
+            background: var(--light);
+            transform: rotate(-2deg);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .art-note {
+            font-style: italic;
+            padding: 20px;
+            margin: 40px 0;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="none" stroke="%23E84A5F" stroke-width="2" stroke-dasharray="5 5"/></svg>');
+            border-left: 4px solid var(--secondary);
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>The Art of Practical Living</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Where Creativity Meets Practical Wisdom</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Podcast Guide Section -->
+        <div class="section">
+            <div class="decorative-border" style="top: -30px; left: -50px;"></div>
+            <h2>Crafting Your Voice:<br> The Budget Podcast Masterclass</h2>
+            
+            <div class="how-to-steps">
+                <div class="step">
+                    <div class="step-content">
+                        <h3>Conceptual Foundation</h3>
+                        <p>Define your audio signature - will it be intimate conversations or produced storytelling? Sketch your first three episodes like chapters in a novel.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-content">
+                        <h3>Sonic Alchemy</h3>
+                        <p>Transform everyday spaces into recording studios. Use thick blankets as sound dampeners, smartphone mics for raw authenticity, and Audacity for polishing gems.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-content">
+                        <h3>Editing as Composition</h3>
+                        <p>Learn the rhythm of removal - trim pauses like excess thread. Use free music archives to weave atmospheric backgrounds between dialogue.</p>
+                    </div>
+                </div>
+
+                <div class="art-note">
+                    "The microphone is your modern quill - every whisper holds the potential to become history."
+                </div>
+            </div>
+        </div>
+
+        <!-- Eco Habits Section -->
+        <div class="section">
+            <div class="decorative-border" style="bottom: -30px; right: -50px;"></div>
+            <h2>10 Ecological Elegances<br> for Modern Living</h2>
+            
+            <div class="listicle-grid">
+                <div class="habit-card">
+                    <div class="habit-number">I</div>
+                    <h3>Ceramic Hydration Ritual</h3>
+                    <p>Carry a handcrafted vessel, turning hydration into a mindful practice while rejecting plastic modernity.</p>
+                </div>
+
+                <div class="habit-card">
+                    <div class="habit-number">II</div>
+                    <h3>Culinary Herb Sanctuary</h3>
+                    <p>Transform kitchen scraps into windowsill gardens - green onions in jars, basil in repurposed tins.</p>
+                </div>
+
+                <div class="habit-card">
+                    <div class="habit-number">III</div>
+                    <h3>Linen Drying Ballet</h3>
+                    <p>Create indoor drying installations with reclaimed wood, turning laundry into spatial poetry.</p>
+                </div>
+
+                <!-- Continue through X -->
+            </div>
+            
+            <div class="art-note" style="margin-top: 40px;">
+                "Sustainability is not subtraction - it's the art of conscious addition to our world."
+            </div>
+        </div>
+    </div>
+</body>
+</html>

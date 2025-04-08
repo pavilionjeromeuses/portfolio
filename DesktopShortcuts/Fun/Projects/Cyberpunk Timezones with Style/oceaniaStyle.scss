@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #111;
+
+    a {
+        text-decoration: none;
+    }
+
+    p {margin-left: auto;}
+    
+    header {
+        background-color: #111;
+        padding: 20px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        margin-bottom: 19px;
+    }
+}
+
+.cyberpunk-nav {
+    display: flex;
+    justify-content: space-between;
+
+    .logo, .origin {
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: bold;
+    }
+}
+
+$primary-color: #00ffff;
+$text-color: black;
+
+.cyberpunk-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: $text-color;
+    background-color: $primary-color;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;   
+}
+
+#neon1:hover  {color: #000000; background-color: #D3F8FF;}
+#neon2:hover  {color: #000100; background-color: #C1F4FF;}
+#neon3:hover  {color: #000200; background-color: #AEEFFF;}
+#neon4:hover  {color: #000300; background-color: #9CEBFF;}
+#neon5:hover  {color: #000400; background-color: #89E7FF;}
+#neon6:hover  {color: #000400; background-color: #77E3FF;}
+#neon7:hover  {color: #000E0B; background-color: #64DFFF;}
+#neon8:hover  {color: #001818; background-color: #52DBFF;}
+#neon9:hover  {color: #002224; background-color: #3FD7FF;}
+#neon10:hover {color: #002C31; background-color: #2DD3FF;}
+#neon11:hover {color: #00363E; background-color: #1AD0FF;}
+#neon12:hover {color: #00404B; background-color: #08CCFF;}
+#neon13:hover {color: #004A58; background-color: #00C2F2;}
+#neon14:hover {color: #005465; background-color: #00B8E6;}
+#neon15:hover {color: #005E72; background-color: #00AED9;}
+#neon16:hover {color: #00687F; background-color: #00A4CC;}
+#neon17:hover {color: #00728C; background-color: #009ABF;}
+#neon18:hover {color: #007C99; background-color: #0090B2;}
+#neon19:hover {color: #0086A6; background-color: #0086A6;}
+#neon20:hover {color: #0090B2; background-color: #007C99;}
+#neon21:hover {color: #009ABF; background-color: #00728C;}
+#neon22:hover {color: #00A4CC; background-color: #00687F;}
+#neon23:hover {color: #00AED9; background-color: #005E72;}
+#neon24:hover {color: #00B8E6; background-color: #005465;}
+#neon25:hover {color: #00C2F2; background-color: #004A58;}
+#neon26:hover {color: #08CCFF; background-color: #00404B;}
+#neon27:hover {color: #1AD0FF; background-color: #00363E;}
+#neon28:hover {color: #2DD3FF; background-color: #002C31;}

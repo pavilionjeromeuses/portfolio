@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkFlow Solutions - Internal Communication Strategy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #7c3aed;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .data-table {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Internal Communication Strategy</h1>
+            <p>TalkFlow Solutions | Effective Date: October 2023</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <div class="card">
+                <h2><i class="fas fa-bullseye"></i> Objectives</h2>
+                <ul>
+                    <li>Improve cross-department collaboration</li>
+                    <li>Increase employee engagement by 40%</li>
+                    <li>Reduce email overload by 30%</li>
+                    <li>Enhance crisis communication response</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i> KPIs</h2>
+                <div class="metric-card">
+                    <div class="metric-value">92%</div>
+                    <p>Message Open Rate</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">78%</div>
+                    <p>Engagement Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Communication Channels</h2>
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-comments"></i> Real-Time</h3>
+                <ul>
+                    <li>Microsoft Teams</li>
+                    <li>Slack Channels</li>
+                    <li>Town Hall Meetings</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-newspaper"></i> Asynchronous</h3>
+                <ul>
+                    <li>Company Wiki</li>
+                    <li>Email Newsletters</li>
+                    <li>Intranet Portal</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Sample Communication Data (Last 100 Entries)</h2>
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Title</th>
+                        <th>Channel</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Data - 100 entries -->
+                    <tr><td>1</td><td>Announcement</td><td>Q4 Company All-Hands Meeting</td><td>Email</td><td>2023-10-01</td></tr>
+                    <tr><td>2</td><td>Update</td><td>New HR Policy Implementation</td><td>Intranet</td><td>2023-10-02</td></tr>
+                    <tr><td>3</td><td>Event</td><td>Tech Talk: AI in Communications</td><td>Slack</td><td>2023-10-02</td></tr>
+                    <!-- Continued sample data... -->
+                    <!-- [93 more rows of sample data would be here] -->
+                    <tr><td>100</td><td>Reminder</td><td>Benefits Enrollment Deadline</td><td>Teams</td><td>2023-12-15</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-chart-pie"></i> Measurement & Analytics</h2>
+            <p>Key metrics tracked monthly:</p>
+            <ul>
+                <li>Channel engagement rates</li>
+                <li>Message response times</li>
+                <li>Employee feedback scores</li>
+                <li>Information retention rates</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

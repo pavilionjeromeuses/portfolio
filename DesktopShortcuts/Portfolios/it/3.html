@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Health Security Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --alert-red: #d32f2f;
+            --recovery-green: #2e7d32;
+            --background: #f8f9fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #004ba0 100%);
+            color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            color: var(--primary-blue);
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 2rem 0;
+        }
+
+        .alert-badge {
+            background: var(--alert-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem;
+        }
+
+        .vaccine-progress {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--recovery-green);
+            transition: width 0.5s ease;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .country-card {
+            padding: 1rem;
+            border-left: 4px solid var(--alert-red);
+            background: #fff;
+        }
+
+        .prevention-tips {
+            columns: 2;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .prevention-tips {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <h1><i class="fas fa-shield-virus icon"></i>Global Health Security Dashboard</h1>
+        <p>Real-time Pandemic Monitoring & Vaccination Tracking</p>
+    </header>
+
+    <div class="grid-container">
+        <div class="card">
+            <h3><i class="fas fa-virus icon"></i>Global Cases</h3>
+            <div class="stat-number" id="globalCases">-</div>
+            <p>24h Change: <span id="dailyChange" class="stat-number">-</span></p>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-skull-crossbones icon"></i>Fatalities</h3>
+            <div class="stat-number" id="globalDeaths">-</div>
+            <p>Mortality Rate: <span id="mortalityRate">-</span></p>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-heartbeat icon"></i>Recoveries</h3>
+            <div class="stat-number" id="globalRecovered">-</div>
+            <p>Recovery Rate: <span id="recoveryRate">-</span></p>
+        </div>
+    </div>
+
+    <div class="card chart-container">
+        <canvas id="globalTrendChart"></canvas>
+    </div>
+
+    <div class="grid-container">
+        <div class="card">
+            <h3><i class="fas fa-syringe icon"></i>Vaccination Progress</h3>
+            <div class="vaccine-progress">
+                <div class="progress-fill" id="vaccineProgress"></div>
+            </div>
+            <p class="stat-number" id="vaccinePercentage">-</p>
+            <div class="risk-matrix" id="topVaccinatedCountries"></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-exclamation-triangle icon"></i>Risk Alerts</h3>
+            <div id="alertContainer"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3><i class="fas fa-globe-americas icon"></i>Regional Breakdown</h3>
+        <div class="chart-container">
+            <canvas id="regionalChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card prevention-tips">
+        <h3><i class="fas fa-shield-alt icon"></i>Prevention Measures</h3>
+        <ul style="list-style: none;">
+            <li>✅ Vaccination recommended for all adults</li>
+            <li>⚠️ New variant XBB.1.5 spreading rapidly</li>
+            <li>🩺 Booster shots available for high-risk groups</li>
+            <li>🧼 Maintain hand hygiene standards</li>
+            <li>😷 Mask mandates in effect for hospitals</li>
+        </ul>
+    </div>
+
+    <script>
+        const API = {
+    global: 'https://disease.sh/v3/covid-19/all',
+    countries: 'https://disease.sh/v3/covid-19/countries',
+    historical: 'https://disease.sh/v3/covid-19/historical/all?lastdays=30',
+    vaccines: 'https://disease.sh/v3/covid-19/vaccine/coverage?lastdays=30'
+};
+
+async function fetchData() {
+    try {
+        const [global, countries, historical, vaccines] = await Promise.all([
+            fetch(API.global).then(res => res.json()),
+            fetch(API.countries).then(res => res.json()),
+            fetch(API.historical).then(res => res.json()),
+            fetch(API.vaccines).then(res => res.json())
+        ]);
+
+        updateDashboard(global, countries, historical, vaccines);
+    } catch (error) {
+        console.error('Data loading error:', error);
+        document.getElementById('alertContainer').innerHTML = `
+            <div class="alert-badge">
+                <i class="fas fa-exclamation-circle"></i>
+                Data refresh failed - displaying cached information
+            </div>
+        `;
+    }
+}
+
+function updateDashboard(global, countries, historical, vaccines) {
+    // Core Statistics
+    document.getElementById('globalCases').textContent = global.cases.toLocaleString();
+    document.getElementById('globalDeaths').textContent = global.deaths.toLocaleString();
+    document.getElementById('globalRecovered').textContent = global.recovered.toLocaleString();
+    
+    // Vaccination Data
+    const vaccineData = Object.values(vaccines)[Object.values(vaccines).length - 1];
+    const vaccinePercentage = ((vaccineData / 7900000000) * 100).toFixed(1);
+    document.getElementById('vaccinePercentage').textContent = `${vaccinePercentage}%`;
+    document.getElementById('vaccineProgress').style.width = `${vaccinePercentage}%`;
+
+    // Create Charts
+    createTrendChart(historical);
+    createRegionalChart(countries);
+    createVaccinationRanking(countries);
+    generateAlerts(countries);
+}
+
+function createTrendChart(historical) {
+    const ctx = document.getElementById('globalTrendChart').getContext('2d');
+    const dates = Object.keys(historical.cases);
+    const primaryBlue = getComputedStyle(document.documentElement).getPropertyValue('--primary-blue').trim();
+    const alertRed = getComputedStyle(document.documentElement).getPropertyValue('--alert-red').trim();
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Cases',
+                data: Object.values(historical.cases),
+                borderColor: primaryBlue,
+                tension: 0.4
+            }, {
+                label: 'Deaths',
+                data: Object.values(historical.deaths),
+                borderColor: alertRed,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: { display: false },
+                legend: { position: 'top' }
+            }
+        }
+    });
+}
+
+function createRegionalChart(countries) {
+    const regions = {};
+    countries.forEach(country => {
+        const region = country.continent || 'Unknown';
+        regions[region] = (regions[region] || 0) + country.active;
+    });
+
+    const ctx = document.getElementById('regionalChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(regions),
+            datasets: [{
+                data: Object.values(regions),
+                backgroundColor: [
+                    '#1a73e8', '#4caf50', '#f44336', '#ff9800', 
+                    '#9c27b0', '#009688'
+                ]
+            }]
+        },
+        options: {
+            plugins: {
+                title: { display: false },
+                legend: { position: 'right' }
+            }
+        }
+    });
+}
+
+function createVaccinationRanking(countries) {
+    const vaccinatedCountries = countries
+        .filter(c => c.people_vaccinated)
+        .sort((a, b) => b.people_vaccinated - a.people_vaccinated)
+        .slice(0, 5);
+
+    const container = document.getElementById('topVaccinatedCountries');
+    vaccinatedCountries.forEach(country => {
+        const percentage = ((country.people_vaccinated / country.population) * 100).toFixed(1);
+        container.innerHTML += `
+            <div class="country-card">
+                <strong>${country.country}</strong>
+                <div>${percentage}% vaccinated</div>
+                <progress value="${percentage}" max="100"></progress>
+            </div>
+        `;
+    });
+}
+
+function generateAlerts(countries) {
+    const highRisk = countries.filter(c => c.active > 50000);
+    const container = document.getElementById('alertContainer');
+    
+    highRisk.forEach(country => {
+        container.innerHTML += `
+            <div class="alert-badge">
+                <i class="fas fa-exclamation-triangle"></i>
+                ${country.country}: ${country.active.toLocaleString()} active cases
+            </div>
+        `;
+    });
+}
+
+// Initialize Dashboard
+fetchData();
+setInterval(fetchData, 600000); // Refresh every 10 minutes
+    </script>
+</body>
+</html>

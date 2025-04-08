@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Upskilling Portal</title>
+    <style>
+        :root {
+            --primary: #2A5C84;
+            --secondary: #F0B323;
+            --light: #F5F7FA;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .nav {
+            background: var(--light);
+            padding: 1rem;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(rgba(42,92,132,0.9), rgba(42,92,132,0.8)),
+                        url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="%23F0B323" opacity="0.2"/></svg>');
+            color: white;
+        }
+
+        .features {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            margin: 3rem 0;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .impact-banner {
+            background: var(--secondary);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .button {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .testimonial-section {
+            background: var(--light);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .mentor-card {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .mentor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .course-list {
+            columns: 2;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary);
+            width: 60%;
+        }
+
+        .badge {
+            background: var(--secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 0.3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Talent Upskilling Portal</h1>
+        <p>Bridging Skill Gaps in Your Organization</p>
+    </header>
+
+    <nav class="nav">
+        <a href="#learning">Learning Paths</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#mentorship">Mentorship</a>
+        <a href="#testimonials">Success Stories</a>
+    </nav>
+
+    <div class="hero">
+        <div class="container">
+            <h2>Empower Your Workforce</h2>
+            <p>Personalized upskilling programs for organizational growth</p>
+            <button class="button" style="margin-top: 1rem;">Get Started</button>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="impact-banner">
+            <h3>Proven Impact: 20% Improvement in Employee Retention</h3>
+            <p>As demonstrated in our HR consultancy partnerships</p>
+        </div>
+
+        <div class="card" id="learning">
+            <h3>📚 Personalized Learning Paths</h3>
+            <div class="course-list">
+                <h4>Technology Track</h4>
+                <ul>
+                    <li>Cloud Computing Fundamentals (AWS/Azure) - 40 hrs</li>
+                    <li>Python for Data Analysis - 30 hrs</li>
+                    <li>Cybersecurity Essentials - 25 hrs</li>
+                    <li>DevOps Foundations - 35 hrs</li>
+                </ul>
+                
+                <h4>Leadership Track</h4>
+                <ul>
+                    <li>Strategic Decision Making - 20 hrs</li>
+                    <li>Digital Transformation Leadership - 30 hrs</li>
+                    <li>Conflict Resolution Masterclass - 15 hrs</li>
+                    <li>Agile Team Management - 25 hrs</li>
+                </ul>
+            </div>
+            
+            <h4>Recommended For You</h4>
+            <div class="badge">AI & Machine Learning</div>
+            <div class="badge">Project Management</div>
+            <div class="badge">Data Visualization</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p>65% Complete - Cloud Certification Path</p>
+        </div>
+
+        <!-- Expanded Certifications Section -->
+        <div class="card" id="certifications">
+            <h3>🏅 Certification Tracking</h3>
+            <table>
+                <tr>
+                    <th>Certification</th>
+                    <th>Status</th>
+                    <th>Expiration</th>
+                    <th>Progress</th>
+                </tr>
+                <tr>
+                    <td>PMP® - Project Management Professional</td>
+                    <td>In Progress</td>
+                    <td>2025-06-01</td>
+                    <td>75%</td>
+                </tr>
+                <tr>
+                    <td>AWS Certified Solutions Architect</td>
+                    <td>Completed</td>
+                    <td>2026-03-01</td>
+                    <td>100%</td>
+                </tr>
+                <tr>
+                    <td>Scrum Master Certification</td>
+                    <td>Not Started</td>
+                    <td>-</td>
+                    <td>0%</td>
+                </tr>
+            </table>
+            
+            <h4>Upcoming Renewals</h4>
+            <div class="badge">Google Analytics: Expires 2024-09-15</div>
+            <div class="badge">Salesforce Admin: Expires 2024-11-01</div>
+        </div>
+
+        <!-- Expanded Mentorship Section -->
+        <div class="card" id="mentorship">
+            <h3>🤝 Mentorship Matching</h3>
+            <div class="mentor-card">
+                <div class="mentor-avatar">SR</div>
+                <div>
+                    <h4>Sarah Johnson</h4>
+                    <p>15 years experience in Cloud Architecture</p>
+                    <p>Areas: AWS, Azure, DevOps | Rating: ★★★★☆ (4.8)</p>
+                    <button class="button">Request Session</button>
+                </div>
+            </div>
+
+            <div class="mentor-card">
+                <div class="mentor-avatar">MK</div>
+                <div>
+                    <h4>Michael Chen</h4>
+                    <p>Leadership Coach & Agile Expert</p>
+                    <p>Areas: Team Management, Conflict Resolution | Rating: ★★★★★ (5.0)</p>
+                    <button class="button">Request Session</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Testimonials Section -->
+        <div class="testimonial-section" id="testimonials">
+            <h3>Success Stories</h3>
+            <div class="card">
+                <p>"Our employee retention improved from 78% to 94% within 18 months of using the portal. The personalized learning paths helped us address specific skill gaps we didn't even realize we had."</p>
+                <p>- Linda Rodriguez, HR Director at TechCorp</p>
+            </div>
+            
+            <div class="card">
+                <p>"The mentorship program connected our junior staff with exactly the right industry experts. We've seen a 40% increase in internal promotions since implementation."</p>
+                <p>- David Kim, Learning & Development Manager at FinSecure</p>
+            </div>
+        </div>
+
+        <!-- Expanded Impact Metrics -->
+        <div class="impact-banner">
+            <h3>Proven Results Across Industries</h3>
+            <div style="display: flex; justify-content: space-around; margin: 1rem 0;">
+                <div>
+                    <h4>42%</h4>
+                    <p>Faster Promotion Rate</p>
+                </div>
+                <div>
+                    <h4>35%</h4>
+                    <p>Reduced Hiring Costs</p>
+                </div>
+                <div>
+                    <h4>58%</h4>
+                    <p>Certification Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2023 Talent Upskilling Portal. Contact: support@upskillportal.com | (555) 123-4567</p>
+    </footer>
+
+    <script>
+        // Enhanced JavaScript
+        document.querySelectorAll('.mentor-card .button').forEach(button => {
+            button.addEventListener('click', () => {
+                const mentorName = button.closest('.mentor-card').querySelector('h4').textContent;
+                alert(`Mentorship request sent to ${mentorName}! They will respond within 2 business days.`);
+            });
+        });
+
+        document.querySelectorAll('table tr').forEach(row => {
+            const progress = row.cells[3].textContent;
+            if (progress.endsWith('%')) {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                const progressFill = document.createElement('div');
+                progressFill.className = 'progress-fill';
+                progressFill.style.width = progress;
+                progressBar.appendChild(progressFill);
+                row.cells[3].textContent = '';
+                row.cells[3].appendChild(progressBar);
+            }
+        });
+
+        // Modal functionality
+        const buttons = document.querySelectorAll('.button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (!button.classList.contains('modal-close')) {
+                    const modal = document.createElement('div');
+                    modal.style.position = 'fixed';
+                    modal.style.top = '50%';
+                    modal.style.left = '50%';
+                    modal.style.transform = 'translate(-50%, -50%)';
+                    modal.style.backgroundColor = 'white';
+                    modal.style.padding = '2rem';
+                    modal.style.borderRadius = '8px';
+                    modal.style.boxShadow = '0 0 20px rgba(0,0,0,0.2)';
+                    modal.innerHTML = `
+                        <h3>Contact Learning Advisor</h3>
+                        <p>Complete this form to get started:</p>
+                        <input type="email" placeholder="Your work email" style="width: 100%; margin: 0.5rem 0; padding: 0.5rem;">
+                        <select style="width: 100%; margin: 0.5rem 0; padding: 0.5rem;">
+                            <option>Select Department</option>
+                            <option>IT & Technology</option>
+                            <option>Leadership</option>
+                            <option>Operations</option>
+                        </select>
+                        <button class="button modal-close" style="width: 100%; margin-top: 1rem;">Submit Request</button>
+                    `;
+                    document.body.appendChild(modal);
+
+                    document.querySelector('.modal-close').addEventListener('click', () => {
+                        document.body.removeChild(modal);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

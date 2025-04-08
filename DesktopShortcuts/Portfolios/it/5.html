@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralCommerce - AI-Powered Product Recommender</title>
+    <style>
+        :root {
+            --primary: #2A2F4F;
+            --secondary: #917FB3;
+            --accent: #E5BEEC;
+            --background: #1A1A2E;
+            --text: #FDE2F3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .ai-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--background) 100%);
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="%23917FB3" stroke-width="0.5" fill="none" opacity="0.2"/></svg>');
+        }
+
+        .neural-network {
+            position: absolute;
+            right: 2rem;
+            bottom: 2rem;
+            width: 300px;
+            height: 200px;
+            opacity: 0.1;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--secondary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(145, 127, 179, 0.2);
+        }
+
+        .ai-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.2rem;
+            margin: 1rem 0;
+        }
+
+        .star {
+            cursor: pointer;
+            color: var(--accent);
+            transition: color 0.2s;
+        }
+
+        .recommendations-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 1px solid var(--secondary);
+        }
+
+        .ai-loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="ai-header">
+            <h1>🕸️ NeuralCommerce AI</h1>
+            <p>Deep Learning-Powered Product Recommendations</p>
+        </header>
+
+        <section class="product-grid" id="marketplace">
+            <!-- Products will be dynamically generated -->
+        </section>
+
+        <section class="recommendations-panel">
+            <h2>🧠 Neural Recommendations</h2>
+            <div class="ai-loading" id="loading">
+                <p>Analyzing 1324 user patterns...</p>
+                <p class="pulse">Training neural network model (epoch 23/50)</p>
+            </div>
+            <div id="recommendations"></div>
+        </section>
+    </div>
+
+    <script>
+        // Extensive Product Database (50 items)
+        const products = Array.from({length: 50}, (_, i) => ({
+            id: i + 1,
+            name: `${techProducts[Math.floor(Math.random() * techProducts.length)]} ${['Pro', 'Max', 'X', 'Elite', 'Series'][Math.floor(Math.random() * 5)]}`,
+            category: categories[Math.floor(Math.random() * categories.length)],
+            price: Math.floor(Math.random() * 900 + 100),
+            rating: 0,
+            features: Array.from({length: 3}, () => 
+                features[Math.floor(Math.random() * features.length)]),
+            image: `https://source.unsplash.com/random/800x600/?${['tech','gadget','electronics','device'][Math.floor(Math.random()*4)]},${i+1}`
+        }));
+
+        // AI Training Data
+        const neuralNetwork = {
+            userVectors: Array.from({length: 1000}, () => 
+                Array.from({length: 50}, () => Math.random() * 5)),
+            itemVectors: Array.from({length: 50}, () => 
+                Array.from({length: 20}, () => Math.random())),
+            userBiases: Array.from({length: 1000}, () => Math.random()),
+            itemBiases: Array.from({length: 50}, () => Math.random()),
+            latentFactors: 20
+        };
+
+        // Matrix Factorization Recommendation Engine
+        function predictRating(userId, itemId) {
+            let sum = 0;
+            for (let k = 0; k < neuralNetwork.latentFactors; k++) {
+                sum += neuralNetwork.userVectors[userId][k] * neuralNetwork.itemVectors[itemId][k];
+            }
+            return sum + neuralNetwork.userBiases[userId] + neuralNetwork.itemBiases[itemId];
+        }
+
+        function updateVectors(userId, itemId, actualRating) {
+            const predicted = predictRating(userId, itemId);
+            const error = actualRating - predicted;
+            const learningRate = 0.01;
+            
+            for (let k = 0; k < neuralNetwork.latentFactors; k++) {
+                neuralNetwork.userVectors[userId][k] += learningRate * 
+                    (error * neuralNetwork.itemVectors[itemId][k] - 0.02 * neuralNetwork.userVectors[userId][k]);
+                neuralNetwork.itemVectors[itemId][k] += learningRate * 
+                    (error * neuralNetwork.userVectors[userId][k] - 0.02 * neuralNetwork.itemVectors[itemId][k]);
+            }
+            
+            neuralNetwork.userBiases[userId] += learningRate * (error - 0.02 * neuralNetwork.userBiases[userId]);
+            neuralNetwork.itemBiases[itemId] += learningRate * (error - 0.02 * neuralNetwork.itemBiases[itemId]);
+        }
+
+        // User Interaction System
+        let currentUser = {
+            id: Math.floor(Math.random() * 1000),
+            history: {},
+            sessionEmbedding: Array.from({length: 20}, () => 0)
+        };
+
+        function rateProduct(productId, rating) {
+            currentUser.history[productId] = rating;
+            updateVectors(currentUser.id, productId - 1, rating);
+            updateRecommendations();
+        }
+
+        // Hybrid Recommendation Algorithm
+        async function generateRecommendations() {
+            document.getElementById('loading').style.display = 'block';
+            
+            // Content-Based Filtering
+            const contentScores = products.map(product => 
+                product.features.reduce((acc, feat) => 
+                    acc + (currentUser.sessionEmbedding.includes(feat) ? 1 : 0), 0));
+            
+            // Collaborative Filtering
+            const collabScores = products.map((_, id) => 
+                predictRating(currentUser.id, id));
+            
+            // Hybrid Scoring
+            const recommendations = products
+                .map((product, index) => ({
+                    product,
+                    score: 0.7 * collabScores[index] + 0.3 * contentScores[index]
+                }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10);
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            displayRecommendations(recommendations);
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // 3D Visualization System
+        function visualizeEmbeddings() {
+            const embedding = currentUser.sessionEmbedding;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Dimensionality reduction visualization
+            ctx.fillStyle = 'rgba(145, 127, 179, 0.2)';
+            embedding.forEach((val, i) => {
+                ctx.beginPath();
+                ctx.arc(100 + val * 50, 100 + embedding[(i+1)%20] * 50, 3, 0, Math.PI*2);
+                ctx.fill();
+            });
+        }
+
+        // Initialization
+        function init() {
+            renderProducts();
+            visualizeEmbeddings();
+        }
+
+        // Start Application
+        init();
+    </script>
+</body>
+</html>

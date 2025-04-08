@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Insights Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: var(--dark);
+            color: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .swot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .swot-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .strengths { background: #dcfce7; }
+        .weaknesses { background: #fee2e2; }
+        .opportunities { background: #dbeafe; }
+        .threats { background: #fef3c7; }
+
+        .persona-card {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 1rem;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: grid;
+            place-items: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Market Research Insights</h1>
+            <p>Data-driven strategy recommendations</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="grid" id="dashboard">
+            <div class="card">
+                <h2>Customer Demographics</h2>
+                <div class="chart-container">
+                    <canvas id="demographicsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Competitor Analysis</h2>
+                <div class="chart-container">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" style="margin: 2rem 0;">
+            <h2>SWOT Analysis</h2>
+            <div class="swot-grid">
+                <div class="swot-item strengths">
+                    <h3>Strengths</h3>
+                    <ul>
+                        <li>Strong brand recognition</li>
+                        <li>High customer satisfaction (92%)</li>
+                    </ul>
+                </div>
+                <div class="swot-item weaknesses">
+                    <h3>Weaknesses</h3>
+                    <ul>
+                        <li>Limited international presence</li>
+                        <li>High customer acquisition cost</li>
+                    </ul>
+                </div>
+                <div class="swot-item opportunities">
+                    <h3>Opportunities</h3>
+                    <ul>
+                        <li>Growing demand in APAC region</li>
+                        <li>Untapped Gen Z market</li>
+                    </ul>
+                </div>
+                <div class="swot-item threats">
+                    <h3>Threats</h3>
+                    <ul>
+                        <li>New regulatory changes</li>
+                        <li>Emerging competitors</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Customer Personas</h2>
+            <div class="grid">
+                <div class="persona-card">
+                    <div class="avatar">SG</div>
+                    <div>
+                        <h3>Sarah Green</h3>
+                        <p>Urban Professional • 28-40 yrs</p>
+                        <p>💡 Values convenience & status</p>
+                    </div>
+                </div>
+                <div class="persona-card">
+                    <div class="avatar">DT</div>
+                    <div>
+                        <h3>David Tran</h3>
+                        <p>Tech Early Adopter • 22-35 yrs</p>
+                        <p>💡 Seeks innovation & exclusivity</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Sample Data Visualization
+        const demographicsData = {
+            labels: ['18-24', '25-34', '35-44', '45-54', '55+'],
+            datasets: [{
+                label: 'Customer Age Distribution',
+                data: [15, 45, 25, 10, 5],
+                backgroundColor: ['#6366f1', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe']
+            }]
+        };
+
+        const competitorData = {
+            labels: ['Competitor A', 'Competitor B', 'Competitor C', 'Our Product'],
+            datasets: [{
+                label: 'Market Perception Score',
+                data: [72, 68, 65, 85],
+                backgroundColor: '#3b82f6'
+            }]
+        };
+
+        // Initialize Charts
+        new Chart(document.getElementById('demographicsChart'), {
+            type: 'doughnut',
+            data: demographicsData
+        });
+
+        new Chart(document.getElementById('competitorChart'), {
+            type: 'bar',
+            data: competitorData,
+            options: {
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+    </script>
+</body>
+</html>

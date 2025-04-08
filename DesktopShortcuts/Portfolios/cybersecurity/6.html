@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petals 🌸 Social Media Privacy Guardian</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --privacy-blue: #2B3A55;
+            --data-pink: #CE7DA5;
+            --alert-red: #FF6B6B;
+            --secure-green: #4ECDC4;
+            --background: #F9F9F9;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
+            color: var(--privacy-blue);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--privacy-blue), #3A506B);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .risk-meter {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--secure-green) 0% 30%,
+                #FFD700 30% 70%,
+                var(--alert-red) 70% 100%
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .risk-score {
+            background: white;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            font-size: 2.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .data-point {
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            background: rgba(255,255,255,0.9);
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .critical { border-color: var(--alert-red); background: #FFEEEE; }
+        .warning { border-color: #FFD700; background: #FFF9E6; }
+        .notice { border-color: var(--secure-green); background: #E8FFFE; }
+        .gdpr { border-color: var(--privacy-blue); background: #F0F4FF; }
+
+        .fix-guide {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 10px;
+            padding-left: 30px;
+            border-left: 2px solid #ddd;
+        }
+
+        .platform-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+
+        button {
+            background: var(--privacy-blue);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background: #3A506B;
+        }
+
+        .compliance-badge {
+            background: var(--secure-green);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .law-reference {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span style="font-size:1.3em;">🌸</span> Petals Privacy Guardian</h1>
+            <p>Advanced Social Media Vulnerability Scanner & Compliance Auditor</p>
+        </header>
+
+        <div class="platform-grid">
+            <div class="analysis-card">
+                <h2>📘 Facebook Analysis</h2>
+                <div class="data-point critical">
+                    <div>🔓</div>
+                    <div>Public Profile Exposure Score: 78/100</div>
+                </div>
+                <div class="data-point warning">
+                    <div>📍</div>
+                    <div>23 Location-Tagged Posts Public</div>
+                </div>
+                <div class="data-point gdpr">
+                    <div>⚖️</div>
+                    <div>4 GDPR Article 15 Violations Detected</div>
+                </div>
+                <button onclick="runDeepScan('facebook')">🛡️ Run Full Audit</button>
+            </div>
+
+            <div class="analysis-card">
+                <h2>📸 Instagram Analysis</h2>
+                <div class="data-point notice">
+                    <div>👀</div>
+                    <div>1,230 Public Story Views Weekly</div>
+                </div>
+                <div class="data-point critical">
+                    <div>📡</div>
+                    <div>Biometric Data Collection Active</div>
+                </div>
+                <div class="data-point gdpr">
+                    <div>⚖️</div>
+                    <div>2 CCPA Section 1798.120 Issues Found</div>
+                </div>
+                <button onclick="runDeepScan('instagram')">🛡️ Run Full Audit</button>
+            </div>
+
+            <div class="analysis-card">
+                <h2>🎵 TikTok Analysis</h2>
+                <div class="data-point warning">
+                    <div>🌐</div>
+                    <div>Geolocation Tracking Always Active</div>
+                </div>
+                <div class="data-point critical">
+                    <div>📦</div>
+                    <div>3rd-Party Data Sharing Enabled</div>
+                </div>
+                <div class="data-point gdpr">
+                    <div>⚖️</div>
+                    <div>GDPR Article 25 Non-Compliance</div>
+                </div>
+                <button onclick="runDeepScan('tiktok')">🛡️ Run Full Audit</button>
+            </div>
+        </div>
+
+        <div id="resultsPanel" class="analysis-card" style="display: none;">
+            <div class="risk-meter">
+                <div class="risk-score" id="privacyScore">85</div>
+            </div>
+            <h2 id="platformHeader">🔍 Facebook Privacy Report</h2>
+            <div id="detailedFindings"></div>
+            <div class="compliance-badge">
+                <span>🛡️ GDPR/CCPA Certified Analysis</span>
+            </div>
+        </div>
+
+        <div class="analysis-card">
+            <h2>📜 Data Protection Metrics</h2>
+            <div class="data-point notice">
+                <div>🌍</div>
+                <div>Protected Under: GDPR (EU), CCPA (CA), PIPEDA (CA)</div>
+            </div>
+            <div class="data-point">
+                <div>🔏</div>
+                <div>Encrypted Data Scanning: AES-256</div>
+            </div>
+            <div class="data-point">
+                <div>⏳</div>
+                <div>Historical Data Analysis: 3 Years Back</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const privacyDatabase = {
+            facebook: {
+                score: () => Math.floor(Math.random() * 30) + 50,
+                findings: [
+                    {
+                        type: 'critical',
+                        icon: '👥',
+                        title: 'Friends List Exposure',
+                        description: 'Entire friends list publicly visible to 2.3M users',
+                        fix: 'Privacy Settings → Friends List → Set to "Only Me"',
+                        law: 'GDPR Art. 5(1b) Data Minimization'
+                    },
+                    {
+                        type: 'warning',
+                        icon: '📅',
+                        title: 'Birthday Public',
+                        description: 'Full birth date visible (Identity theft risk +32%)',
+                        fix: 'Profile Info → Birthday Visibility → "Only Me"',
+                        law: 'CCPA §1798.100 Right to Know'
+                    },
+                    {
+                        type: 'gdpr',
+                        icon: '📱',
+                        title: '3rd-Party App Access',
+                        description: '12 unused applications with full profile access',
+                        fix: 'Apps & Websites → Remove Legacy Integrations',
+                        law: 'GDPR Art. 25 Data Protection by Design'
+                    }
+                ]
+            },
+            instagram: {
+                score: () => Math.floor(Math.random() * 35) + 45,
+                findings: [
+                    {
+                        type: 'critical',
+                        icon: '📌',
+                        title: 'Location Tagging',
+                        description: '47 posts reveal exact home/work locations',
+                        fix: 'Post Archive → Bulk Edit → Remove Location Data',
+                        law: 'CCPA §1798.115 Sale Prohibition'
+                    },
+                    {
+                        type: 'warning',
+                        icon: '👁️',
+                        title: 'Story Visibility',
+                        description: 'Stories visible to 15,000+ unknown accounts',
+                        fix: 'Privacy → Story Sharing → "Close Friends Only"',
+                        law: 'GDPR Art. 25 Data Minimization'
+                    },
+                    {
+                        type: 'gdpr',
+                        icon: '🧠',
+                        title: 'Face Recognition',
+                        description: 'Biometric analysis enabled in photo tags',
+                        fix: 'Face Recognition Settings → Disable',
+                        law: 'GDPR Art. 9 Biometric Protection'
+                    }
+                ]
+            },
+            tiktok: {
+                score: () => Math.floor(Math.random() * 40) + 40,
+                findings: [
+                    {
+                        type: 'critical',
+                        icon: '🌐',
+                        title: 'IP Logging',
+                        description: 'Exact location tracked via persistent IP logging',
+                        fix: 'Privacy → Location Services → Disable',
+                        law: 'CCPA §1798.100 Geolocation'
+                    },
+                    {
+                        type: 'warning',
+                        icon: '📦',
+                        title: 'Data Sharing',
+                        description: 'Personal data shared with 9 advertising partners',
+                        fix: 'Personalization → Disable Data Sharing',
+                        law: 'GDPR Art. 28 Processor Agreements'
+                    },
+                    {
+                        type: 'gdpr',
+                        icon: '👶',
+                        title: 'Minor Protection',
+                        description: 'Age verification bypass detected',
+                        fix: 'Account Settings → Enable Strict Age Protection',
+                        law: 'GDPR Art. 8 Child Consent'
+                    }
+                ]
+            }
+        };
+
+        function runDeepScan(platform) {
+            document.getElementById('resultsPanel').style.display = 'block';
+            const { score, findings } = privacyDatabase[platform];
+            const privacyScore = score();
+            
+            document.getElementById('privacyScore').textContent = privacyScore;
+            document.getElementById('platformHeader').textContent = 
+                `${platform.charAt(0).toUpperCase() + platform.slice(1)} Privacy Audit Report`;
+
+            const findingsContainer = document.getElementById('detailedFindings');
+            findingsContainer.innerHTML = '';
+
+            findings.forEach((finding, index) => {
+                const findingElement = document.createElement('div');
+                findingElement.className = `data-point ${finding.type}`;
+                findingElement.innerHTML = `
+                    <div>${finding.icon}</div>
+                    <div>
+                        <strong>${finding.title}</strong>
+                        <p>${finding.description}</p>
+                        <div class="law-reference">${finding.law}</div>
+                        <button onclick="toggleFix(${index})">🛠️ Show Resolution</button>
+                        <div class="fix-guide" id="fix-${index}">
+                            <p>🔧 <strong>Resolution:</strong> ${finding.fix}</p>
+                        </div>
+                    </div>
+                `;
+                findingsContainer.appendChild(findingElement);
+            });
+
+            window.scrollTo({
+                top: document.getElementById('resultsPanel').offsetTop - 100,
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleFix(index) {
+            const fixGuide = document.getElementById(`fix-${index}`);
+            fixGuide.style.maxHeight = fixGuide.style.maxHeight ? '' : `${fixGuide.scrollHeight}px`;
+        }
+    </script>
+</body>
+</html>

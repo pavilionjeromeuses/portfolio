@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service Optimization Project</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .workflow-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .workflow {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .metrics-table th, .metrics-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .metrics-table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .skills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .skill-tag {
+            background: #ecf0f1;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        canvas {
+            margin: 40px 0;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .phase {
+            width: 23%;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .testimonial {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .quote-icon {
+            font-size: 2em;
+            color: #3498db;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h1>Customer Service Process Optimization</h1>
+        <div class="skills">
+            <div class="skill-tag"><i class="fas fa-cogs"></i>Zendesk Configuration</div>
+            <div class="skill-tag"><i class="fas fa-project-diagram"></i>Miro Process Mapping</div>
+            <div class="skill-tag"><i class="fas fa-clock"></i>Time Management</div>
+            <div class="skill-tag"><i class="fas fa-chart-bar"></i>Data Analysis</div>
+            <div class="skill-tag"><i class="fas fa-robot"></i>Automation Design</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Workflow Transformation</h2>
+        <div class="workflow-container">
+            <div class="workflow">
+                <h3 style="color: #e74c3c">Original Workflow (45min avg handle time)</h3>
+                <svg viewBox="0 0 800 200" style="width:100%">
+                    <!-- Simplified original workflow visualization -->
+                    <rect x="10" y="50" width="120" height="50" fill="#e74c3c" rx="5"/>
+                    <text x="70" y="80" fill="white" text-anchor="middle">Ticket Received</text>
+                    <path d="M140,75 L170,75" stroke="black"/>
+                    <rect x="170" y="50" width="120" height="50" fill="#e74c3c" rx="5"/>
+                    <text x="230" y="80" fill="white" text-anchor="middle">Manual Triage</text>
+                    <path d="M300,75 L330,75" stroke="black"/>
+                    <rect x="330" y="50" width="120" height="50" fill="#e74c3c" rx="5"/>
+                    <text x="390" y="80" fill="white" text-anchor="middle">Research</text>
+                    <path d="M460,75 L490,75" stroke="black"/>
+                    <rect x="490" y="50" width="120" height="50" fill="#e74c3c" rx="5"/>
+                    <text x="550" y="80" fill="white" text-anchor="middle">Draft Response</text>
+                    <path d="M620,75 L650,75" stroke="black"/>
+                    <rect x="650" y="50" width="120" height="50" fill="#e74c3c" rx="5"/>
+                    <text x="710" y="80" fill="white" text-anchor="middle">Approval</text>
+                </svg>
+                
+                <h3 style="color: #2ecc71">Optimized Workflow (18min avg handle time)</h3>
+                <svg viewBox="0 0 800 200" style="width:100%">
+                    <!-- Enhanced optimized workflow visualization -->
+                    <rect x="10" y="50" width="120" height="50" fill="#2ecc71" rx="5"/>
+                    <text x="70" y="80" fill="white" text-anchor="middle">Auto-Triage</text>
+                    <path d="M140,75 L170,75" stroke="black"/>
+                    <rect x="170" y="50" width="120" height="50" fill="#2ecc71" rx="5"/>
+                    <text x="230" y="80" fill="white" text-anchor="middle">Template Match</text>
+                    <path d="M300,75 L330,75" stroke="black"/>
+                    <rect x="330" y="50" width="120" height="50" fill="#2ecc71" rx="5"/>
+                    <text x="390" y="80" fill="white" text-anchor="middle">AI Drafting</text>
+                    <path d="M460,75 L490,75" stroke="black"/>
+                    <rect x="490" y="50" width="120" height="50" fill="#2ecc71" rx="5"/>
+                    <text x="550" y="80" fill="white" text-anchor="middle">Quick Review</text>
+                    <path d="M620,75 L650,75" stroke="black"/>
+                    <rect x="650" y="50" width="120" height="50" fill="#2ecc71" rx="5"/>
+                    <text x="710" y="80" fill="white" text-anchor="middle">Auto-Escalation</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Performance Metrics Analysis</h2>
+        <div class="chart-container">
+            <canvas id="responseChart"></canvas>
+            <canvas id="slaChart"></canvas>
+        </div>
+
+        <h3>Key Performance Indicators</h3>
+        <table class="metrics-table">
+            <tr>
+                <th>Metric</th>
+                <th>Before</th>
+                <th>After</th>
+                <th>Improvement</th>
+                <th>Impact</th>
+            </tr>
+            <tr>
+                <td>First Response Time</td>
+                <td>9.2 hours</td>
+                <td>1.4 hours</td>
+                <td>85%</td>
+                <td>CSAT +35%</td>
+            </tr>
+            <tr>
+                <td>Resolution Time (Tier 1)</td>
+                <td>45min</td>
+                <td>18min</td>
+                <td>60%</td>
+                <td>Capacity +220%</td>
+            </tr>
+            <tr>
+                <td>Escalation Rate</td>
+                <td>32%</td>
+                <td>11%</td>
+                <td>66%</td>
+                <td>Manager workload ↓41%</td>
+            </tr>
+            <tr>
+                <td>Customer Satisfaction</td>
+                <td>68%</td>
+                <td>92%</td>
+                <td>35%</td>
+                <td>NPS ↑28 points</td>
+            </tr>
+            <tr>
+                <td>Backlog Tickets</td>
+                <td>1,422</td>
+                <td>289</td>
+                <td>80%</td>
+                <td>Overtime costs ↓75%</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Technology Stack Implementation</h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <i class="fab fa-zendesk" style="color: #03363d; font-size: 2em"></i>
+                <div>
+                    <h3>Zendesk Suite</h3>
+                    <p>• Automated ticket routing<br>
+                       • AI-powered suggestions<br>
+                       • 85+ response templates</p>
+                </div>
+            </div>
+            <div class="tech-item">
+                <i class="fab fa-confluence" style="color: #172B4D; font-size: 2em"></i>
+                <div>
+                    <h3>Confluence KB</h3>
+                    <p>• Centralized knowledge base<br>
+                       • Version-controlled articles<br>
+                       • AI search optimization</p>
+                </div>
+            </div>
+            <div class="tech-item">
+                <i class="fas fa-chart-network" style="color: #FF6B6B; font-size: 2em"></i>
+                <div>
+                    <h3>Miro Process Maps</h3>
+                    <p>• 12 workflow variants mapped<br>
+                       • 45 improvement points identified<br>
+                       • Team collaboration space</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Implementation Timeline</h2>
+        <div class="timeline">
+            <div class="phase">
+                <h4>Discovery Phase</h4>
+                <p>Week 1-2<br>
+                • Process mapping<br>
+                • Pain point analysis<br>
+                • Baseline metrics</p>
+            </div>
+            <div class="phase">
+                <h4>Design Phase</h4>
+                <p>Week 3-4<br>
+                • Workflow redesign<br>
+                • Template development<br>
+                • System configuration</p>
+            </div>
+            <div class="phase">
+                <h4>Testing Phase</h4>
+                <p>Week 5<br>
+                • Pilot group testing<br>
+                • Feedback iteration<br>
+                • Training materials</p>
+            </div>
+            <div class="phase">
+                <h4>Launch Phase</h4>
+                <p>Week 6<br>
+                • Full deployment<br>
+                • Monitoring setup<br>
+                • Support channels</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Response Time Comparison Chart
+        new Chart(document.getElementById('responseChart'), {
+            type: 'bar',
+            data: {
+                labels: ['First Response', 'Resolution', 'Escalation', 'Satisfaction'],
+                datasets: [{
+                    label: 'Before Optimization',
+                    data: [9.2, 45, 32, 68],
+                    backgroundColor: '#e74c3c'
+                },
+                {
+                    label: 'After Optimization',
+                    data: [1.4, 18, 11, 92],
+                    backgroundColor: '#2ecc71'
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                scales: {
+                    x: { title: { display: true, text: 'Time (hours) / Percentage' }},
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // SLA Compliance Chart
+        new Chart(document.getElementById('slaChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Within SLA', 'Breached SLA'],
+                datasets: [{
+                    data: [83, 17],
+                    backgroundColor: ['#2ecc71', '#e74c3c']
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Pre-Optimization SLA Compliance (83%)'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

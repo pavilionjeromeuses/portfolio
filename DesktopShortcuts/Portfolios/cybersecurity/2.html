@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberWiki - Interactive Vulnerability Database</title>
+    <style>
+        :root {
+            --cyber-blue: #00f3ff;
+            --matrix-green: #0f0;
+            --dark-bg: #0a0a12;
+            --terminal-text: #20c20e;
+            --critical: #ff0038;
+            --high: #ff5722;
+            --medium: #ffc107;
+            --low: #4caf50;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            background: var(--dark-bg);
+            color: var(--cyber-blue);
+            line-height: 1.6;
+        }
+
+        .cyber-border {
+            border: 2px solid var(--cyber-blue);
+            box-shadow: 0 0 15px var(--cyber-blue);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(45deg, #000428, #004e92);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: repeating-linear-gradient(45deg, 
+                transparent, 
+                transparent 10px, 
+                var(--cyber-blue) 10px, 
+                var(--cyber-blue) 20px);
+        }
+
+        .search-section {
+            background: rgba(0, 0, 20, 0.9);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        input, select {
+            background: #000;
+            border: 1px solid var(--cyber-blue);
+            color: var(--cyber-blue);
+            padding: 1rem;
+            font-family: monospace;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--cyber-blue);
+        }
+
+        .cve-card {
+            background: rgba(0, 20, 30, 0.9);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cve-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 243, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .cve-card:hover::before {
+            left: 100%;
+        }
+
+        .critical { border-color: var(--critical); color: var(--critical); }
+        .high { border-color: var(--high); color: var(--high); }
+        .medium { border-color: var(--medium); color: var(--medium); }
+        .low { border-color: var(--low); color: var(--low); }
+
+        .severity {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            background: #000;
+        }
+
+        .mitigation {
+            background: #00111a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px dashed var(--cyber-blue);
+        }
+
+        .cvss {
+            font-size: 1.2em;
+            color: var(--matrix-green);
+            margin-left: 1rem;
+        }
+
+        .affected {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .affected span {
+            background: #00222d;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+        }
+
+        .reference-links a {
+            color: var(--cyber-blue);
+            text-decoration: none;
+            border-bottom: 1px dotted;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scanline {
+            position: fixed;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 243, 255, 0.1);
+            animation: scanline 3s linear infinite;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="container">
+        <header class="cyber-border">
+            <h1>🛡️ CyberWiki Vulnerability Database ⚡</h1>
+            <p>// CVE Repository v2.3.5 // Last Updated: 2024-02-15 //</p>
+        </header>
+
+        <div class="search-section cyber-border">
+            <input type="text" id="searchInput" placeholder="[SEARCH CVEs...]" autofocus>
+            <div class="filters">
+                <select id="severityFilter">
+                    <option value="">ALL SEVERITIES</option>
+                    <option value="critical">CRITICAL</option>
+                    <option value="high">HIGH</option>
+                    <option value="medium">MEDIUM</option>
+                    <option value="low">LOW</option>
+                </select>
+                <select id="yearFilter">
+                    <option value="">ALL YEARS</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2017">2017</option>
+                    <option value="2014">2014</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const cves = [
+            {
+                id: "CVE-2014-0160",
+                name: "Heartbleed Bug",
+                description: "Critical vulnerability in OpenSSL's TLS heartbeat extension allowing memory disclosure",
+                severity: "critical",
+                cvss: 9.8,
+                year: "2014",
+                affected: ["OpenSSL 1.0.1 - 1.0.1f", "Debian", "Ubuntu", "CentOS"],
+                mitigation: [
+                    "Immediately upgrade to OpenSSL 1.0.1g or later",
+                    "Reissue and revoke all SSL certificates",
+                    "Rotate all credentials that might be compromised",
+                    "Monitor for unusual network activity"
+                ],
+                references: [
+                    "https://heartbleed.com/",
+                    "https://nvd.nist.gov/vuln/detail/CVE-2014-0160",
+                    "https://www.us-cert.gov/ncas/alerts/TA14-098A"
+                ],
+                exploited: true,
+                patchStatus: "Official patch available"
+            },
+            {
+                id: "CVE-2021-44228",
+                name: "Log4Shell",
+                description: "Remote code execution vulnerability in Apache Log4j 2",
+                severity: "critical",
+                cvss: 10.0,
+                year: "2021",
+                affected: ["Apache Log4j 2.x < 2.15.0", "Java 8+", "Various enterprise systems"],
+                mitigation: [
+                    "Upgrade to Log4j 2.17.1 or later",
+                    "Set log4j2.formatMsgNoLookups=true",
+                    "Remove JndiLookup class from classpath",
+                    "Monitor WAF logs for exploit attempts"
+                ],
+                references: [
+                    "https://logging.apache.org/log4j/2.x/security.html",
+                    "https://nvd.nist.gov/vuln/detail/CVE-2021-44228"
+                ],
+                exploited: true,
+                patchStatus: "Multiple patches available"
+            },
+            {
+                id: "CVE-2017-0144",
+                name: "EternalBlue",
+                description: "SMBv1 remote code execution vulnerability used in WannaCry ransomware",
+                severity: "critical",
+                cvss: 9.3,
+                year: "2017",
+                affected: ["Windows 7", "Windows Server 2008 R2", "Windows XP"],
+                mitigation: [
+                    "Apply MS17-010 security update",
+                    "Disable SMBv1 protocol",
+                    "Enable Network Level Authentication",
+                    "Use host-based firewalls to block SMB ports"
+                ],
+                references: [
+                    "https://docs.microsoft.com/en-us/security-updates/securitybulletins/2017/ms17-010",
+                    "https://nvd.nist.gov/vuln/detail/CVE-2017-0144"
+                ],
+                exploited: true,
+                patchStatus: "Patched by Microsoft"
+            },
+            {
+                id: "CVE-2023-48795",
+                name: "SSH Protocol Vulnerability",
+                description: "Terrapin attack affecting SSH protocol security",
+                severity: "high",
+                cvss: 7.4,
+                year: "2023",
+                affected: ["OpenSSH < 9.6", "PuTTY < 0.80", "libssh implementations"],
+                mitigation: [
+                    "Upgrade to OpenSSH 9.6 or later",
+                    "Use strict encryption modes",
+                    "Disable vulnerable encryption modes",
+                    "Monitor for unexpected SSH traffic"
+                ],
+                references: [
+                    "https://terrapin-attack.com/",
+                    "https://nvd.nist.gov/vuln/detail/CVE-2023-48795"
+                ],
+                exploited: false,
+                patchStatus: "Vendor updates available"
+            },
+            {
+                id: "CVE-2014-6271",
+                name: "Shellshock",
+                description: "GNU Bash remote code execution via environment variables",
+                severity: "critical",
+                cvss: 10.0,
+                year: "2014",
+                affected: ["Bash <= 4.3", "Unix/Linux systems", "Network devices"],
+                mitigation: [
+                    "Update Bash to version 4.3 or later",
+                    "Sanitize environment variables",
+                    "Restrict CGI scripts",
+                    "Use web application firewalls"
+                ],
+                references: [
+                    "https://shellshocker.net/",
+                    "https://nvd.nist.gov/vuln/detail/CVE-2014-6271"
+                ],
+                exploited: true,
+                patchStatus: "Multiple patches available"
+            },
+            {
+                id: "CVE-2018-11776",
+                name: "Apache Struts RCE",
+                description: "Remote code execution in Apache Struts namespace handling",
+                severity: "high",
+                cvss: 8.1,
+                year: "2018",
+                affected: ["Struts 2.3 - 2.3.34", "Struts 2.5 - 2.5.16"],
+                mitigation: [
+                    "Upgrade to Struts 2.3.35 or 2.5.17",
+                    "Validate all user inputs",
+                    "Restrict namespace definitions",
+                    "Implement proper error handling"
+                ],
+                references: [
+                    "https://struts.apache.org/security/",
+                    "https://nvd.nist.gov/vuln/detail/CVE-2018-11776"
+                ],
+                exploited: true,
+                patchStatus: "Official patch available"
+            }
+        ];
+
+        function renderResults() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const severity = document.getElementById('severityFilter').value;
+            const year = document.getElementById('yearFilter').value;
+
+            const filtered = cves.filter(cve => {
+                const searchMatch = cve.id.toLowerCase().includes(search) ||
+                    cve.name.toLowerCase().includes(search) ||
+                    cve.description.toLowerCase().includes(search) ||
+                    cve.affected.join(' ').toLowerCase().includes(search);
+
+                const severityMatch = severity ? cve.severity === severity : true;
+                const yearMatch = year ? cve.year === year : true;
+
+                return searchMatch && severityMatch && yearMatch;
+            });
+
+            const html = filtered.map(cve => `
+                <div class="cve-card ${cve.severity}">
+                    <h2>${cve.id} 
+                        <span class="severity">${cve.severity.toUpperCase()}</span>
+                        <span class="cvss">CVSS: ${cve.cvss}</span>
+                    </h2>
+                    <h3>${cve.name}</h3>
+                    <p>${cve.description}</p>
+                    
+                    <div class="affected">
+                        ${cve.affected.map(sys => `<span>${sys}</span>`).join('')}
+                    </div>
+
+                    <div class="mitigation">
+                        <strong>MITIGATION STRATEGIES:</strong>
+                        <ul>
+                            ${cve.mitigation.map(m => `<li>${m}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="reference-links">
+                        <strong>REFERENCES:</strong><br>
+                        ${cve.references.map(r => `<a href="${r}" target="_blank">${new URL(r).hostname}</a>`).join(' • ')}
+                    </div>
+
+                    <div class="meta">
+                        <span>Exploited: ${cve.exploited ? '⚠️ ACTIVE EXPLOITS' : 'No known exploits'}</span>
+                        <span>Patch Status: ${cve.patchStatus}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('results').innerHTML = html || `
+                <div class="cve-card">
+                    <h3>NO VULNERABILITIES FOUND</h3>
+                    <p>Try adjusting your search filters</p>
+                </div>
+            `;
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderResults);
+        document.getElementById('severityFilter').addEventListener('change', renderResults);
+        document.getElementById('yearFilter').addEventListener('change', renderResults);
+
+        // Initial render
+        renderResults();
+    </script>
+</body>
+</html>

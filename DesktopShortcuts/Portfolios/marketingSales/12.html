@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABM Strategy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white">
+    <!-- Navigation -->
+    <nav class="bg-slate-800 p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">ABM Strategy Dashboard</h1>
+        <div class="flex items-center space-x-4">
+            <span class="bg-purple-600 rounded-full p-2">📈</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="p-6 space-y-8">
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="gradient-bg p-6 rounded-xl hover-scale">
+                <h3 class="text-sm opacity-75">Target Accounts</h3>
+                <p class="text-3xl font-bold">127</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl hover-scale">
+                <h3 class="text-sm opacity-75">Meetings Booked</h3>
+                <p class="text-3xl font-bold">23</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl hover-scale">
+                <h3 class="text-sm opacity-75">Pipeline Generated</h3>
+                <p class="text-3xl font-bold">$2.4M</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl hover-scale">
+                <h3 class="text-sm opacity-75">Engagement Rate</h3>
+                <p class="text-3xl font-bold">38%</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-800 p-6 rounded-xl">
+                <h2 class="text-lg font-semibold mb-4">Account Distribution</h2>
+                <div id="industryChart"></div>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl">
+                <h2 class="text-lg font-semibold mb-4">Engagement Trends</h2>
+                <div id="engagementChart"></div>
+            </div>
+        </div>
+
+        <!-- Target Account List -->
+        <div class="bg-slate-800 rounded-xl p-6">
+            <h2 class="text-lg font-semibold mb-4">Target Accounts</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-sm opacity-75">
+                            <th class="pb-3">Company</th>
+                            <th class="pb-3">Industry</th>
+                            <th class="pb-3">Employees</th>
+                            <th class="pb-3">Engagement Score</th>
+                            <th class="pb-3">Last Interaction</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountList">
+                        <!-- Sample data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const accounts = [
+            { name: "TechCorp Inc", industry: "Technology", employees: "5000", score: 92, last: "2024-03-15" },
+            { name: "GlobalBank", industry: "Financial", employees: "10,000+", score: 85, last: "2024-03-14" },
+            { name: "HealthPrime", industry: "Healthcare", employees: "2500", score: 78, last: "2024-03-13" },
+            { name: "EduSystems", industry: "Education", employees: "1500", score: 88, last: "2024-03-12" },
+            { name: "AutoInnovate", industry: "Manufacturing", employees: "8000", score: 91, last: "2024-03-11" }
+        ];
+
+        const activities = [
+            { type: "Webinar", account: "TechCorp Inc", date: "2024-03-15", attendees: 45 },
+            { type: "Case Study", account: "GlobalBank", date: "2024-03-14", downloads: 127 },
+            { type: "Meeting", account: "HealthPrime", date: "2024-03-13", duration: "30m" },
+            { type: "Demo", account: "EduSystems", date: "2024-03-12", participants: 5 }
+        ];
+
+        // Initialize Charts
+        const industryChart = new ApexCharts(document.querySelector("#industryChart"), {
+            series: [25, 18, 22, 15, 20],
+            labels: ['Technology', 'Financial', 'Healthcare', 'Education', 'Manufacturing'],
+            chart: { type: 'donut', height: 350 },
+            colors: ['#6366f1', '#a855f7', '#ec4899', '#f472b6', '#fb7185'],
+            legend: { position: 'bottom' }
+        });
+
+        const engagementChart = new ApexCharts(document.querySelector("#engagementChart"), {
+            series: [{
+                name: "Engagement Score",
+                data: [65, 72, 68, 79, 85, 88, 92]
+            }],
+            chart: { type: 'line', height: 350 },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+            },
+            colors: ['#a855f7'],
+            stroke: { width: 3 }
+        });
+
+        // Populate account table
+        const accountList = document.getElementById('accountList');
+        accounts.forEach(account => {
+            accountList.innerHTML += `
+                <tr class="border-t border-slate-700 hover:bg-slate-700/50">
+                    <td class="py-3">${account.name}</td>
+                    <td>${account.industry}</td>
+                    <td>${account.employees}</td>
+                    <td><span class="bg-purple-600/20 text-purple-400 px-2 py-1 rounded">${account.score}</span></td>
+                    <td>${account.last}</td>
+                </tr>
+            `;
+        });
+
+        // Render charts
+        industryChart.render();
+        engagementChart.render();
+    </script>
+</body>
+</html>

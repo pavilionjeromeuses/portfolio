@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Campaign Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --success: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .metric {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: rgba(99,102,241,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🌟 Influencer Campaign Dashboard</h1>
+            <p>Tracking Campaign Performance - Q3 2023</p>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Total Influencers</h3>
+                <div class="metric" id="totalInfluencers">25</div>
+            </div>
+            <div class="card">
+                <h3>Avg. Engagement Rate</h3>
+                <div class="metric">8.2%</div>
+            </div>
+            <div class="card">
+                <h3>UTM-linked Sales</h3>
+                <div class="metric">$142K</div>
+            </div>
+            <div class="card">
+                <h3>ROI</h3>
+                <div class="metric">3.8x</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Engagement Trends</h3>
+                <canvas id="engagementChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>Sales by Platform</h3>
+                <canvas id="platformChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Influencer Performance</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Influencer</th>
+                        <th>Platform</th>
+                        <th>Engagement</th>
+                        <th>Sales</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@TechGuru</td>
+                        <td>YouTube</td>
+                        <td>12.4%</td>
+                        <td>$42K</td>
+                        <td><span class="pill">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>@Fashionista</td>
+                        <td>Instagram</td>
+                        <td>9.1%</td>
+                        <td>$38K</td>
+                        <td><span class="pill">Completed</span></td>
+                    </tr>
+                    <tr>
+                        <td>@FoodieBlog</td>
+                        <td>TikTok</td>
+                        <td>15.2%</td>
+                        <td>$27K</td>
+                        <td><span class="pill">Active</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Engagement Line Chart
+        new Chart(document.getElementById('engagementChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Engagement Rate',
+                    data: [5.2, 6.8, 7.4, 8.1, 8.9, 9.3],
+                    borderColor: '#6366f1',
+                    tension: 0.4,
+                    fill: false
+                }]
+            }
+        });
+
+        // Platform Sales Bar Chart
+        new Chart(document.getElementById('platformChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Instagram', 'YouTube', 'TikTok', 'Twitter'],
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: [62000, 48000, 21000, 11000],
+                    backgroundColor: [
+                        '#6366f1',
+                        '#a855f7',
+                        '#ec4899',
+                        '#3b82f6'
+                    ]
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

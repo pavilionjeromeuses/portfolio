@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dimensional Drift</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #gameCanvas {
+            border: 2px solid #444;
+            margin-top: 20px;
+        }
+        .dimension-ruined {
+            background: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+        }
+        .dimension-pristine {
+            background: linear-gradient(45deg, #87CEEB, #E0F6FF);
+        }
+        .ui {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body class="dimension-ruined">
+    <div class="ui">
+        <p>Dimensional Drift</p>
+        <p>Press SPACE to shift dimensions</p>
+        <p id="objective">Reach the dimensional portal!</p>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
+
+// Game State
+let isPristineDimension = false;
+let hasWon = false;
+const DIMENSION_COLORS = {
+    ruined: ['#444', '#666', '#888'],
+    pristine: ['#4CAF50', '#FFC107', '#2196F3']
+};
+
+// Engine Setup
+const engine = Engine.create();
+const render = Render.create({
+    canvas: document.getElementById('gameCanvas'),
+    engine: engine,
+    options: {
+        width: 800,
+        height: 600,
+        wireframes: false,
+        background: 'transparent'
+    }
+});
+
+// Player
+const player = Bodies.rectangle(100, 500, 40, 60, {
+    label: 'player',
+    render: {
+        fillStyle: DIMENSION_COLORS.ruined[2]
+    }
+});
+
+// Dimensions
+const createDimensionObjects = (dimensionType) => {
+    const color = DIMENSION_COLORS[dimensionType];
+    return [
+        // Platforms
+        Bodies.rectangle(400, 550, 800, 100, { 
+            isStatic: true,
+            render: { fillStyle: color[0] }
+        }),
+        Bodies.rectangle(600, 400, 200, 20, { 
+            isStatic: true,
+            render: { fillStyle: color[1] },
+            collisionFilter: { group: dimensionType }
+        }),
+        // Puzzle elements
+        Bodies.rectangle(700, 300, 50, 50, {
+            label: 'box',
+            render: { fillStyle: color[2] }
+        }),
+        Bodies.rectangle(750, 200, 40, 80, {
+            label: 'door',
+            isStatic: true,
+            render: { fillStyle: color[2] }
+        })
+    ];
+};
+
+// World Setup
+let currentDimension = 'ruined';
+World.add(engine.world, [player, ...createDimensionObjects('ruined')]);
+
+// Dimension Shifting
+function shiftDimension() {
+    isPristineDimension = !isPristineDimension;
+    currentDimension = isPristineDimension ? 'pristine' : 'ruined';
+    
+    // Toggle visual style
+    document.body.className = `dimension-${currentDimension}`;
+    
+    // Toggle physics objects
+    World.clear(engine.world, false);
+    World.add(engine.world, [
+        player,
+        ...createDimensionObjects(currentDimension),
+        ...createDimensionObjects(currentDimension === 'pristine' ? 'ruined' : 'pristine')
+            .map(obj => Body.set(obj, { collisionFilter: { mask: 0 } }))
+    ]);
+}
+
+// Player Controls
+const keys = {};
+window.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+    if (e.code === 'Space') shiftDimension();
+});
+window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+// Game Loop
+Events.on(engine, 'beforeUpdate', () => {
+    // Horizontal movement
+    if (keys['ArrowLeft']) Body.setVelocity(player, { x: -5, y: player.velocity.y });
+    if (keys['ArrowRight']) Body.setVelocity(player, { x: 5, y: player.velocity.y });
+    
+    // Jumping
+    if (keys['ArrowUp'] && Math.abs(player.velocity.y) < 0.1) {
+        Body.setVelocity(player, { x: player.velocity.x, y: -12 });
+    }
+});
+
+// Victory Condition
+Events.on(engine, 'collisionStart', ({ pairs }) => {
+    if (hasWon) return;
+    
+    pairs.forEach(({ bodyA, bodyB }) => {
+        if ((bodyA.label === 'player' && bodyB.label === 'door') ||
+            (bodyB.label === 'player' && bodyA.label === 'door')) {
+            hasWon = true;
+            document.getElementById('objective').textContent = 'Dimension Stabilized!';
+        }
+    });
+});
+
+// Start Engine
+Engine.run(engine);
+Render.run(render);
+
+// Environmental Story Elements
+const storyElements = [
+    { text: "The dimensions are collapsing...", x: 100, y: 100 },
+    { text: "Find the stabilizer core!", x: 600, y: 300 }
+];
+Events.on(render, 'afterRender', () => {
+    if (hasWon) return;
+    const ctx = render.context;
+    storyElements.forEach(({ text, x, y }) => {
+        ctx.fillStyle = isPristineDimension ? '#1a1a1a' : '#E0F6FF';
+        ctx.font = '16px Arial';
+        ctx.fillText(text, x, y);
+    });
+});
+</script>
+</body>
+</html>

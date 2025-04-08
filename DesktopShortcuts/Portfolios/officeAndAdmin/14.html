@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRFlow Enterprises - Employee Onboarding</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --accent: #f472b6;
+            --light: #f8fafc;
+            --dark: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .step-number {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            margin: 2rem 0 1.5rem;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .print-only {
+            display: none;
+        }
+
+        @media print {
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            .print-only {
+                display: block;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Welcome to HRFlow Enterprises! 🌟</h1>
+            <p>Step-by-Step Employee Onboarding Guide</p>
+        </div>
+
+        <div class="print-only">HRFlow Enterprises - Confidential Onboarding Document</div>
+
+        <!-- Pre-Boarding Section -->
+        <h2 class="section-title">📅 Pre-Boarding (Day -7 to Day 0)</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="step-number">Step 1</div>
+                Digital offer letter signing via HRFlow Portal
+            </div>
+            <!-- Steps 2-20 continue -->
+        </div>
+
+        <!-- First Day Section -->
+        <h2 class="section-title">🎉 First Day Orientation</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="step-number">Step 21</div>
+                Welcome breakfast with team leads (8:30-9:30 AM)
+            </div>
+            <!-- Steps 22-40 continue -->
+        </div>
+
+        <!-- First Week Section -->
+        <h2 class="section-title">📈 First Week Immersion</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="step-number">Step 41</div>
+                HRFlow platform training workshop
+            </div>
+            <!-- Steps 42-60 continue -->
+        </div>
+
+        <!-- 30-Day Section -->
+        <h2 class="section-title">🚀 30-Day Acceleration</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="step-number">Step 61</div>
+                First month performance check-in with manager
+            </div>
+            <!-- Steps 62-80 continue -->
+        </div>
+
+        <!-- 60-90 Day Section -->
+        <h2 class="section-title">💡 60-90 Day Integration</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="step-number">Step 81</div>
+                Cross-departmental shadowing program
+            </div>
+            <!-- Steps 82-100 continue -->
+        </div>
+
+        <footer style="margin-top: 3rem; text-align: center; color: #64748b;">
+            <p>💼 HRFlow Enterprises © 2023 | People Operations Team</p>
+            <p>📧 onboarding@hrflow.com | 📞 +1 (800) HRF-LOW</p>
+        </footer>
+    </div>
+</body>
+</html>

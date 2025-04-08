@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #111;
+
+    a {
+        text-decoration: none;
+    }
+
+    p {margin-left: auto;}
+    
+    header {
+        background-color: #111;
+        padding: 20px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        margin-bottom: 19px;
+    }
+}
+
+.cyberpunk-nav {
+    display: flex;
+    justify-content: space-between;
+
+    .logo, .origin {
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: bold;
+    }
+}
+
+$primary-color: #ff5f1f;
+$text-color: #ffffff;
+
+.cyberpunk-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: $text-color;
+    background-color: $primary-color;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;   
+}
+
+#orange1:hover  {color: #1C1C1C; background-color: #FFF5E0;}
+#orange2:hover  {color: #FF6EC7; background-color: #FFE5B2;}
+#orange3:hover  {color: #00FFFF; background-color: #FFD180;}
+#orange4:hover  {color: #39FF14; background-color: #FFC24D;}
+#orange5:hover  {color: #FFFF00; background-color: #FFB219;}
+#orange6:hover  {color: #FFA500; background-color: #FFA200;}
+#orange7:hover  {color: #B10DC9; background-color: #FF8C00;}
+#orange8:hover  {color: #FF2400; background-color: #FF7A00;}
+#orange9:hover  {color: #00FFFF; background-color: #FF6600;}
+#orange10:hover {color: #FF00FF; background-color: #FF5500;}
+#orange11:hover {color: #BFFF00; background-color: #FF4500;}
+#orange12:hover {color: #00FFFF; background-color: #FF3600;}
+#orange13:hover {color: #4B0082; background-color: #FF2800;}
+#orange14:hover {color: #40E0D0; background-color: #FF1B00;}
+#orange15:hover {color: #FF7F50; background-color: #FF0F00;}
+#orange16:hover {color: #FFBF00; background-color: #FF0300;}
+#orange17:hover {color: #EE82EE; background-color: #FF0000;}
+#orange18:hover {color: #7FFF00; background-color: #FF1100;}
+#orange19:hover {color: #DC143C; background-color: #FF2200;}
+#orange20:hover {color: #FF00FF; background-color: #FF3300;}
+#orange21:hover {color: #FFD700; background-color: #FF4400;}
+#orange22:hover {color: #E6E6FA; background-color: #FF5500;}
+#orange23:hover {color: #800000; background-color: #FF6600;}
+#orange24:hover {color: #808000; background-color: #FF7700;}
+#orange25:hover {color: #DA70D6; background-color: #FF8800;}
+#orange26:hover {color: #FFDAB9; background-color: #FF9900;}
+#orange27:hover {color: #CCCCFF; background-color: #FFAA00;}
+#orange28:hover {color: #DDA0DD; background-color: #FFBB00;}
+#orange29:hover {color: #E0115F; background-color: #FFCC00;}
+#orange30:hover {color: #082567; background-color: #FFDD00;}
+#orange31:hover {color: #FF2400; background-color: #FFEE00;}
+#orange32:hover {color: #008080; background-color: #FFFF00;}
+#orange33:hover {color: #98FF98; background-color: #EEFF00;}
+#orange34:hover {color: #CB4154; background-color: #DDFF00;}
+#orange35:hover {color: #1F1F1F; background-color: #CCFF00;}
+#orange36:hover {color: #2a3439; background-color: #BBFF00;}
+#orange37:hover {color: #36454f; background-color: #AAFF00;}
+#orange38:hover {color: #001C2E; background-color: #99FF00;}
+#orange39:hover {color: #191970; background-color: #88FF00;}
+#orange40:hover {color: #202124; background-color: #77FF00;}
+#orange41:hover {color: #353535; background-color: #66FF00;}
+#orange42:hover {color: #555555; background-color: #55FF00;}
+#orange43:hover {color: #4E4E4E; background-color: #44FF00;}
+#orange44:hover {color: #737373; background-color: #33FF00;}
+#orange45:hover {color: #8A8A8A; background-color: #22FF00;}
+#orange46:hover {color: #A6A6A6; background-color: #11FF00;}
+#orange47:hover {color: #C0C0C0; background-color: #00FF00;}
+#orange48:hover {color: #E0E0E0; background-color: #00FF11;}
+#orange49:hover {color: #F5F5F5; background-color: #00FF22;}
+#orange50:hover {color: #FFFFFF; background-color: #00FF33;}
+#orange51:hover {color: #FFFFFF; background-color: #00FF44;}

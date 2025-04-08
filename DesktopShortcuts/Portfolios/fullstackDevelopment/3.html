@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CollabDoc - Real-Time Collaboration</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #f1f3f4;
+            --admin-color: #fce8e6;
+            --editor-color: #e8f0fe;
+            --viewer-color: #f6f9fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        #documentEditor {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-height: 80vh;
+        }
+
+        #editor {
+            width: 100%;
+            height: 70vh;
+            padding: 20px;
+            border: 2px solid #dadce0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .comment {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .version-entry {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .version-entry:hover {
+            background: var(--secondary-color);
+        }
+
+        .role-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .admin { background: var(--admin-color); color: #c5221f; }
+        .editor { background: var(--editor-color); color: var(--primary-color); }
+        .viewer { background: var(--viewer-color); color: #5f6368; }
+
+        #currentUsers {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .user-bubble {
+            padding: 6px 12px;
+            border-radius: 16px;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="documentEditor">
+            <div class="role-selector">
+                <select id="userRole" class="role-tag">
+                    <option value="admin" class="admin">Admin</option>
+                    <option value="editor" class="editor">Editor</option>
+                    <option value="viewer" class="viewer">Viewer</option>
+                </select>
+                <div id="currentUsers"></div>
+            </div>
+            <textarea id="editor"></textarea>
+            <button onclick="saveVersion()" class="role-tag editor">Save Version</button>
+        </div>
+
+        <div class="sidebar">
+            <div class="panel">
+                <h3>📝 Comments (12)</h3>
+                <div id="comments"></div>
+                <input type="text" id="newComment" placeholder="Add comment..." style="width: 100%; margin-top: 15px;">
+                <button onclick="addComment()" style="margin-top: 10px;">Add Comment</button>
+            </div>
+
+            <div class="panel">
+                <h3>🕑 Version History</h3>
+                <div id="versionHistory"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Extensive Sample Data
+        const sampleContent = `# Project Orion Specifications
+
+## Overview
+A next-generation collaboration platform designed to revolutionize team productivity. Key features include:
+- Real-time co-editing
+- Version control system
+- Role-based access
+- Comment threads
+- Cross-platform compatibility
+
+## Technical Requirements
+1. WebSocket-based communication
+2. Operational Transformation for conflict resolution
+3. JWT-based authentication
+4. Cloud storage integration
+5. Markdown support
+
+**Target Launch Date:** Q3 2024
+**Development Team:** Engineering Team Alpha`;
+
+        const sampleVersions = [
+            {
+                content: `# Project Orion Specifications\n\n## Overview\nInitial draft of project requirements`,
+                timestamp: "2023-08-15T09:30:00Z",
+                author: "Sarah Johnson",
+                changes: "Created document"
+            },
+            {
+                content: `# Project Orion Specifications\n\n## Overview\nAdded basic feature list\n\n## Technical Requirements\nInitial technical outline`,
+                timestamp: "2023-08-15T14:45:00Z",
+                author: "Michael Chen",
+                changes: "Added technical requirements section"
+            },
+            {
+                content: sampleContent,
+                timestamp: "2023-08-16T11:20:00Z",
+                author: "Emma Wilson",
+                changes: "Completed initial draft with markdown formatting"
+            }
+        ];
+
+        const sampleComments = [
+            {
+                text: "Should we consider adding AI-assisted editing?",
+                author: "Raj Patel",
+                role: "editor",
+                timestamp: "2023-08-15T10:15:00Z",
+                resolved: false
+            },
+            {
+                text: "Need to clarify cloud storage requirements",
+                author: "Linda Martinez",
+                role: "admin",
+                timestamp: "2023-08-15T16:30:00Z",
+                resolved: true
+            },
+            {
+                text: "Let's add more details about security protocols",
+                author: "David Kim",
+                role: "editor",
+                timestamp: "2023-08-16T09:45:00Z",
+                resolved: false
+            }
+        ];
+
+        const activeUsers = [
+            { name: "You", role: "admin" },
+            { name: "Emma W.", role: "editor" },
+            { name: "Michael C.", role: "viewer" }
+        ];
+
+        // Application State
+        let docState = {
+            content: sampleContent,
+            versions: sampleVersions,
+            comments: sampleComments,
+            currentUser: { role: "admin" }
+        };
+
+        // DOM Elements
+        const editor = document.getElementById('editor');
+        const commentsDiv = document.getElementById('comments');
+        const versionHistory = document.getElementById('versionHistory');
+        const userRole = document.getElementById('userRole');
+        const currentUsersDiv = document.getElementById('currentUsers');
+
+        // Initialize
+        function init() {
+            editor.value = docState.content;
+            updateComments();
+            updateVersions();
+            updateActiveUsers();
+            updateRolePermissions();
+        }
+
+        // Update Functions
+        function updateActiveUsers() {
+            currentUsersDiv.innerHTML = activeUsers.map(user => `
+                <div class="user-bubble ${user.role}">
+                    <div class="role-tag ${user.role}">${user.role}</div>
+                    ${user.name}
+                </div>
+            `).join('');
+        }
+
+        function updateComments() {
+            commentsDiv.innerHTML = docState.comments.map(comment => `
+                <div class="comment ${comment.resolved ? 'resolved' : ''}">
+                    <div class="comment-avatar">${comment.author[0]}</div>
+                    <div>
+                        <div style="font-weight:500;">${comment.author}
+                            <span class="role-tag ${comment.role}">${comment.role}</span>
+                            <span style="color:#5f6368;font-size:0.9em">${new Date(comment.timestamp).toLocaleString()}</span>
+                        </div>
+                        <p>${comment.text}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateVersions() {
+            versionHistory.innerHTML = docState.versions.map((version, index) => `
+                <div class="version-entry" onclick="loadVersion(${index})">
+                    <div style="font-weight:500;">Version ${index + 1}</div>
+                    <div style="color:#5f6368;font-size:0.9em">
+                        ${new Date(version.timestamp).toLocaleString()}<br>
+                        <em>${version.changes}</em>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateRolePermissions() {
+            editor.disabled = docState.currentUser.role === 'viewer';
+            editor.style.backgroundColor = 
+                docState.currentUser.role === 'admin' ? 'var(--admin-color)' :
+                docState.currentUser.role === 'editor' ? 'var(--editor-color)' :
+                'var(--viewer-color)';
+        }
+
+        // Event Handlers
+        userRole.addEventListener('change', (e) => {
+            docState.currentUser.role = e.target.value;
+            updateRolePermissions();
+        });
+
+        editor.addEventListener('input', (e) => {
+            if (docState.currentUser.role !== 'viewer') {
+                docState.content = e.target.value;
+            }
+        });
+
+        // Core Functionality
+        function saveVersion() {
+            const newVersion = {
+                content: docState.content,
+                timestamp: new Date().toISOString(),
+                author: "Current User",
+                changes: "Manual save"
+            };
+            docState.versions.push(newVersion);
+            updateVersions();
+        }
+
+        function loadVersion(index) {
+            editor.value = docState.versions[index].content;
+            docState.content = editor.value;
+        }
+
+        function addComment() {
+            const commentInput = document.getElementById('newComment');
+            if (commentInput.value.trim()) {
+                docState.comments.push({
+                    text: commentInput.value,
+                    author: "Current User",
+                    role: docState.currentUser.role,
+                    timestamp: new Date().toISOString(),
+                    resolved: false
+                });
+                commentInput.value = '';
+                updateComments();
+            }
+        }
+
+        // Initialize application
+        init();
+    </script>
+</body>
+</html>

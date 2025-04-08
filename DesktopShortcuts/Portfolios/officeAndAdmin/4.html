@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox Zero Email Organization - SwiftMail Solutions</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #64748b;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), #60a5fa);
+            color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .email-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .email-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .email-subject {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .email-sender {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .email-preview {
+            color: #475569;
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .promotion { background: #f0f9ff; color: #0369a1; }
+        .update { background: #fef2f2; color: #b91c1c; }
+        .alert { background: #fff7ed; color: #c2410c; }
+        .news { background: #f0fdf4; color: #15803d; }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Inbox Zero Mastery</h1>
+            <p>SwiftMail Solutions Email Management System</p>
+        </header>
+
+        <div class="email-grid" id="emailContainer">
+            <!-- Emails will be dynamically generated here -->
+        </div>
+    </div>
+
+    <script>
+        const categories = ['promotion', 'update', 'alert', 'news'];
+        const senders = [
+            'Marketing Team', 'Support Desk', 'Sales Department', 'CEO Office',
+            'Product Updates', 'Security Alert', 'HR Newsletter', 'Tech Support'
+        ];
+        
+        const subjects = [
+            'Q4 Campaign Strategy Finalized',
+            'Urgent: System Maintenance Tonight',
+            'Your Weekly Productivity Report',
+            'New Feature Launch: Smart Templates',
+            'Action Required: Security Update',
+            'Exclusive Partner Offer Inside',
+            'Team Meeting Rescheduled',
+            'Your Feedback Needed: New Interface',
+            'Subscription Renewal Reminder',
+            'Welcome to SwiftMail Pro Tier'
+        ];
+
+        const previewTexts = [
+            'We\'re excited to share the final plan for...',
+            'Please save your work before 8 PM EST...',
+            'You spent 12h 34m on email last week...',
+            'Create emails faster with our new AI-powered...',
+            'Critical security patch required for...',
+            'Get 30% off on premium plugins when...',
+            'The all-hands meeting has been moved to...',
+            'Help us improve by sharing your thoughts...',
+            'Your professional plan renews on June 30...',
+            'Unlocked: Advanced analytics and priority...'
+        ];
+
+        function generateEmail() {
+            return {
+                category: categories[Math.floor(Math.random() * categories.length)],
+                sender: senders[Math.floor(Math.random() * senders.length)],
+                subject: subjects[Math.floor(Math.random() * subjects.length)],
+                preview: previewTexts[Math.floor(Math.random() * previewTexts.length)],
+                read: Math.random() > 0.5
+            };
+        }
+
+        function renderEmails() {
+            const container = document.getElementById('emailContainer');
+            let html = '';
+
+            for(let i = 0; i < 100; i++) {
+                const email = generateEmail();
+                html += `
+                    <div class="email-card">
+                        <div class="category-tag ${email.category}">${email.category.toUpperCase()}</div>
+                        <div class="email-sender">${email.sender}</div>
+                        <h3 class="email-subject">${email.subject}</h3>
+                        <p class="email-preview">${email.preview}</p>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        renderEmails();
+    </script>
+</body>
+</html>

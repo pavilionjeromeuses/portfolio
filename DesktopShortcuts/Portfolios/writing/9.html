@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink & Imagination: Writing Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #fcf5e3;
+            --ink: #2a1a0f;
+            --accent: #8b0000;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            line-height: 1.8;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOaOAAABVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqrmQDeuv3powQ5ta2eN0FY0InkqDD73lT9c9lEzwUNqgFHs9VQce3TVClFCQrSTfOiYkVJQBmpbq2L6iZavPnAPcoU0dSw0SUTqz/GtrGuXfbyyBniKykOWQWGqwwMA7QiYAxi+IlPdqo+hYHnUt5ZPfnsHJyNiDtnpJyayNBkF6cWoYGAMY92U2hXHF/C1M8uP/ZtYdiuj26UdAdQQSXQErwSOMzt/XWRWAz5GuSBIkwG1H3FabJ2OsUOUhGC6tK4EMtJO0ttC6IBD3kM0ve0tJwMdSfjZo+EEISaeTr9P3wYrGjXqyC1krcKdhMpxEnt5JetoulscpyzhXN5FRpuPHvbeQaKxFAEB6EN+cYN6xD7RYGpXpNndMmZgM5Dcs3YSNFDHUo2LGfZuukSWyUYirJAdYbF3MfqEKmjM+I2EfhA94iG3L7uKrR+GdWD73ydlIB+6hgref1QTlmgmbM3/LeX5GI1Ux1RWpgxpLuZ2+I+IjzZ8wqE4nilvQdkUdfhzI5QDWyOUkw7XhJqHQ6K3R2XWwAAAAAElFTkSuQmCC');
+            color: var(--ink);
+            margin: 0;
+            padding: 4rem 2rem;
+        }
+
+        .manuscript {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--parchment);
+            padding: 4rem 3rem;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .manuscript::before {
+            content: '';
+            position: absolute;
+            top: -15px; bottom: -15px;
+            left: -15px; right: -15px;
+            background: linear-gradient(to right, var(--accent) 2px, transparent 2px) 0 0,
+                        linear-gradient(to bottom, var(--accent) 2px, transparent 2px) 0 0;
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--accent);
+            text-align: center;
+            margin: 0 0 4rem;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 2px;
+            background: var(--ink);
+            margin: 1rem auto;
+        }
+
+        .project-section {
+            margin: 4rem 0;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .project-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .script {
+            border-left: 3px solid var(--accent);
+            padding-left: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .script::before {
+            content: '✍';
+            position: absolute;
+            left: -30px;
+            top: -15px;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .character {
+            font-weight: 700;
+            color: var(--accent);
+            margin: 1.5rem 0 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .character::before {
+            content: '▪';
+            position: absolute;
+            left: 0;
+            color: var(--ink);
+        }
+
+        .dialogue {
+            margin-left: 2rem;
+            font-style: italic;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .action {
+            color: #666;
+            font-size: 0.9em;
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .scene-header {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin: 2rem 0 1rem;
+        }
+
+        .ink-blot {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 2rem 1rem; }
+            .manuscript { padding: 2rem; }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="manuscript">
+        <h1>Quill & Canvas</h1>
+
+        <div class="project-section">
+            <div class="scene-header">FADE IN:</div>
+            <div class="script">
+                <p class="scene-header">INT. MOONLIT DINER - WITCHING HOUR</p>
+                <p class="action">The hum of fluorescent lights battles silence. JENNA's reflection fractures in a coffee spoon. The door creaks open - a symphony of rust and regret.</p>
+
+                <p class="character">LEO</p>
+                <p class="dialogue">(voice cracking like old vinyl)<br>You kept the late hours.</p>
+
+                <p class="character">JENNA</p>
+                <p class="dialogue">(tracing the mug's rim)<br>Some ghosts only come calling after dark.</p>
+
+                <p class="action">A harmonica wails from the kitchen radio. Leo's shadow swallows half the table.</p>
+
+                <p class="character">LEO</p>
+                <p class="dialogue">I need... (swallows moonlight)<br>...to remember how we said goodbye.</p>
+
+                <p class="character">JENNA</p>
+                <p class="dialogue">(soft as cigarette ash)<br>We didn't.</p>
+            </div>
+        </div>
+
+        <div class="project-section">
+            <div class="scene-header">AIRWAVES:</div>
+            <div class="script">
+                <p class="scene-header">[CELLO INTRO FADES LIKE SMOKE]</p>
+
+                <p class="character">HOST (ALEX)</p>
+                <p class="dialogue">Tonight: When algorithms dream. Can machines yearn? Do servers grieve? (beat) And should we care?</p>
+
+                <p class="character">CO-HOST (MIRA)</p>
+                <p class="dialogue">(clinking teacup)<br>My Roomba definitely holds grudges.</p>
+
+                <p class="action">[LAUGHTER TANGLED IN STATIC]</p>
+
+                <p class="character">ALEX</p>
+                <p class="dialogue">We're joined by Dr. Amara Voss, who's been teaching neural networks to write poetry. Does GPT-3 know sonnets from haiku?</p>
+
+                <p class="character">DR. VOSS</p>
+                <p class="dialogue">"It learned metaphor from 10 million books... but can't describe its mother's hands."</p>
+
+                <p class="action">[MUSIC SWELLS LIKE A QUESTION]</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

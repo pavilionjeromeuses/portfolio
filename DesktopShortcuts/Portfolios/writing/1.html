@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink & Soul: A Writer's Canvas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Proza+Libre:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink-black: #2a2a2e;
+            --parchment: #f9f5e7;
+            --accent-gold: #c5a47e;
+            --deep-plum: #3f2b3b;
+        }
+
+        body {
+            font-family: 'Proza Libre', sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(45deg, var(--parchment) 30%, #fdfaf0 100%);
+            color: var(--ink-black);
+            margin: 0;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .header:after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: var(--accent-gold);
+            margin: 25px auto;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            color: var(--deep-plum);
+            letter-spacing: 1.5px;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .prompt-section {
+            background: rgba(255,255,255,0.9);
+            padding: 40px;
+            margin: 50px 0;
+            border-radius: 5px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--accent-gold);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-section:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--deep-plum);
+            font-size: 2.5rem;
+            margin: 0 0 25px;
+            position: relative;
+        }
+
+        h2:before {
+            content: '✒';
+            position: absolute;
+            left: -50px;
+            top: -10px;
+            color: var(--accent-gold);
+            font-size: 2rem;
+        }
+
+        .writing-tips {
+            background: rgba(197,164,126,0.08);
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 3px solid var(--accent-gold);
+            border-radius: 3px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        button {
+            background: var(--deep-plum);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background: var(--accent-gold);
+            transform: scale(1.05);
+        }
+
+        .sample-work {
+            background: rgba(255,255,255,0.95);
+            padding: 35px;
+            margin: 40px 0;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            position: relative;
+        }
+
+        .sample-work:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--deep-plum));
+        }
+
+        .sample-work h3 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--deep-plum);
+            font-size: 1.8rem;
+            margin: 0 0 20px;
+        }
+
+        ul, ol {
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        .essay-example {
+            font-style: italic;
+            color: #666;
+            border-left: 3px solid var(--accent-gold);
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin: 60px 0 30px;
+            padding: 30px;
+            background: rgba(63,43,59,0.9);
+            color: white;
+            border-radius: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ink Blot Decoration */
+        .ink-blot {
+            position: fixed;
+            opacity: 0.08;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .ink-blot-1 {
+            top: 20%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--ink-black) 20%, transparent 70%);
+            filter: blur(15px);
+        }
+
+        .ink-blot-2 {
+            top: 60%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--deep-plum) 30%, transparent 70%);
+            filter: blur(20px);
+            transform: rotate(45deg);
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent-gold);
+            z-index: 999;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .prompt-section { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="ink-blot ink-blot-1"></div>
+    <div class="ink-blot ink-blot-2"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Ink & Soul<br><span style="font-size: 1.2rem; letter-spacing: 3px;">A Writer's Journey Through Memory</span></h1>
+        </div>
+
+    <h1>Personal Essay Writing Project</h1>
+    
+    <div class="prompt-section" style="background-color: #e8f4fc;">
+        <h2>1. "A Defining Moment"</h2>
+        <p>Reflect on a specific event that fundamentally changed your worldview, values, or understanding of yourself.</p>
+        
+        <h3>Writing Prompts:</h3>
+        <ul>
+            <li>What made this moment particularly significant?</li>
+            <li>How did you feel before, during, and after the event?</li>
+            <li>What specific details make this memory vivid?</li>
+            <li>How has your perspective evolved since then?</li>
+        </ul>
+
+        <button onclick="toggleTips('tips1')">Show Writing Tips</button>
+        <div id="tips1" class="writing-tips">
+            <p>✍️ Tips:</p>
+            <ul>
+                <li>Use sensory details to recreate the moment</li>
+                <li>Show the contrast between "before" and "after"</li>
+                <li>Include specific dialogue or inner monologue</li>
+                <li>Reflect on lasting impacts</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="sample-work">
+        <h3>Sample Essay: "The Pool Incident"</h3>
+        <p>I still smell the chlorine whenever I remember my ninth summer. There I was - knock-kneed and trembling in my daisy-print swimsuit, toes curling over the pool's gritty edge. "Jump!" shouted Uncle Rob, his arms outstretched in the turquoise water. But the pool's swallowing vastness had frozen my legs...</p>
+        
+        <p>What I couldn't know then: This moment of humiliating retreat from the diving board would seed a decade of avoidance. I became the girl who invented period cramps to skip swim class, who panicked at beach trips. Until my eighteenth year, when watching a toddler bravely belly-flop made me ache for that frozen child...</p>
+
+        <p>Now, when I slip into the community pool each morning, the water hugs rather than threatens. Each stroke whispers: "Courage isn't the absence of fear, but the decision that something else matters more." My defining moment wasn't the childhood hesitation, but the adult realization that we can refreeze melted fears into new shapes.</p>
+    </div>
+</div>
+
+    <div class="prompt-section" style="background-color: #f0f8ec;">
+        <h2>2. "Letter to My Younger Self"</h2>
+        <p>Write a compassionate letter offering wisdom, reassurance, or guidance to your past self.</p>
+
+        <h3>Writing Prompts:</h3>
+        <ul>
+            <li>What specific age/version of yourself are you addressing?</li>
+            <li>What truths do you wish you'd understood then?</li>
+            <li>What tender advice would you offer?</li>
+            <li>How would you reframe past struggles?</li>
+        </ul>
+
+        <button onclick="toggleTips('tips2')">Show Writing Tips</button>
+        <div id="tips2" class="writing-tips">
+            <p>✍️ Tips:</p>
+            <ul>
+                <li>Use second-person perspective ("you")</li>
+                <li>Balance honesty with compassion</li>
+                <li>Include specific memories or reference points</li>
+                <li>Reveal how challenges shaped you</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="sample-work">
+        <h3>Sample Letter: "To 14-Year-Old Me"</h3>
+        <p>Dear Keeper of Butterfly Hairclips,</p>
+        
+        <p>I know you're sitting on your bed right now, tear-blurred eyes staring at the math test circled in red. Your chest aches like you've swallowed thorns. That boy's cruel "four-eyes" comment still rings in your ears, and you're wondering if anyone will ever see past the braces and awkwardness...</p>
+
+        <p>Let me tell you three truths your 14-year-old heart needs:</p>
+        
+        <p>1. Those "flaws" you pick at in the mirror? They're the very features your future love will trace lovingly, calling them home.<br>
+        2. The loneliness you feel isn't a life sentence - it's fertilizer. From this soil will grow your fierce compassion.<br>
+        3. That math grade? In five years, you'll laugh about it while accepting a writing award.</p>
+
+        <p>Don't shrink to fit their boxes, firefly. Your light isn't meant for jars. Keep scribbling in those notebooks - those words will become wings.</p>
+        
+        <p>With love,<br>
+        Your 30-Year-Old Self<br>
+        P.S. Wear the red dress to homecoming.</p>
+    </div>
+</div>
+
+    <div class="prompt-section">
+        <h3>Reflection Questions (For Both Essays):</h3>
+        <ol>
+            <li>What emotional truth are you trying to convey?</li>
+            <li>How can you make universal experiences feel personal?</li>
+            <li>Where can you add concrete details to enhance authenticity?</li>
+        </ol>
+    </div>
+
+    <div class="sample-work" style="margin-top: 25px;">
+        <h3>Sample Answers:</h3>
+        
+        <div style="margin-bottom: 30px;">
+            <h4>From "A Defining Moment" Sample:</h4>
+            <ol>
+                <li><strong>Emotional Truth:</strong> That courage is a continuous choice rather than a fixed trait, 
+                    and that our past limitations don't define our future capabilities</li>
+                
+                <li><strong>Universal to Personal:</strong> By pairing the common childhood fear of water with 
+                    specific details like the daisy-print swimsuit and Uncle Rob's outstretched arms, 
+                    transforming a generic "facing fears" narrative into a unique personal journey</li>
+                
+                <li><strong>Concrete Details Added:</strong> 
+                    <ul>
+                        <li>The gritty texture of pool edge under toes</li>
+                        <li>Chlorine smell as emotional trigger</li>
+                        <li>Specific age markers ("ninth summer"/"eighteenth year")</li>
+                        <li>Tactile water description ("hugs rather than threatens")</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div>
+            <h4>From "Letter to My Younger Self" Sample:</h4>
+            <ol>
+                <li><strong>Emotional Truth:</strong> That adolescent insecurities contain the seeds of future strength, 
+                    and temporary pain often fuels lasting growth</li>
+                
+                <li><strong>Universal to Personal:</strong> Using specific reference points like butterfly hairclips 
+                    and the red dress recommendation to ground common teenage anxieties in particular 
+                    lived experience</li>
+                
+                <li><strong>Concrete Details Added:</strong>
+                    <ul>
+                        <li>The physical sensation of "chest aches like swallowed thorns"</li>
+                        <li>Visual of math test "circled in red"</li>
+                <li>Tactile memory of future love tracing features</li>
+                        <li>Specific age callouts ("14-year-old heart"/"30-year-old self")</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;">
+        "Words are the brushstrokes of the soul's canvas"<br>
+        ✦ Crafted with care for storytellers ✦
+    </p>
+</footer>
+</div>
+
+<script>
+// Scroll Progress Indicator
+window.onscroll = function() {
+    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    let scrolled = (winScroll / height) * 100;
+    document.getElementById("scrollProgress").style.width = scrolled + "%";
+};
+
+// Enhanced Toggle Function
+function toggleTips(tipsId) {
+    const tips = document.getElementById(tipsId);
+    tips.style.display = tips.style.display === 'block' ? 'none' : 'block';
+    if (tips.style.display === 'block') {
+        tips.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+</script>
+</body>
+</html>

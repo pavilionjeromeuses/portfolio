@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWise Solutions - Office Expense Dashboard</title>
+    
+    <!-- Modern CSS Framework -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Charting Library -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #6366f1;
+            --accent-color: #10b981;
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-card {
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen text-gray-800">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="mb-4 md:mb-0">
+                <h1 class="text-3xl font-bold text-gray-900">FinWise Solutions</h1>
+                <p class="text-gray-600">Office Expense Dashboard</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <select class="bg-white rounded-lg px-4 py-2 focus:outline-none border border-gray-200 text-gray-700">
+                        <option>Q3 2023</option>
+                        <option>Q2 2023</option>
+                        <option>Q1 2023</option>
+                    </select>
+                </div>
+                <button class="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-lg transition-colors text-white">
+                    <i class='bx bx-download'></i> Export
+                </button>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glassmorphism p-6 rounded-xl">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-600">Total Expenses</p>
+                        <p class="text-3xl font-bold text-gray-900">$45,230</p>
+                    </div>
+                    <i class='bx bx-credit-card text-4xl text-indigo-500'></i>
+                </div>
+            </div>
+            <!-- Add more summary cards similarly -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Expense Trends Chart -->
+            <div class="lg:col-span-2 chart-card glassmorphism p-6 rounded-xl">
+                <h3 class="text-xl font-semibold mb-4 text-gray-900">Expense Trends</h3>
+                <div id="trendChart"></div>
+            </div>
+
+            <!-- Expense Categories -->
+            <div class="chart-card glassmorphism p-6 rounded-xl">
+                <h3 class="text-xl font-semibold mb-4 text-gray-900">Categories</h3>
+                <div id="categoryChart"></div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="glassmorphism p-6 rounded-xl mt-6">
+            <h3 class="text-xl font-semibold mb-4 text-gray-900">Recent Transactions</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-gray-600 text-left border-b border-gray-200">
+                            <th class="pb-3">Date</th>
+                            <th class="pb-3">Category</th>
+                            <th class="pb-3">Amount</th>
+                            <th class="pb-3">Department</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Department</th>
+                            <th>Amount</th>
+                            <th>Payment Method</th>
+                            <th>Status</th>
+                          </tr>
+                          
+                          <!-- Technology Expenses -->
+                          <tr>
+                            <td>2023-07-15</td>
+                            <td>Technology</td>
+                            <td>15x Dell Latitude 5440 Laptops</td>
+                            <td>IT</td>
+                            <td>$18,750</td>
+                            <td>Bank Transfer</td>
+                            <td>Paid</td>
+                          </tr>
+                          <tr>
+                            <td>2023-08-02</td>
+                            <td>Technology</td>
+                            <td>Office 365 Enterprise License (Annual)</td>
+                            <td>Company-wide</td>
+                            <td>$8,400</td>
+                            <td>Credit Card</td>
+                            <td>Paid</td>
+                          </tr>
+                          <tr>
+                            <td>2023-09-12</td>
+                            <td>Technology</td>
+                            <td>Cisco Meraki Network Equipment</td>
+                            <td>IT</td>
+                            <td>$12,300</td>
+                            <td>Bank Transfer</td>
+                            <td>Pending</td>
+                          </tr>
+                          
+                          <!-- Office Supplies -->
+                          <tr>
+                            <td>2023-07-03</td>
+                            <td>Office Supplies</td>
+                            <td>Bulk HP LaserJet Toner Cartridges</td>
+                            <td>Operations</td>
+                            <td>$1,230</td>
+                            <td>Credit Card</td>
+                            <td>Paid</td>
+                          </tr>
+                          <tr>
+                            <td>2023-08-19</td>
+                            <td>Office Supplies</td>
+                            <td>Ergonomic Keyboard/Mouse Sets</td>
+                            <td>HR</td>
+                            <td>$890</td>
+                            <td>Credit Card</td>
+                            <td>Reimbursed</td>
+                          </tr>
+                          
+                          <!-- Facilities -->
+                          <tr>
+                            <td>2023-09-01</td>
+                            <td>Facilities</td>
+                            <td>Office Deep Cleaning Service</td>
+                            <td>Operations</td>
+                            <td>$650</td>
+                            <td>Check</td>
+                            <td>Paid</td>
+                          </tr>
+                          <tr>
+                            <td>2023-07-22</td>
+                            <td>Facilities</td>
+                            <td>Reception Area Furniture Update</td>
+                            <td>Executive</td>
+                            <td>$4,200</td>
+                            <td>Bank Transfer</td>
+                            <td>Paid</td>
+                          </tr>
+                          
+                          <!-- Employee Expenses -->
+                          <tr>
+                            <td>2023-08-10</td>
+                            <td>Employee Expenses</td>
+                            <td>Q3 Team Building Retreat</td>
+                            <td>HR</td>
+                            <td>$7,800</td>
+                            <td>Credit Card</td>
+                            <td>Paid</td>
+                          </tr>
+                          <tr>
+                            <td>2023-09-05</td>
+                            <td>Employee Expenses</td>
+                            <td>Employee Wellness Program Subsidy</td>
+                            <td>HR</td>
+                            <td>$2,500</td>
+                            <td>Bank Transfer</td>
+                            <td>Pending</td>
+                          </tr>
+                          
+                          <!-- Professional Services -->
+                          <tr>
+                            <td>2023-07-29</td>
+                            <td>Professional Services</td>
+                            <td>Corporate Legal Consultation</td>
+                            <td>Executive</td>
+                            <td>$3,200</td>
+                            <td>Bank Transfer</td>
+                            <td>Paid</td>
+                          </tr>
+                          <tr>
+                            <td>2023-09-18</td>
+                            <td>Professional Services</td>
+                            <td>Cybersecurity Audit</td>
+                            <td>IT</td>
+                            <td>$5,600</td>
+                            <td>Credit Card</td>
+                            <td>Paid</td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Charts with light theme colors
+        const trendOptions = {
+            series: [{
+                name: "Expenses",
+                data: [3000, 4200, 3500, 5100, 4900, 6200]
+            }],
+            chart: {
+                type: 'area',
+                height: 350,
+                toolbar: { show: false },
+                zoom: { enabled: false },
+                foreColor: '#374151'
+            },
+            colors: ['#818cf8'],
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 3 },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.2,
+                }
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            grid: {
+                borderColor: '#e5e7eb'
+            }
+        };
+
+        const categoryOptions = {
+            series: [44, 55, 13, 33],
+            labels: ['Operations', 'IT', 'HR', 'Marketing'],
+            chart: { 
+                type: 'donut', 
+                height: 350,
+                foreColor: '#374151'
+            },
+            colors: ['#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'],
+            legend: { 
+                position: 'bottom',
+                labels: {
+                    colors: '#374151'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                color: '#374151'
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const trendChart = new ApexCharts(document.querySelector("#trendChart"), trendOptions);
+        const categoryChart = new ApexCharts(document.querySelector("#categoryChart"), categoryOptions);
+        
+        trendChart.render();
+        categoryChart.render();
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Database Management - NeoConnect Technologies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-inactive { background: #f3f4f6; color: #374151; }
+        .status-onboarding { background: #fef9c3; color: #854d0e; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">NeoConnect Technologies</h1>
+                    <p class="text-gray-600 mt-1">Client Database Management System</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">v2.1.8</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Client ID</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Client Name</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Email</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Phone</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Industry</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Account Manager</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="clientData">
+                        <!-- Data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sample Data Generator
+        const industries = ['Technology', 'Finance', 'Healthcare', 'Retail', 'Manufacturing', 'Education', 'Energy'];
+        const statuses = ['Active', 'Inactive', 'Onboarding'];
+        const managers = ['Alex Rivera', 'Jordan Smith', 'Taylor Chen', 'Morgan Lee'];
+        
+        const clients = Array.from({length: 100}, (_, i) => ({
+            id: `NC-${2024000 + i}`,
+            name: `Client ${String.fromCharCode(65 + (i % 26))}${i + 1}`,
+            email: `client${i + 1}@${['neomail','techconnect','globex'].sort(() => 0.5 - Math.random())[0]}.com`,
+            phone: `+1 (${String(Math.floor(Math.random() * 900) + 100)}) ${String(Math.floor(Math.random() * 900) + 100)}-${String(Math.floor(Math.random() * 9000) + 1000)}`,
+            industry: industries[Math.floor(Math.random() * industries.length)],
+            manager: managers[Math.floor(Math.random() * managers.length)],
+            status: statuses[Math.floor(Math.random() * statuses.length)]
+        }));
+
+        // Populate Table
+        const tbody = document.getElementById('clientData');
+        clients.forEach(client => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 transition-colors';
+            row.innerHTML = `
+                <td class="px-6 py-4 text-sm text-gray-900 font-mono">${client.id}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${client.name}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">${client.email}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">${client.phone}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">${client.industry}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">${client.manager}</td>
+                <td class="px-6 py-4 text-sm">
+                    <span class="px-2.5 py-1 rounded-full text-xs font-medium status-${client.status.toLowerCase()}">
+                        ${client.status}
+                    </span>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    </script>
+</body>
+</html>

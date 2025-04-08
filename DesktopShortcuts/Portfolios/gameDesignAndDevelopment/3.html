@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Labyrinth of Cooperation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        canvas {
+            position: absolute;
+            image-rendering: pixelated;
+        }
+        #hud {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="hud">Player 1: WASD + Shift | Player 2: Arrows + Ctrl</div>
+    <div id="gameContainer">
+        <canvas id="player1View"></canvas>
+        <canvas id="player2View"></canvas>
+    </div>
+
+<script>
+const CONFIG = {
+    GRAVITY: 0.5,
+    PLAYER_SPEED: 5,
+    JUMP_FORCE: -12,
+    LIGHT_RADIUS: 100,
+    WORLD_SIZE: { x: 1600, y: 800 }
+};
+
+class CooperativeGame {
+    constructor() {
+        this.canvas = {
+            p1: document.getElementById('player1View'),
+            p2: document.getElementById('player2View')
+        };
+        this.ctx = {
+            p1: this.canvas.p1.getContext('2d'),
+            p2: this.canvas.p2.getContext('2d')
+        };
+        
+        this.players = {
+            p1: this.createPlayer('light', 100, 100),
+            p2: this.createPlayer('gravity', 300, 100)
+        };
+
+        this.platforms = [
+            {x: 0, y: 500, w: 1600, h: 300},
+            {x: 400, y: 400, w: 200, h: 20},
+            {x: 800, y: 300, w: 200, h: 20}
+        ];
+
+        this.keys = {};
+        this.init();
+    }
+
+    createPlayer(type, x, y) {
+        return {
+            type,
+            x, y,
+            w: 32, h: 48,
+            velX: 0, velY: 0,
+            grounded: false,
+            gravityMultiplier: 1,
+            lightActive: false
+        };
+    }
+
+    init() {
+        // Setup canvases
+        this.canvas.p1.width = window.innerWidth/2;
+        this.canvas.p1.height = window.innerHeight;
+        this.canvas.p2.width = window.innerWidth/2;
+        this.canvas.p2.height = window.innerHeight;
+        this.canvas.p2.style.left = '50%';
+
+        // Input handling
+        window.addEventListener('keydown', e => this.keys[e.key] = true);
+        window.addEventListener('keyup', e => this.keys[e.key] = false);
+        
+        // Start game loop
+        this.gameLoop();
+    }
+
+    handleInput() {
+        // Player 1 controls (WASD + Shift)
+        if (this.keys['a']) this.players.p1.velX = -CONFIG.PLAYER_SPEED;
+        if (this.keys['d']) this.players.p1.velX = CONFIG.PLAYER_SPEED;
+        if (this.keys['w'] && this.players.p1.grounded) {
+            this.players.p1.velY = CONFIG.JUMP_FORCE * this.players.p1.gravityMultiplier;
+        }
+        this.players.p1.lightActive = this.keys['Shift'];
+
+        // Player 2 controls (Arrows + Ctrl)
+        if (this.keys['ArrowLeft']) this.players.p2.velX = -CONFIG.PLAYER_SPEED;
+        if (this.keys['ArrowRight']) this.players.p2.velX = CONFIG.PLAYER_SPEED;
+        if (this.keys['ArrowUp'] && this.players.p2.grounded) {
+            this.players.p2.velY = CONFIG.JUMP_FORCE * this.players.p2.gravityMultiplier;
+        }
+        if (this.keys['Control']) this.players.p2.gravityMultiplier *= -1;
+    }
+
+    applyPhysics(player) {
+        player.y += player.velY;
+        player.x += player.velX;
+        player.velY += CONFIG.GRAVITY * player.gravityMultiplier;
+        player.velX *= 0.8;
+
+        // Platform collision
+        player.grounded = false;
+        this.platforms.forEach(plat => {
+            if (this.checkCollision(player, plat)) {
+                player.velY = 0;
+                player.y = plat.y - player.h;
+                player.grounded = true;
+            }
+        });
+    }
+
+    checkCollision(rect1, rect2) {
+        return rect1.x < rect2.x + rect2.w &&
+               rect1.x + rect1.w > rect2.x &&
+               rect1.y < rect2.y + rect2.h &&
+               rect1.y + rect1.h > rect2.y;
+    }
+
+    drawScene(ctx, player, viewport) {
+        // Clear canvas
+        ctx.fillStyle = '#0a0a1a';
+        ctx.fillRect(0, 0, viewport.w, viewport.h);
+
+        // Draw platforms
+        ctx.fillStyle = '#444';
+        this.platforms.forEach(plat => {
+            ctx.fillRect(plat.x - viewport.x, plat.y - viewport.y, plat.w, plat.h);
+        });
+
+        // Draw players
+        ctx.fillStyle = player === this.players.p1 ? '#ff4444' : '#44ff44';
+        ctx.fillRect(
+            player.x - viewport.x, 
+            player.y - viewport.y, 
+            player.w, 
+            player.h
+        );
+
+        // Light effect (P1 ability)
+        if (player.type === 'light' && player.lightActive) {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(
+                player.x + player.w/2 - viewport.x,
+                player.y + player.h/2 - viewport.y,
+                CONFIG.LIGHT_RADIUS,
+                0, Math.PI * 2
+            );
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+        }
+    }
+
+    calculateViewport(player) {
+        return {
+            x: Math.max(0, player.x + player.w/2 - this.canvas.p1.width/2),
+            y: Math.max(0, player.y + player.h/2 - this.canvas.p1.height/2),
+            w: this.canvas.p1.width,
+            h: this.canvas.p1.height
+        };
+    }
+
+    gameLoop() {
+        this.handleInput();
+        
+        // Update physics
+        Object.values(this.players).forEach(player => {
+            this.applyPhysics(player);
+            player.x = Math.max(0, Math.min(CONFIG.WORLD_SIZE.x - player.w, player.x));
+        });
+
+        // Draw both views
+        const viewP1 = this.calculateViewport(this.players.p1);
+        const viewP2 = this.calculateViewport(this.players.p2);
+        
+        this.drawScene(this.ctx.p1, this.players.p1, viewP1);
+        this.drawScene(this.ctx.p2, this.players.p2, viewP2);
+
+        requestAnimationFrame(() => this.gameLoop());
+    }
+}
+
+// Start game
+window.addEventListener('load', () => new CooperativeGame());
+</script>
+</body>
+</html>

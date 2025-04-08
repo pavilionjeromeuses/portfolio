@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFusion AI - Smart Task Assignments</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --background: #f8fafc;
+            --text: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f9fafb, #f1f5f9);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--primary);
+            padding: 2rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-in-progress {
+            background: #fef9c3;
+            color: #a16207;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .priority-high {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Task Assignments</h1>
+            <p class="subtitle">TaskFusion AI Workforce Optimization Dashboard</p>
+        </header>
+        
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Assignee</th>
+                    <th>Department</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody id="taskData">
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const departments = ['AI Research', 'Product Dev', 'Customer Success', 'Data Ops', 'Marketing', 'QA'];
+        const statuses = ['In Progress', 'Completed'];
+        const names = ['Alex Chen', 'Samira Khan', 'Jordan Smith', 'Taylor Wright', 'Morgan Lee', 'Casey Kim'];
+        
+        const generateData = () => {
+            const tasks = [];
+            const tbody = document.getElementById('taskData');
+            
+            for(let i = 1; i <= 100; i++) {
+                const task = {
+                    id: `TASK-${i.toString().padStart(4, '0')}`,
+                    assignee: names[Math.floor(Math.random() * names.length)],
+                    department: departments[Math.floor(Math.random() * departments.length)],
+                    priority: Math.random() > 0.7 ? 'High' : 'Normal',
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    dueDate: new Date(Date.now() + Math.random() * 30 * 86400000).toLocaleDateString()
+                };
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.id}</td>
+                    <td>${task.assignee}</td>
+                    <td>${task.department}</td>
+                    <td class="${task.priority === 'High' ? 'priority-high' : ''}">${task.priority}</td>
+                    <td><span class="status status-${task.status.toLowerCase().replace(' ', '-')}">${task.status}</span></td>
+                    <td>${task.dueDate}</td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        generateData();
+    </script>
+</body>
+</html>

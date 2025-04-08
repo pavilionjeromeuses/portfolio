@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elena Marquez: The Poetry of Threads | Artisan Profile</title>
+    <style>
+        :root {
+            --primary: #3A2E39;
+            --secondary: #D44D5C;
+            --accent: #E9B44C;
+            --text: #F4F4F2;
+            --paper: #FFF8EE;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(var(--paper), #FEFBF6);
+            color: var(--primary);
+            line-height: 1.8;
+            margin: 0;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23E9B44C22" d="M42.8,-76.3C55.3,-69.3,64.7,-56.7,71.7,-43.2C78.7,-29.7,83.3,-15.3,82.7,-1.1C82.1,13.2,76.3,26.3,68.5,38.3C60.7,50.3,50.9,61.1,39.3,68.9C27.7,76.7,14.3,81.5,-0.5,82.4C-15.3,83.3,-30.6,80.4,-42.2,73.1C-53.8,65.8,-61.7,54.1,-69.3,42.1C-76.9,30.1,-84.3,17.8,-85.6,4.8C-86.9,-8.3,-82.2,-22.1,-74.5,-34.2C-66.7,-46.3,-56,-56.7,-43.3,-63.6C-30.6,-70.5,-15.3,-73.9,0.6,-74.8C16.5,-75.8,33,-74.3,42.8,-76.3Z"/></svg>');
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 4px;
+            background: var(--secondary);
+        }
+
+        .profile-img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 6px solid var(--text);
+            box-shadow: 0 10px 30px rgba(58, 46, 57, 0.2);
+            margin: 2rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: rotate(5deg);
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            color: var(--primary);
+            margin: 1rem 0;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .section::before {
+            content: '✻';
+            position: absolute;
+            top: -1.5rem;
+            left: -1rem;
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--secondary);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px dashed var(--accent);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .interview-grid {
+            display: grid;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .interview-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .interview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .question {
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .question::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .answer {
+            color: var(--primary);
+            font-size: 0.95rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--accent);
+            margin-left: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Custom Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600&display=swap');
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>The Loom of<br>Human Connection</h1>
+            <img src="placeholder-profile.jpg" alt="Elena Marquez" class="profile-img">
+            <p class="tagline">Elena Marquez · Textile Alchemist · Community Architect</p>
+        </header>
+
+        <section class="section" id="profile">
+            <h2>Warp & Weft of Existence</h2>
+            <p>In the golden-hour glow of her studio, where dust motes dance like ancestral spirits, Elena Marquez' hands move with the rhythm of centuries. Needles flash like tiny lightning bolts as she transforms raw hemp into living history. The air hums with stories - each spool of indigo-dyed thread a river of memory, every patchwork scrap a fragment of collective soul.</p>
+            
+            <p>Her workspace resembles an archaeological dig of the future. On weathered shelves, pre-Columbian weaving tools converse with 3D-printed looms. A vibrant chaos of community quilts blankets the walls, their stitched signatures forming constellations of resistance. In one corner, a digital frame cycles through augmented reality tapestries, their patterns shifting with real-time climate data.</p>
+        </section>
+
+        <section class="section" id="interview">
+            <h2>Conversations in Thread</h2>
+            <div class="interview-grid">
+                <div class="interview-card">
+                    <div class="question">On the alchemy of collective creation</div>
+                    <div class="answer">"We're spinning social DNA. When hundreds contribute to a single piece, the artwork becomes a living organism. It breathes with the community's joys and traumas. Our Borderlands Altarpiece now has 724 contributors - each stitch a prayer, each patch a migration story."</div>
+                </div>
+
+                <div class="interview-card">
+                    <div class="question">Technology in traditional craft</div>
+                    <div class="answer">"We've developed bio-luminescent threads that react to body heat. Protest banners that change patterns based on decibel levels. But our greatest innovation? An AI that analyzes stitch patterns to detect early signs of community trauma."</div>
+                </div>
+
+                <div class="interview-card">
+                    <div class="question">The politics of texture</div>
+                    <div class="answer">"Rough burlap next to silk isn't just aesthetic - it's class commentary. We work with recycled plastic bags crocheted into delicate lace. The material contradictions force viewers to confront uncomfortable truths."</div>
+                </div>
+
+                <div class="interview-card">
+                    <div class="question">Future threads</div>
+                    <div class="answer">"We're developing a global quilt documenting climate migration. Satellite imagery translated into stitch patterns. Refugee coordinates become embroidery coordinates. The ultimate act of bearing witness."</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2023 The Textile Chronicles · Crafted with <span style="color: var(--secondary);">♥</span> in collaboration with Threads of Resistance Collective</p>
+    </footer>
+
+    <script>
+        // Simple animation trigger
+        const cards = document.querySelectorAll('.interview-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        cards.forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

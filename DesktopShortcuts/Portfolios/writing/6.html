@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literary Canvas | Writing Projects Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C5A47E;
+            --deep-navy: #0A192F;
+            --parchment: #F4F0E6;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: linear-gradient(45deg, #f3f4f6 0%, #f9fafb 100%);
+            color: var(--deep-navy);
+            line-height: 1.8;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            text-align: center;
+            margin: 4rem 0;
+            position: relative;
+            color: var(--deep-navy);
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gold);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--deep-navy);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .visual-frame {
+            background: linear-gradient(45deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .visual-frame:after {
+            content: "Visual Concept";
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .post-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .post-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .post-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold) 0%, #e5d4b9 100%);
+        }
+
+        .newsletter-wrap {
+            background: var(--deep-navy);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .newsletter-wrap:after {
+            content: '✉';
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            font-size: 8rem;
+            opacity: 0.05;
+            transform: rotate(15deg);
+        }
+
+        .cta-button {
+            background: var(--gold);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 1rem 0;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .decorative-pen {
+            position: fixed;
+            top: 20%;
+            right: 5%;
+            font-size: 3rem;
+            opacity: 0.1;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .project-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decorative-pen">🖋️</div>
+        
+        <h1>The Art of Persuasion</h1>
+
+        <!-- Product Description -->
+        <div class="project-card">
+            <h2>Product Poetry: AetherGlow Smart Glasses</h2>
+            <div class="visual-frame">
+                <p>[Futuristic eyewear floating above cityscape]</p>
+            </div>
+            <p class="sample-copy">"Where light meets intelligence. AetherGlow redefines visual perception through precision-engineered augmented reality that harmonizes with your natural environment. Not just smart glasses – <em>enlightened vision</em>."</p>
+            <div style="margin-top: 2rem;">
+                <a href="#" class="cta-button">Craft Your Narrative</a>
+            </div>
+        </div>
+
+        <!-- Social Campaign -->
+        <div class="project-card">
+            <h2>Digital Storytelling: #UrbanHike Chronicles</h2>
+            <div class="post-grid">
+                <div class="post-card">
+                    <div class="visual-frame" style="min-height: 200px;">
+                        <p>[Abstract mountain silhouette]</p>
+                    </div>
+                    <p>"Concrete jungles demand new explorers. Where will your #UrbanHike take you tomorrow? 🌆<br><span style="color: var(--gold);">#CityScapeAdventures</span></p>
+                </div>
+                <div class="post-card">
+                    <div class="visual-frame" style="min-height: 200px;">
+                        <p>[Minimalist shoe design]</p>
+                    </div>
+                    <p>"Architecture for your feet: precision-engineered for the urban explorer's soul. 🏗️👟<br><span style="color: var(--gold);">#DesignMeetsFunction</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="project-card">
+            <div class="newsletter-wrap">
+                <h2 style="color: white;">The Curated Mind: Tech Insider</h2>
+                <div class="visual-frame" style="background: rgba(255,255,255,0.1);">
+                    <p>[Futuristic circuit pattern]</p>
+                </div>
+                <p style="opacity: 0.9;">Dear Visionary,<br><br>
+                This week's digital odyssey:<br>
+                • AI's new renaissance in creative tech<br>
+                • The hidden art of semiconductor design<br>
+                • Quantum computing's aesthetic frontier</p>
+                <a href="#" class="cta-button" style="background: white; color: var(--deep-navy);">Unlock Insights</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple intersection observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.project-card').forEach((card) => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

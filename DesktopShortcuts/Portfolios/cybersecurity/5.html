@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedGuard Pro - HIPAA Compliance Auditor</title>
+    <style>
+        :root {
+            --md-blue: #2a5c8d;
+            --md-red: #c43d4b;
+            --md-green: #4a9b8e;
+            --md-gray: #e9f0f5;
+        }
+
+        body {
+            font-family: 'Roboto', system-ui, sans-serif;
+            margin: 0;
+            background: var(--md-gray);
+            color: #2a2a2a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(42,92,141,0.1);
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--md-blue), #183d5d);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 10px 10px 0 0;
+            margin: -2rem -2rem 2rem -2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '⚕️🛡️';
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.1;
+            right: -1rem;
+            top: -1rem;
+        }
+
+        .compliance-form {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .question-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-left: 4px solid var(--md-green);
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .question-card:hover {
+            transform: translateX(5px);
+        }
+
+        select, input {
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            width: 100%;
+            border: 2px solid #d1e3f6;
+            border-radius: 6px;
+            background: white;
+        }
+
+        button {
+            background: var(--md-green);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #3a7b6e;
+            box-shadow: 0 5px 15px rgba(74,155,142,0.3);
+        }
+
+        .report-section {
+            margin-top: 3rem;
+            display: none;
+            border-top: 2px solid var(--md-gray);
+            padding-top: 2rem;
+        }
+
+        .risk-visual {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            position: relative;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(42,92,141,0.08);
+        }
+
+        .compliance-badge {
+            position: absolute;
+            right: 2rem;
+            top: -1.5rem;
+            background: var(--md-red);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .detailed-findings {
+            columns: 2;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .hipaa-reference {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .print-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .detailed-findings {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>🛡️ MedGuard Pro HIPAA Compliance Scanner</h1>
+            <p>Comprehensive Security Audit for Healthcare Applications</p>
+        </div>
+
+        <form class="compliance-form" id="auditForm">
+            <!-- Expanded Questionnaire Section -->
+            <div class="question-card">
+                <label>Application URL/Name:</label>
+                <input type="text" id="appName" required placeholder="HealthCareApp v4.2">
+            </div>
+
+            <div class="question-card">
+                <label>Data Encryption Standard:</label>
+                <select id="encryptionLevel">
+                    <option value="none">No Encryption</option>
+                    <option value="basic">TLS 1.2</option>
+                    <option value="hipaa">TLS 1.3 + AES-256</option>
+                </select>
+            </div>
+
+            <div class="question-card">
+                <label>Access Control Model:</label>
+                <select id="accessModel">
+                    <option value="none">No RBAC</option>
+                    <option value="basic">Simple User Roles</option>
+                    <option value="hipaa">RBAC with PHI Protection</option>
+                </select>
+            </div>
+
+            <div class="question-card">
+                <label>Audit Log Retention:</label>
+                <select id="logRetention">
+                    <option value="30">30 Days</option>
+                    <option value="180">6 Months</option>
+                    <option value="2190">6 Years (HIPAA Minimum)</option>
+                </select>
+            </div>
+
+            <div class="question-card">
+                <label>Breach Notification Protocol:</label>
+                <select id="breachProtocol">
+                    <option value="none">No Protocol</option>
+                    <option value="basic">Internal Process</option>
+                    <option value="hipaa">Automated System + 60h Response</option>
+                </select>
+            </div>
+
+            <div class="question-card">
+                <label>Business Associate Agreements:</label>
+                <select id="baaStatus">
+                    <option value="none">No BAAs in Place</option>
+                    <option value="partial">Some BAAs Signed</option>
+                    <option value="full">All Third Parties Covered</option>
+                </select>
+            </div>
+
+            <button type="submit">Run Full Compliance Audit</button>
+        </form>
+
+        <div class="report-section" id="auditReport">
+            <div class="compliance-badge" id="complianceStatus">NON-COMPLIANT</div>
+            
+            <div class="risk-visual">
+                <h2>Compliance Report: <span id="reportAppName"></span></h2>
+                <div class="hipaa-reference">
+                    <strong>HIPAA Reference:</strong> 45 CFR Part 164 Security Rule
+                </div>
+                <canvas id="complianceChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="detailed-findings">
+                <div>
+                    <h3>🔍 Critical Findings</h3>
+                    <ul id="criticalIssues"></ul>
+                </div>
+                
+                <div>
+                    <h3>⚠️ Security Recommendations</h3>
+                    <ul id="securityRecommendations"></ul>
+                </div>
+            </div>
+
+            <div class="hipaa-reference">
+                <h3>📜 Compliance Breakdown</h3>
+                <div id="regulationDetails"></div>
+            </div>
+
+            <div class="print-section">
+                <button onclick="window.print()" class="print-btn">Export PDF Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const complianceRequirements = {
+            encryption: {
+                'none': { score: 40, issues: ['PHI transmitted without encryption (164.312(e)(1)'], 
+                         fix: 'Implement TLS 1.3 + AES-256 encryption' },
+                'basic': { score: 20, issues: ['Insufficient encryption protocol'], 
+                         fix: 'Upgrade to TLS 1.3 with FIPS 140-2 validation' },
+                'hipaa': { score: 0 }
+            },
+            accessModel: {
+                'none': { score: 35, issues: ['No role-based access controls (164.308(a)(4))'], 
+                        fix: 'Implement RBAC with least privilege principles' },
+                'basic': { score: 15, issues: ['Insufficient role granularity'], 
+                        fix: 'Add PHI-specific access tiers' },
+                'hipaa': { score: 0 }
+            },
+            logRetention: {
+                '30': { score: 25, issues: ['Audit logs not maintained (164.308(a)(1)(ii)(D))'], 
+                      fix: 'Implement 6-year log retention with write-once storage' },
+                '180': { score: 15, issues: ['Insufficient audit history'], 
+                      fix: 'Extend retention to HIPAA minimum 6 years' },
+                '2190': { score: 0 }
+            },
+            breachProtocol: {
+                'none': { score: 30, issues: ['No breach response plan (164.308(a)(6))'], 
+                        fix: 'Develop incident response plan with 60-hour notification' },
+                'basic': { score: 15, issues: ['Unverified breach protocols'], 
+                        fix: 'Implement automated breach detection system' },
+                'hipaa': { score: 0 }
+            },
+            baaStatus: {
+                'none': { score: 25, issues: ['Missing Business Associate Agreements (164.308(b)(1))'], 
+                        fix: 'Execute BAAs with all third-party vendors' },
+                'partial': { score: 10, issues: ['Incomplete BA coverage'], 
+                        fix: 'Audit all data processors for BAA compliance' },
+                'hipaa': { score: 0 }
+            }
+        };
+
+        document.getElementById('auditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            setTimeout(generateComprehensiveReport, 1000);
+        });
+
+        function generateComprehensiveReport() {
+            const auditData = {
+                appName: document.getElementById('appName').value,
+                encryption: document.getElementById('encryptionLevel').value,
+                access: document.getElementById('accessModel').value,
+                logs: document.getElementById('logRetention').value,
+                breach: document.getElementById('breachProtocol').value,
+                baa: document.getElementById('baaStatus').value
+            };
+
+            let totalScore = 0;
+            let allIssues = [];
+            let allFixes = [];
+            let regDetails = [];
+
+            // Process each compliance area
+            Object.keys(auditData).forEach(field => {
+                if(field === 'appName') return;
+                
+                const result = complianceRequirements[field][auditData[field]];
+                totalScore += result.score || 0;
+                
+                if(result.issues) {
+                    allIssues.push(...result.issues.map(i => `<li>${i}</li>`));
+                    regDetails.push(`<p><strong>${field.toUpperCase()}:</strong> ${result.issues[0]}</p>`);
+                }
+                if(result.fix) allFixes.push(`<li>${result.fix}</li>`);
+            });
+
+            // Simulate additional penetration findings
+            const penTestFindings = [
+                "API Endpoint PHI Exposure (CWE-359)",
+                "Insecure Direct Object Reference (IDOR) Vulnerabilities",
+                "Missing Input Validation on Patient Forms"
+            ];
+            penTestFindings.forEach(f => allIssues.push(`<li>${f}</li>`));
+            totalScore += 20; // Add pen test penalty
+
+            // Update UI
+            const rootStyles = getComputedStyle(document.documentElement);
+            document.getElementById('reportAppName').textContent = auditData.appName;
+            document.getElementById('criticalIssues').innerHTML = allIssues.join('');
+            document.getElementById('securityRecommendations').innerHTML = allFixes.join('');
+            document.getElementById('regulationDetails').innerHTML = regDetails.join('');
+            
+            const complianceStatus = totalScore > 30 ? 'NON-COMPLIANT' : 
+                                  totalScore > 15 ? 'PARTIALLY COMPLIANT' : 'FULLY COMPLIANT';
+            const statusElement = document.getElementById('complianceStatus');
+            statusElement.textContent = complianceStatus;
+            statusElement.style.backgroundColor = 
+                totalScore > 30 ? rootStyles.getPropertyValue('--md-red') : 
+                totalScore > 15 ? '#f1c40f' : 
+                rootStyles.getPropertyValue('--md-green');
+
+            // Initialize Chart
+            const ctx = document.getElementById('complianceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Encryption', 'Access Control', 'Audit Logs', 'Breach Protocol', 'BAAs'],
+                    datasets: [{
+                        label: 'Compliance Level',
+                        data: [
+                            100 - (complianceRequirements.encryption[auditData.encryption].score || 0),
+                            100 - (complianceRequirements.access[auditData.access].score || 0),
+                            100 - (complianceRequirements.logs[auditData.logs].score || 0),
+                            100 - (complianceRequirements.breach[auditData.breach].score || 0),
+                            100 - (complianceRequirements.baa[auditData.baa].score || 0)
+                        ],
+                        backgroundColor: 'rgba(74, 155, 142, 0.2)',
+                        borderColor: rootStyles.getPropertyValue('--md-green'),
+                        pointBackgroundColor: rootStyles.getPropertyValue('--md-blue')
+                    }]
+                },
+                options: {
+                    scale: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('auditReport').style.display = 'block';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

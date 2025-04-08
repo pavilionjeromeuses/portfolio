@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Efficiency Toolkit | Streamline Your Workflow</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+        }
+        body { background-color: #f8f9fa; }
+        .jumbotron { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; }
+        .card:hover { transform: translateY(-5px); transition: all 0.3s; }
+        .skill-icon { font-size: 2.5rem; margin: 10px; }
+        .template-card img { height: 200px; object-fit: cover; }
+        .testimonial-card { background: rgba(255, 255, 255, 0.9); border-radius: 15px; }
+        .pricing-card { border: 2px solid var(--secondary-color); }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Admin Toolkit Pro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#templates">Templates</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#automation">Automation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="jumbotron py-5 text-center">
+        <div class="container">
+            <h1 class="display-4 mb-4">Administrative Efficiency Toolkit</h1>
+            <p class="lead mb-4">Transform Your Workflow with AI-Powered Templates & Smart Automation</p>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 bg-white rounded">
+                        <h3>8500+</h3>
+                        <p>Downloads This Month</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 bg-white rounded">
+                        <h3>40hrs+</h3>
+                        <p>Average Monthly Time Saved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Gallery -->
+    <section id="templates" class="container my-5">
+        <h2 class="text-center mb-5">Premium Template Gallery</h2>
+        <div class="row g-4">
+            <!-- Budget Sheet -->
+            <div class="col-md-4">
+                <div class="card template-card h-100">
+                    <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600" class="card-img-top" alt="Budget Template">
+                    <div class="card-body">
+                        <h5 class="card-title">Smart Budget Master</h5>
+                        <p class="card-text">Features include:
+                            <ul>
+                                <li>Automated expense categorization</li>
+                                <li>Real-time currency conversion</li>
+                                <li>Visual cashflow dashboard</li>
+                            </ul>
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="#" class="btn btn-primary"><i class="fas fa-file-excel me-2"></i>Download (.xlsx)</a>
+                            <a href="#" class="btn btn-outline-secondary">Preview Online</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meeting Agenda -->
+            <div class="col-md-4">
+                <div class="card template-card h-100">
+                    <img src="https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&w=600" class="card-img-top" alt="Meeting Agenda">
+                    <div class="card-body">
+                        <h5 class="card-title">Executive Meeting Planner</h5>
+                        <p class="card-text">Professional features:
+                            <ul>
+                                <li>Auto-time allocation system</li>
+                                <li>Action item tracker</li>
+                                <li>Integrated voting system</li>
+                            </ul>
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="#" class="btn btn-primary"><i class="fas fa-file-word me-2"></i>Download (.docx)</a>
+                            <a href="#" class="btn btn-outline-secondary">Google Docs Version</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Management -->
+            <div class="col-md-4">
+                <div class="card template-card h-100">
+                    <img src="https://images.unsplash.com/photo-1586282391129-76a746df25f9?auto=format&fit=crop&w=600" class="card-img-top" alt="Document Organizer">
+                    <div class="card-body">
+                        <h5 class="card-title">Document Orchestrator Pro</h5>
+                        <p class="card-text">Advanced features:
+                            <ul>
+                                <li>AI-powered tagging system</li>
+                                <li>Version control history</li>
+                                <li>Cross-platform sync</li>
+                            </ul>
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="#" class="btn btn-primary"><i class="fab fa-google-drive me-2"></i>Google Sheets</a>
+                            <a href="#" class="btn btn-outline-secondary">Office 365 Version</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Automation Section -->
+    <section id="automation" class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Automation Workflow Solutions</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4><i class="fas fa-envelope text-primary me-2"></i>Email Processor</h4>
+                            <p>Automated workflow features:
+                                <ul>
+                                    <li>Attachment auto-saver to Drive</li>
+                                    <li>AI-powered email sorting</li>
+                                    <li>Calendar event creator</li>
+                                </ul>
+                            </p>
+                            <a href="#" class="btn btn-outline-primary">View Zapier Template</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4><i class="fas fa-file-invoice-dollar text-success me-2"></i>Expense Manager</h4>
+                            <p>Automation features:
+                                <ul>
+                                    <li>Receipt scanning → Spreadsheet</li>
+                                    <li>Approval workflow system</li>
+                                    <li>Auto-PDF report generator</li>
+                                </ul>
+                            </p>
+                            <a href="#" class="btn btn-outline-success">Microsoft Flow Setup</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4><i class="fas fa-calendar-check text-warning me-2"></i>Calendar Syncer</h4>
+                            <p>Features include:
+                                <ul>
+                                    <li>Cross-platform synchronization</li>
+                                    <li>Auto-reminder system</li>
+                                    <li>Meeting prep checklist</li>
+                                </ul>
+                            </p>
+                            <a href="#" class="btn btn-outline-warning">Google Script Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 text-center">
+                <h3 class="mb-4">Watch Automation in Action</h3>
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.youtube.com/embed/7UQ81oPvHQQ" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-5 bg-primary text-white">
+        <div class="container">
+            <h2 class="text-center mb-5">Success Stories</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle me-3" width="60" alt="User">
+                            <div>
+                                <h5 class="mb-0">Sarah Johnson</h5>
+                                <p class="text-muted mb-0">Office Manager</p>
+                            </div>
+                        </div>
+                        <p>"This toolkit reduced our monthly reporting time by 70%. The budget template alone saved us 15 hours/month!"</p>
+                    </div>
+                </div>
+                <!-- Add more testimonials similarly -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Frequently Asked Questions</h2>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                            How often are templates updated?
+                        </button>
+                    </h3>
+                    <div id="q1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Our team releases quarterly updates with new features and responds to user feedback within 30 days.
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more FAQ items -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope me-2"></i>support@admintoolkit.com</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Resources</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Documentation</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Video Tutorials</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="fab fa-linkedin fa-2x"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5">
+            <p class="text-center mb-0">© 2023 Admin Efficiency Toolkit Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

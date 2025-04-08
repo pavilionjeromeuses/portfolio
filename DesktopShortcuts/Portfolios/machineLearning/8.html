@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraSolve - AI-Powered Equation Solver</title>
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #ff2d75;
+            --background: #0a192f;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--background);
+            color: #ffffff;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #000428, #004e92);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="%2300f3ff" stroke-width="0.5" fill="none"/></svg>');
+            opacity: 0.1;
+        }
+
+        h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    color: transparent;
+}
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .neural-network {
+            position: relative;
+            height: 150px;
+            margin: 2rem 0;
+            background: radial-gradient(circle at center, #1a365f 0%, #0a192f 100%);
+        }
+
+        .neural-node {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); }
+        }
+
+        .canvas-box {
+            background: #112240;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #233554;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+
+        #canvas {
+            border: 2px solid #233554;
+            border-radius: 8px;
+            background: #020c1b;
+            cursor: crosshair;
+        }
+
+        .controls {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .results {
+            background: #112240;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #233554;
+        }
+
+        .processing {
+            display: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .processing::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        #equationPreview {
+            font-size: 2.5rem;
+            margin: 1.5rem 0;
+            color: var(--primary);
+            font-family: 'Times New Roman', serif;
+        }
+
+        #solution {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin: 1rem 0;
+        }
+
+        .confidence-meter {
+            height: 15px;
+            background: #020c1b;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s ease-in-out;
+        }
+
+        .history-item {
+            background: #1a365f;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-item {
+            text-align: center;
+            padding: 1rem;
+            background: #1a365f;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NEURASOLVE</h1>
+        <p>Deep Learning-Powered Mathematical Recognition System</p>
+        <div class="neural-network">
+            <!-- Neural network visualization nodes -->
+            <div class="neural-node" style="top: 20%; left: 10%"></div>
+            <div class="neural-node" style="top: 50%; left: 25%"></div>
+            <div class="neural-node" style="top: 80%; left: 40%"></div>
+            <div class="neural-node" style="top: 30%; left: 55%"></div>
+            <div class="neural-node" style="top: 70%; left: 70%"></div>
+            <div class="neural-node" style="top: 45%; left: 85%"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="canvas-box">
+            <canvas id="canvas" width="500" height="300"></canvas>
+            <div class="controls">
+                <button onclick="clearCanvas()">Clear Canvas</button>
+                <button onclick="solveEquation()">Analyze Equation</button>
+            </div>
+            <div class="processing" id="processing">Processing</div>
+        </div>
+
+        <div class="results">
+            <div class="system-output">
+                <h3>RECOGNIZED EQUATION</h3>
+                <div id="equationPreview">∫x² dx + 2π</div>
+                <h3>SOLUTION</h3>
+                <div id="solution">(1/3)x³ + 2π + C</div>
+                <div class="confidence-meter">
+                    <div class="confidence-fill" id="confidenceBar" style="width: 92%"></div>
+                </div>
+            </div>
+            
+            <div class="history">
+                <h3>ANALYSIS HISTORY</h3>
+                <div class="history-item">
+                    <strong>25 × 3 + 8</strong> → 83 (94% confidence)
+                </div>
+                <div class="history-item">
+                    <strong>√144 + 5²</strong> → 17 (89% confidence)
+                </div>
+                <div class="history-item">
+                    <strong>dy/dx = 2x</strong> → y = x² + C (91% confidence)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-stack">
+        <div class="tech-item">
+            <h4>TensorFlow 3.0</h4>
+            <p>Deep Learning Framework</p>
+        </div>
+        <div class="tech-item">
+            <h4>OpenCV 4.7</h4>
+            <p>Image Processing</p>
+        </div>
+        <div class="tech-item">
+            <h4>SymPy 1.12</h4>
+            <p>Symbolic Mathematics</p>
+        </div>
+        <div class="tech-item">
+            <h4>CUDA 12.0</h4>
+            <p>GPU Acceleration</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        // Enhanced Drawing Configuration
+        ctx.lineWidth = 4;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#00f3ff';
+        ctx.globalCompositeOperation = 'source-over';
+
+        // Drawing Functions
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('equationPreview').textContent = '';
+            document.getElementById('solution').textContent = '';
+            document.getElementById('confidenceBar').style.width = '0%';
+        }
+
+        // Enhanced Mock ML Processing
+        const sampleEquations = [
+            { equation: "3x² + 2x - 5 = 0", solution: "x = 1 or x = -1.666", confidence: 0.88 },
+            { equation: "∫ sin(x) dx", solution: "-cos(x) + C", confidence: 0.95 },
+            { equation: "2³ × (4 + 5)", solution: "72", confidence: 0.91 },
+            { equation: "√(81) + 7²", solution: "58", confidence: 0.89 },
+            { equation: "dy/dx = 3x²", solution: "y = x³ + C", confidence: 0.93 }
+        ];
+
+        function solveEquation() {
+            document.getElementById('processing').style.display = 'block';
+            const imageData = canvas.toDataURL();
+
+            // Simulated Neural Network Processing
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * sampleEquations.length);
+                const result = sampleEquations[randomIndex];
+                
+                document.getElementById('equationPreview').textContent = result.equation;
+                document.getElementById('solution').textContent = result.solution;
+                document.getElementById('confidenceBar').style.width = `${result.confidence * 100}%`;
+                
+                // Add to history
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `<strong>${result.equation}</strong> → ${result.solution} (${Math.round(result.confidence * 100)}% confidence)`;
+                document.querySelector('.history').prepend(historyItem);
+                
+                document.getElementById('processing').style.display = 'none';
+            }, 2000);
+        }
+
+        // Initialize with sample data
+        window.onload = () => {
+            sampleEquations.forEach(eq => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `<strong>${eq.equation}</strong> → ${eq.solution} (${Math.round(eq.confidence * 100)}% confidence)`;
+                document.querySelector('.history').appendChild(historyItem);
+            });
+        }
+    </script>
+</body>
+</html>

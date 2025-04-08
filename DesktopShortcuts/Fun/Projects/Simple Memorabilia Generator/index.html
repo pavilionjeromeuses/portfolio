@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMG</title>
+    <link rel="icon" type="image/x-icon" href="_19984dd4-ff6d-464c-9b4a-74f2e2853a64-removebg-preview.png">
+    <link rel="stylesheet" href="dist\styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" target="_self">
+            <div class="logo">SIMPLE MEMORABILIA GENERATOR</div>
+        </a>
+    </header>
+
+    <div id="imgHere" style="text-align:center; margin-top:20px;"></div>
+    <div id="textHere" style="text-align:center; margin-top:20px; color: white"></div>
+
+    <footer class="footer">
+        <div class="footer-text">© 2024 <a href="https://linktr.ee/jeromespavilion" target="_blank">MORE STUFF</a></div>
+        <div class="footer-buttons">
+            <label class="footer-button" for="upload">image/</label>
+            <input type="file" id="upload" class="upload-input" accept="image/*">
+            <label class="footer-button" for="uploadText">.txt</label>
+            <input type="file" id="uploadText" class="upload-input" accept=".txt">
+            <label class="footer-button" id="downloadBtn" for="downloadBothAsOne">DL</label>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

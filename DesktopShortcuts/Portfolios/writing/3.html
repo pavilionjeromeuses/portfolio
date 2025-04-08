@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Urban Chronicle | Metroville Journalism Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2A363B;
+            --accent: #E84A5F;
+            --light: #F8F8F8;
+            --dark: #1A1A1A;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            color: var(--dark);
+            background: var(--light);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            margin: 2rem 0;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            letter-spacing: -0.03em;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 1rem;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .article-section {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .source-quote {
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            margin: 2rem 0;
+            background: linear-gradient(to right, #ffffff 0%, #fcfcfc 100%);
+            position: relative;
+        }
+
+        .source-quote:before {
+            content: "“";
+            font-family: 'Playfair Display', serif;
+            font-size: 6rem;
+            position: absolute;
+            left: -1rem;
+            top: -2rem;
+            color: var(--accent);
+            opacity: 0.2;
+        }
+
+        .opinion-section {
+            background: var(--primary);
+            color: white;
+            padding: 4rem;
+            margin: 4rem 0;
+            clip-path: polygon(0 3%, 100% 0, 100% 97%, 0% 100%);
+        }
+
+        .data-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .data-point {
+            text-align: center;
+            padding: 2rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .data-point span {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .button {
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(232,74,95,0.3);
+        }
+
+        .byline {
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #666;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 2rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .opinion-section {
+                padding: 2rem;
+            }
+        }
+
+        .article-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent 0%, var(--accent) 50%, transparent 100%);
+            margin: 4rem 0;
+            opacity: 0.3;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 6rem;
+            padding: 2rem;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="article-header">
+        <h1>The Urban Chronicle</h1>
+        <p class="byline">Metroville's Independent Journalism Collective</p>
+    </div>
+
+    <!-- Reported Feature -->
+    <article class="article-section">
+        <h2>Redefining Home: The Human Cost of Urban Development</h2>
+        <p class="byline">Investigative Report by Alex Reporter · September 2023</p>
+
+        <div class="data-points">
+            <div class="data-point">
+                <span>45%</span>
+                Average rent increase since 2019
+            </div>
+            <div class="data-point">
+                <span>5k</span>
+                Displacement notices issued
+            </div>
+            <div class="data-point">
+                <span>1.2%</span>
+                Affordable unit vacancy rate
+            </div>
+        </div>
+
+        <div class="source-quote">
+            <p>"This isn't just about housing - it's about preserving the soul of our community. We're being priced out of our own history."</p>
+            <p class="byline">Maria Gonzalez, Riverside Community Organizer</p>
+        </div>
+
+        <p>The clash between steel-and-glass aspirations and brick-and-mortar realities forms the central tension in Metroville's...</p>
+    </article>
+
+    <div class="article-divider"></div>
+
+    <!-- Opinion Piece -->
+    <article class="opinion-section">
+        <h2>Cultural Erasure Through Urban Planning</h2>
+        <p class="byline">Opinion by Taylor Opinionwriter</p>
+
+        <div class="source-quote">
+            <p>"When we prioritize profit over people, we don't just lose affordable housing - we lose generations of cultural memory."</p>
+        </div>
+
+        <h3>The Architecture of Inequality</h3>
+        <p>Modern urban development has become the gentry class's final frontier - a colonial expansion...</p>
+
+        <h3>Alternative Visions</h3>
+        <ul>
+            <li>Community land trust models</li>
+            <li>Historic preservation tax incentives</li>
+            <li>Tenant-first development policies</li>
+        </ul>
+    </article>
+
+    <!-- Resources -->
+    <article class="article-section">
+        <h3>Explore the Data</h3>
+        <button class="button">📊 Full Economic Analysis</button>
+        <button class="button">🎧 Interview Recordings</button>
+        <button class="button">📚 Policy Documents</button>
+    </article>
+
+    <footer>
+        <p>© 2023 The Urban Chronicle · All rights reserved</p>
+        <p>Ethical Journalism · Community Focused · Reader Supported</p>
+    </footer>
+</body>
+</html>

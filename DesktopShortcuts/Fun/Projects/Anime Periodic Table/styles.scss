@@ -1,0 +1,61 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    min-height: 100vh;
+    /* Minimum height of 100% of the viewport */
+    margin: 0;
+    /* Remove default margin */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #FF6B6B, #FFD166, #06D6A0, #118AB2, #073B4C);
+    background-size: 400% 400%;
+    /* Increase the size of the background */
+    animation: GradientAnimation 15s ease infinite;
+    /* Apply the animation */
+}
+
+@keyframes GradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/*
+$neon-green: #39FF14;
+$red: #FF0000;
+$yellow: #FFFF00;
+$pink: #FF69B4;
+*/
+
+td {
+    height: 30px;
+    width: 50px;
+}
+
+img {
+    height: 52px;
+    width: 52px;
+}
+
+table {
+    margin: 0;
+    background-color: white;
+}
+
+.hoverEffect:hover {
+    transform: scale(2.5);
+    z-index: 2;
+}

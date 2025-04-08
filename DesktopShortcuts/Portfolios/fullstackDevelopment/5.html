@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Master Pro - Smart Meal Planning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/tesseract.js@v3.0.3/dist/tesseract.min.js"></script>
+    <style>
+        :root {
+            --primary: #2A9D8F;
+            --secondary: #E76F51;
+            --accent: #264653;
+            --light: #F4F7F6;
+            --text: #2B2D42;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 15px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .search-section {
+            display: grid;
+            grid-template-columns: 3fr 1fr 150px;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+
+        input, select, button {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 111, 81, 0.3);
+        }
+
+        .ocr-upload {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .preview-image {
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .day {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 180px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .day:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .day h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .recipe-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            cursor: move;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .grocery-list {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .grocery-list h2 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .diet-tag {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 5px;
+            background: var(--light);
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.9);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-utensils"></i>Recipe Master Pro</h1>
+            <p>Your Ultimate Meal Planning Companion</p>
+        </header>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="🔍 Search recipes (e.g., chicken, pasta, vegan...)">
+            <select id="dietFilter">
+                <option value="">All Diets</option>
+                <option>Vegetarian</option>
+                <option>Vegan</option>
+                <option>Keto</option>
+                <option>Gluten-Free</option>
+                <option>Low-Carb</option>
+                <option>Dairy-Free</option>
+            </select>
+            <button onclick="searchRecipes()"><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <div class="ocr-upload">
+            <input type="file" id="imageUpload" accept="image/*" hidden>
+            <button onclick="document.getElementById('imageUpload').click()">
+                <i class="fas fa-camera"></i> Scan Recipe from Image
+            </button>
+            <img id="preview" class="preview-image hidden">
+            <div id="ocrResult" class="hidden recipe-card"></div>
+        </div>
+
+        <div class="main-content">
+            <div>
+                <h2><i class="fas fa-calendar-alt"></i> Meal Plan Calendar</h2>
+                <div class="calendar" id="calendar"></div>
+            </div>
+
+            <div class="grocery-list">
+                <h2><i class="fas fa-shopping-basket"></i> Grocery List</h2>
+                <ul id="groceryItems" style="list-style: none; padding: 0;"></ul>
+                <button onclick="generateGroceryList()" style="margin-top: 20px;">
+                    <i class="fas fa-sync"></i> Update List
+                </button>
+                <button onclick="window.print()" style="background: var(--primary); margin-left: 10px;">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+
+        <div id="recipeResults" class="recipe-grid"></div>
+    </div>
+
+    <div class="loading" id="loading">
+        <i class="fas fa-spinner fa-spin"></i> Processing Image...
+    </div>
+
+    <script>
+        // Extensive Sample Recipe Data
+        const recipes = [
+            {
+                name: 'Mediterranean Chicken Bowl',
+                ingredients: ['chicken breast', 'quinoa', 'cherry tomatoes', 'cucumber', 'feta cheese', 'olives', 'lemon'],
+                diet: 'Gluten-Free',
+                cookTime: 35,
+                calories: 480
+            },
+            {
+                name: 'Vegan Buddha Bowl',
+                ingredients: ['sweet potato', 'chickpeas', 'kale', 'avocado', 'tahini', 'quinoa', 'sunflower seeds'],
+                diet: 'Vegan',
+                cookTime: 40,
+                calories: 420
+            },
+            {
+                name: 'Keto Beef Stir-Fry',
+                ingredients: ['beef sirloin', 'broccoli', 'bell peppers', 'soy sauce', 'ginger', 'garlic', 'sesame oil'],
+                diet: 'Keto',
+                cookTime: 25,
+                calories: 550
+            },
+            {
+                name: 'Vegetarian Lasagna',
+                ingredients: ['lasagna noodles', 'ricotta cheese', 'spinach', 'tomato sauce', 'mozzarella', 'zucchini'],
+                diet: 'Vegetarian',
+                cookTime: 60,
+                calories: 380
+            },
+            {
+                name: 'Gluten-Free Pancakes',
+                ingredients: ['almond flour', 'eggs', 'almond milk', 'baking powder', 'vanilla extract', 'maple syrup'],
+                diet: 'Gluten-Free',
+                cookTime: 20,
+                calories: 280
+            },
+            {
+                name: 'Low-Carb Zucchini Noodles',
+                ingredients: ['zucchini', 'shrimp', 'garlic', 'cherry tomatoes', 'parmesan', 'basil', 'olive oil'],
+                diet: 'Low-Carb',
+                cookTime: 25,
+                calories: 320
+            },
+            {
+                name: 'Dairy-Free Smoothie Bowl',
+                ingredients: ['frozen berries', 'banana', 'almond milk', 'chia seeds', 'granola', 'coconut flakes'],
+                diet: 'Dairy-Free',
+                cookTime: 10,
+                calories: 250
+            },
+            {
+                name: 'Protein-Packed Breakfast Burrito',
+                ingredients: ['eggs', 'black beans', 'avocado', 'whole wheat tortilla', 'salsa', 'greek yogurt'],
+                diet: '',
+                cookTime: 15,
+                calories: 400
+            },
+            {
+                name: 'Asian Salmon Bowl',
+                ingredients: ['salmon fillet', 'brown rice', 'edamame', 'carrot', 'cucumber', 'sesame dressing'],
+                diet: 'Gluten-Free',
+                cookTime: 30,
+                calories: 450
+            },
+            {
+                name: 'Quinoa Stuffed Peppers',
+                ingredients: ['bell peppers', 'quinoa', 'ground turkey', 'tomato sauce', 'onion', 'garlic', 'mozzarella'],
+                diet: 'Gluten-Free',
+                cookTime: 45,
+                calories: 320
+            }
+        ];
+
+        // Initialize Calendar
+        function initCalendar() {
+            const calendar = document.getElementById('calendar');
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            days.forEach(day => {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day';
+                dayEl.innerHTML = `
+                    <h3>${day}</h3>
+                    <div class="meal-container"></div>
+                `;
+                dayEl.ondragover = allowDrop;
+                dayEl.ondrop = drop;
+                calendar.appendChild(dayEl);
+            });
+        }
+
+        // Enhanced Search Functionality
+        function searchRecipes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const diet = document.getElementById('dietFilter').value;
+            
+            const results = recipes.filter(recipe => {
+                const matchesIngredients = recipe.ingredients.some(ing => ing.includes(searchTerm));
+                const matchesDiet = diet ? recipe.diet === diet : true;
+                return matchesIngredients && matchesDiet;
+            });
+
+            displayResults(results);
+        }
+
+        // Display Results with Rich Information
+        function displayResults(results) {
+            const container = document.getElementById('recipeResults');
+            container.innerHTML = '';
+            
+            results.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.draggable = true;
+                card.ondragstart = drag;
+                card.innerHTML = `
+                    <h3>${recipe.name}</h3>
+                    ${recipe.diet ? `<span class="diet-tag" style="background: ${getDietColor(recipe.diet)}">${recipe.diet}</span>` : ''}
+                    <p><i class="fas fa-clock"></i> ${recipe.cookTime} mins • ${recipe.calories} kcal</p>
+                    <p><strong>Ingredients:</strong> ${recipe.ingredients.join(', ')}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function getDietColor(diet) {
+            const colors = {
+                'Vegetarian': '#2A9D8F',
+                'Vegan': '#264653',
+                'Keto': '#E76F51',
+                'Gluten-Free': '#8AB17D',
+                'Low-Carb': '#E9C46A',
+                'Dairy-Free': '#A8DADC'
+            };
+            return colors[diet] || '#eee';
+        }
+
+        // Drag and Drop Functions
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.outerHTML);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const div = document.createElement('div');
+            div.innerHTML = data;
+            ev.target.closest('.day').querySelector('.meal-container').appendChild(div.firstChild);
+        }
+
+        // Enhanced OCR Processing
+        document.getElementById('imageUpload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            const preview = document.getElementById('preview');
+            const resultDiv = document.getElementById('ocrResult');
+            const loading = document.getElementById('loading');
+
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('hidden');
+            loading.style.display = 'flex';
+
+            try {
+                const worker = Tesseract.createWorker();
+                await worker.load();
+                await worker.loadLanguage('eng');
+                await worker.initialize('eng');
+                
+                const { data: { text } } = await worker.recognize(file);
+                resultDiv.innerHTML = `
+                    <h3>Scanned Recipe</h3>
+                    <pre>${text}</pre>
+                `;
+                resultDiv.classList.remove('hidden');
+            } catch (error) {
+                resultDiv.textContent = 'Error processing image. Please try a clearer image.';
+            } finally {
+                loading.style.display = 'none';
+                await worker.terminate();
+            }
+        });
+
+        // Grocery List Generator
+        function generateGroceryList() {
+            const items = [...new Set(
+                Array.from(document.querySelectorAll('.recipe-card'))
+                    .flatMap(card => 
+                        card.querySelector('p:last-child').textContent
+                            .replace('Ingredients: ', '')
+                            .split(', ')
+                    )
+            )];
+            
+            const list = document.getElementById('groceryItems');
+            list.innerHTML = items.map(item => `
+                <li style="padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: var(--primary);"></i> ${item}
+                </li>
+            `).join('');
+        }
+
+        // Initialization
+        window.onload = () => {
+            initCalendar();
+            displayResults(recipes);
+        };
+    </script>
+</body>
+</html>

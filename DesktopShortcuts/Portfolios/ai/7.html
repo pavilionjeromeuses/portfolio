@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedPredict AI - Ethical Healthcare Diagnostics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --medical-blue: #0066CC;
+            --health-green: #009B77;
+            --alert-red: #E63946;
+            --neutral-gray: #F1FAEE;
+            --deep-blue: #1D3557;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--neutral-gray);
+            color: var(--deep-blue);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .medical-header {
+            background: linear-gradient(135deg, var(--medical-blue), var(--health-green));
+            padding: 2rem;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,102,204,0.2);
+        }
+
+        .diagnostic-section {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .results-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .medical-input {
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .medical-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--deep-blue);
+            font-weight: 500;
+        }
+
+        .medical-input input, 
+        .medical-input select,
+        .medical-input textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .medical-input input:focus {
+            border-color: var(--medical-blue);
+            outline: none;
+        }
+
+        .scan-upload {
+            border: 2px dashed var(--medical-blue);
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .predict-btn {
+            background: var(--health-green);
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,155,119,0.3);
+        }
+
+        .ethics-panel {
+            background: #E3F2FD;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .disease-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #E0E0E0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--medical-blue);
+            color: white;
+        }
+
+        .sample-data {
+            background: #FFF9C4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .risk-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .low-risk { background: #C8E6C9; color: #2E7D32; }
+        .medium-risk { background: #FFF3E0; color: #EF6C00; }
+        .high-risk { background: #FFCDD2; color: #C62828; }
+
+        .medical-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="medical-header">
+            <h1><i class="fas fa-heartbeat medical-icon"></i>MedPredict AI</h1>
+            <p>Ethical AI-powered Disease Prediction & Diagnostic Support</p>
+        </div>
+
+        <div class="disease-tabs">
+            <div class="tab active" onclick="switchDisease('diabetes')">Diabetes</div>
+            <div class="tab" onclick="switchDisease('covid')">COVID-19</div>
+            <div class="tab" onclick="switchDisease('cardio')">Cardiovascular</div>
+        </div>
+
+        <div class="diagnostic-section">
+            <div class="input-panel">
+                <h2><i class="fas fa-user-circle medical-icon"></i>Patient Information</h2>
+                
+                <div class="sample-data">
+                    <h4>Sample Datasets:</h4>
+                    <button onclick="loadSampleData('diabetes')" class="predict-btn" style="background: var(--medical-blue); margin: 5px 0;">
+                        Load Diabetes Sample
+                    </button>
+                    <button onclick="loadSampleData('covid')" class="predict-btn" style="background: var(--alert-red); margin: 5px 0;">
+                        Load COVID Sample
+                    </button>
+                </div>
+
+                <div class="medical-input">
+                    <label><i class="fas fa-birthday-cake medical-icon"></i>Age</label>
+                    <input type="number" id="age" min="18" max="100" required>
+                </div>
+
+                <div class="medical-input">
+                    <label><i class="fas fa-venus-mars medical-icon"></i>Gender</label>
+                    <select id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="medical-input">
+                    <label><i class="fas fa-weight medical-icon"></i>BMI</label>
+                    <input type="number" id="bmi" step="0.1" min="15" max="50" required>
+                </div>
+
+                <div class="medical-input disease-specific" id="diabetes-fields">
+                    <label><i class="fas fa-syringe medical-icon"></i>Glucose Level (mg/dL)</label>
+                    <input type="number" id="glucose" min="50" max="300">
+                </div>
+
+                <div class="medical-input disease-specific" id="covid-fields" style="display:none;">
+                    <label><i class="fas fa-lungs medical-icon"></i>Oxygen Saturation (%)</label>
+                    <input type="number" id="oxygen" min="70" max="100">
+                </div>
+
+                <div class="scan-upload">
+                    <h3><i class="fas fa-x-ray medical-icon"></i>Medical Imaging Upload</h3>
+                    <input type="file" id="medicalScan" accept="image/*">
+                    <p>Supported formats: X-ray, CT scan, MRI</p>
+                </div>
+
+                <button class="predict-btn" onclick="runAnalysis()">
+                    <i class="fas fa-diagnoses medical-icon"></i>Run Diagnostic Analysis
+                </button>
+            </div>
+
+            <div class="results-panel">
+                <h2><i class="fas fa-file-medical medical-icon"></i>Diagnostic Report</h2>
+                
+                <div id="riskAssessment">
+                    <h3 class="risk-indicator medium-risk">Risk Assessment: Loading...</h3>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="ethics-panel">
+                    <h3><i class="fas fa-balance-scale medical-icon"></i>Ethical AI Audit</h3>
+                    <div id="biasMetrics">
+                        <p>• Demographic Parity: <span class="risk-indicator low-risk">0.89</span></p>
+                        <p>• Equalized Odds Ratio: <span class="risk-indicator medium-risk">0.76</span></p>
+                        <p>• Feature Fairness Variance: <span class="risk-indicator high-risk">1.24</span></p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="fairnessChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="explainability-section">
+                    <h3><i class="fas fa-microscope medical-icon"></i>Model Explainability</h3>
+                    <div class="chart-container">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive sample datasets
+        const sampleData = {
+            diabetes: {
+                age: 58,
+                gender: 'female',
+                bmi: 33.2,
+                glucose: 148
+            },
+            covid: {
+                age: 45,
+                gender: 'male',
+                bmi: 28.7,
+                oxygen: 88
+            },
+            cardio: {
+                age: 65,
+                gender: 'male',
+                bmi: 29.9,
+                bloodPressure: '140/90'
+            }
+        };
+
+        let currentDisease = 'diabetes';
+
+        function switchDisease(disease) {
+            currentDisease = disease;
+            document.querySelectorAll('.disease-specific').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`${disease}-fields`).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        function loadSampleData(type) {
+            const data = sampleData[type];
+            document.getElementById('age').value = data.age;
+            document.getElementById('gender').value = data.gender;
+            document.getElementById('bmi').value = data.bmi;
+            
+            if(type === 'diabetes') {
+                document.getElementById('glucose').value = data.glucose;
+            } else if(type === 'covid') {
+                document.getElementById('oxygen').value = data.oxygen;
+            }
+        }
+
+        function runAnalysis() {
+            // Simulate analysis process
+            document.getElementById('riskAssessment').innerHTML = `
+                <h3 class="risk-indicator medium-risk">Analyzing Patient Data...</h3>
+                <p>Checking for potential biases...</p>
+                <p>Validating model fairness...</p>
+            `;
+
+            setTimeout(() => showResults(), 2000);
+        }
+
+        function showResults() {
+            // Comprehensive sample results
+            const results = {
+                diagnosis: currentDisease === 'diabetes' ? 'Type 2 Diabetes' : 
+                          currentDisease === 'covid' ? 'COVID-19 (Severe)' : 'Coronary Artery Disease',
+                confidence: Math.floor(Math.random() * 40 + 60),
+                riskLevel: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
+                features: {
+                    age: Math.random() * 0.5,
+                    bmi: Math.random() * 0.8,
+                    diseaseSpecific: Math.random() * 1.2
+                },
+                fairness: {
+                    demographicParity: (Math.random() * 0.3 + 0.7).toFixed(2),
+                    equalizedOdds: (Math.random() * 0.3 + 0.6).toFixed(2)
+                }
+            };
+
+            // Update risk indicator
+            const riskHTML = `
+                <h3 class="risk-indicator ${results.riskLevel}-risk">
+                    Diagnosis: ${results.diagnosis} (${results.confidence}% Confidence)
+                </h3>
+                <p>Recommended Actions: ${generateRecommendations(results.diagnosis)}</p>
+            `;
+            document.getElementById('riskAssessment').innerHTML = riskHTML;
+
+            // Update charts
+            updateMainChart(results);
+            updateFairnessChart(results);
+            updateShapChart(results);
+        }
+
+        function generateRecommendations(diagnosis) {
+            const recommendations = {
+                diabetes: ['HbA1c Test', 'Dietary Consultation', 'Regular Glucose Monitoring'],
+                covid: ['Chest CT Scan', 'Oxygen Therapy', 'Antiviral Treatment'],
+                cardio: ['Stress Test', 'Cholesterol Panel', 'Cardiac Consultation']
+            };
+            return recommendations[currentDisease].map(r => `<li>${r}</li>`).join('');
+        }
+
+        function updateMainChart(results) {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Clinical Signs', 'Biomarkers', 'Imaging Data', 'History', 'Labs'],
+                    datasets: [{
+                        label: 'Diagnostic Confidence',
+                        data: [85, 78, 92, 65, 88],
+                        backgroundColor: 'rgba(0,102,204,0.2)',
+                        borderColor: '#0066CC',  // Fixed color value
+                        pointBackgroundColor: '#0066CC'  // Fixed color value
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateFairnessChart(results) {
+            const ctx = document.getElementById('fairnessChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Age', 'Gender', 'BMI', 'Ethnicity', 'Socioeconomic'],
+                    datasets: [{
+                        label: 'Bias Factors',
+                        data: [0.2, 0.35, 0.15, 0.4, 0.25],
+                        backgroundColor: [
+                            '#0066CC', '#009B77', '#E63946', '#1D3557', '#FFB703'
+                        ]
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateShapChart(results) {
+            const ctx = document.getElementById('shapChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Clinical Factors', 'Demographics', 'Biomarkers', 'Imaging Data'],
+                    datasets: [{
+                        data: [35, 20, 30, 15],
+                        backgroundColor: [
+                            '#0066CC', '#009B77', '#E63946', '#1D3557'
+                        ]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // Initialization
+        window.onload = () => {
+            loadSampleData('diabetes');
+            showResults();
+        }
+    </script>
+</body>
+</html>

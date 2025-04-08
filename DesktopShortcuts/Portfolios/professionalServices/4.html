@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComplyGuard - Compliance Management Platform</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f5f6fa;
+        }
+
+        nav {
+            background: var(--primary);
+            padding: 1rem 5%;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 5%;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .alert-feed {
+            background: #fff9e6;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid #f1c40f;
+        }
+
+        .checklist {
+            margin: 1rem 0;
+        }
+
+        .checklist li {
+            list-style: none;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .impact-banner {
+            text-align: center;
+            padding: 3rem;
+            background: var(--primary);
+            color: white;
+            margin: 2rem 0;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .compliance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .compliance-table th, .compliance-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .compliance-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .risk-meter {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .risk-progress {
+            height: 100%;
+            width: 30%;
+            background: #e74c3c;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline {
+            border-left: 3px solid var(--secondary);
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .timeline-event {
+            position: relative;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary);
+            border-radius: 50%;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background: white;
+        }
+        
+        .metric-box {
+            text-align: center;
+            padding: 2rem;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <h2>ComplyGuard Pro</h2>
+        <div>
+            <a href="#features" style="color: white; text-decoration: none; margin-left: 2rem;">Features</a>
+            <a href="#metrics" style="color: white; text-decoration: none; margin-left: 2rem;">Metrics</a>
+            <a href="#testimonials" style="color: white; text-decoration: none; margin-left: 2rem;">Testimonials</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Enterprise Compliance Management Platform</h1>
+        <p>End-to-end regulatory compliance solution for financial, healthcare, and technology sectors</p>
+    </div>
+
+    <!-- Expanded Audit Trails Section -->
+    <div class="card" style="margin: 2rem 5%;">
+        <h3><i class="fas fa-history"></i> Comprehensive Audit Trails</h3>
+        <table class="compliance-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Document</th>
+                    <th>Compliance Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023-11-15 14:22:35</td>
+                    <td>admin@financialcorp.com</td>
+                    <td>Updated Privacy Policy</td>
+                    <td>GDPR_Compliance_v4.2</td>
+                    <td><span class="risk-progress" style="width: 15%;"></span> 85% Compliant</td>
+                </tr>
+                <tr>
+                    <td>2023-11-15 13:45:10</td>
+                    <td>auditor@healthcare.org</td>
+                    <td>Performed HIPAA Audit</td>
+                    <td>Patient_Data_Handling</td>
+                    <td><span class="risk-progress" style="width: 10%; background: #2ecc71;"></span> 90% Compliant</td>
+                </tr>
+                <!-- Add 8 more rows with sample data -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Enhanced Compliance Alerts -->
+    <div class="card" style="margin: 2rem 5%;">
+        <h3><i class="fas fa-bell"></i> Active Compliance Alerts</h3>
+        <div class="alert-feed">
+            <div class="timeline">
+                <div class="timeline-event">
+                    <h4>GDPR Article 30 Update Required</h4>
+                    <p>Deadline: 2023-12-01 | Affected Departments: Legal, IT</p>
+                    <p>New record-keeping requirements for data processing activities</p>
+                </div>
+                <div class="timeline-event">
+                    <h4>HIPAA Security Rule Review</h4>
+                    <p>Deadline: 2023-11-30 | Priority: High</p>
+                    <p>Mandatory annual review of administrative safeguards</p>
+                </div>
+                <!-- Add 5 more timeline events -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Document Templating -->
+    <div class="card" style="margin: 2rem 5%;">
+        <h3><i class="fas fa-file-contract"></i> Compliance Document Library</h3>
+        <div class="checklist">
+            <h4>GDPR Templates</h4>
+            <ul>
+                <li><i class="fas fa-file-pdf"></i> Data Processing Agreement (v3.1)</li>
+                <li><i class="fas fa-file-alt"></i> Breach Notification Protocol (v2.4)</li>
+                <!-- Add 8 more GDPR templates -->
+            </ul>
+            
+            <h4>HIPAA Templates</h4>
+            <ul>
+                <li><i class="fas fa-file-medical"></i> Patient Authorization Form (2023 Ed.)</li>
+                <li><i class="fas fa-user-shield"></i> Security Awareness Training Module</li>
+                <!-- Add 8 more HIPAA templates -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Expanded Metrics Section -->
+    <div class="metric-grid" id="metrics">
+        <div class="metric-box">
+            <div class="metric-value">90%</div>
+            <p>Reduction in Compliance Violations</p>
+        </div>
+        <div class="metric-box">
+            <div class="metric-value">650+</div>
+            <p>Pre-built Compliance Controls</p>
+        </div>
+        <div class="metric-box">
+            <div class="metric-value">48h</div>
+            <p>Average Audit Preparation Time Saved</p>
+        </div>
+    </div>
+
+    <!-- Compliance Calendar Section -->
+    <div class="card" style="margin: 2rem 5%;">
+        <h3><i class="fas fa-calendar-alt"></i> Compliance Calendar</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <div class="deadline-card">
+                <h4>Q4 Financial Reporting</h4>
+                <p>📅 Dec 15, 2023 | SOX 404 Requirements</p>
+                <p>🔔 30 Days Remaining | Owner: CFO Office</p>
+            </div>
+            <!-- Add 5 more deadline cards -->
+        </div>
+    </div>
+
+    <!-- Client Testimonials -->
+    <div class="impact-banner" id="testimonials">
+        <h2>Trusted by Leading Organizations</h2>
+        <div style="display: flex; gap: 2rem; overflow-x: auto; padding: 2rem 0;">
+            <div class="testimonial-card">
+                <p>"Reduced our PCI DSS audit findings from 42 to 3 in first year."</p>
+                <h4>– Global Payment Processor</h4>
+            </div>
+            <!-- Add 3 more testimonials -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 ComplyGuard Pro | SOC 2 Type II Certified | GDPR Compliant Hosting</p>
+        <div style="margin-top: 1rem;">
+            <a href="#contact" style="color: white; margin: 0 1rem;">Contact Compliance Experts</a>
+            <a href="#docs" style="color: white; margin: 0 1rem;">Documentation</a>
+        </div>
+    </footer>
+</body>
+</html>

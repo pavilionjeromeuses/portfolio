@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Campaign Dashboard - TikTok/Reels Analytics</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-['Inter']">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-purple-600 to-blue-500 text-white py-8 px-6">
+        <div class="max-w-7xl mx-auto" data-aos="fade-up">
+            <h1 class="text-4xl font-bold mb-2">#TrendingNow Campaign</h1>
+            <p class="opacity-90">Viral Content Analytics Dashboard</p>
+        </div>
+    </header>
+
+    <!-- Dashboard Metrics -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Metric Cards -->
+            <div class="bg-white p-6 rounded-xl shadow-sm" data-aos="fade-right">
+                <h3 class="text-gray-500 text-sm mb-2">Total Views</h3>
+                <p class="text-3xl font-bold">2.4M <span class="text-green-500 text-sm">↑ 48%</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm" data-aos="fade-up">
+                <h3 class="text-gray-500 text-sm mb-2">Shares</h3>
+                <p class="text-3xl font-bold">184K <span class="text-blue-500 text-sm">↗ 32%</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm" data-aos="fade-left">
+                <h3 class="text-gray-500 text-sm mb-2">Sales Attributed</h3>
+                <p class="text-3xl font-bold">$324K <span class="text-purple-500 text-sm">↑ 68%</span></p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm" data-aos="zoom-in">
+                <h3 class="text-lg font-semibold mb-4">Engagement Timeline</h3>
+                <canvas id="engagementChart"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm" data-aos="zoom-in">
+                <h3 class="text-lg font-semibold mb-4">Sales Attribution</h3>
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Video Gallery -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden" data-aos="flip-up">
+                <img src="https://images.pexels.com/photos/7337677/pexels-photo-7337677.jpeg" 
+                     class="w-full h-48 object-cover" alt="Campaign Video">
+                <div class="p-4">
+                    <h4 class="font-semibold mb-2">Unboxing Challenge</h4>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>▶ 1.2M views</span>
+                        <span>📅 3 days ago</span>
+                    </div>
+                    <div class="mt-3 bg-purple-50 p-2 rounded-md">
+                        <code class="text-purple-600">PROMO: TREND20</code>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more video cards here -->
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({duration: 1000});
+
+        // Sample Data
+        const engagementData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [{
+                label: 'Video Views',
+                data: [65, 59, 80, 81, 56],
+                borderColor: '#4F46E5',
+                tension: 0.4
+            }]
+        };
+
+        const salesData = {
+            labels: ['Product A', 'Product B', 'Product C'],
+            datasets: [{
+                label: 'Sales Attribution',
+                data: [65, 59, 80],
+                backgroundColor: ['#4F46E5', '#60A5FA', '#A78BFA']
+            }]
+        };
+
+        // Initialize Charts
+        window.addEventListener('DOMContentLoaded', (event) => {
+            new Chart(document.getElementById('engagementChart'), {
+                type: 'line',
+                data: engagementData
+            });
+
+            new Chart(document.getElementById('salesChart'), {
+                type: 'bar',
+                data: salesData
+            });
+        });
+    </script>
+</body>
+</html>

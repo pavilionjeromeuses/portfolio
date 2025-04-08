@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Productivity Tracker - TimeTrack Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 2rem;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-bar {
+            margin-top: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.75rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+        }
+
+        input {
+            width: 100%;
+            background: none;
+            border: none;
+            color: white;
+            outline: none;
+        }
+
+        ::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .productivity-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Employee Productivity Tracker</h1>
+            <p>TimeTrack Pro — Q3 2023 Report</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search employees..." onkeyup="filterTable(this.value)">
+            </div>
+        </div>
+        
+        <table id="productivityTable">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Hours Worked</th>
+                    <th>Tasks Completed</th>
+                    <th>Productivity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample Data - 100 entries -->
+                <script>
+                    const departments = ['Development', 'Marketing', 'Sales', 'Design', 'Support'];
+                    const names = ['Alex', 'Jamie', 'Taylor', 'Morgan', 'Casey', 'Jordan', 'Riley', 'Peyton', 'Quinn'];
+                    
+                    function generateData() {
+                        const tbody = document.querySelector('#productivityTable tbody');
+                        let html = '';
+                        
+                        for(let i = 1; i <= 100; i++) {
+                            const name = names[Math.floor(Math.random() * names.length)];
+                            const department = departments[Math.floor(Math.random() * departments.length)];
+                            const hours = 35 + Math.floor(Math.random() * 11);
+                            const tasks = 15 + Math.floor(Math.random() * 16);
+                            const productivity = 70 + Math.floor(Math.random() * 26);
+                            
+                            html += `
+                                <tr>
+                                    <td>TT${i.toString().padStart(3, '0')}</td>
+                                    <td>${name} ${String.fromCharCode(65 + i%26)}</td>
+                                    <td>${department}</td>
+                                    <td>${hours}</td>
+                                    <td>${tasks}</td>
+                                    <td>
+                                        <div class="productivity-cell">
+                                            ${productivity}%
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: ${productivity}%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        tbody.innerHTML = html;
+                    }
+                    
+                    function filterTable(query) {
+                        const rows = document.querySelectorAll('#productivityTable tbody tr');
+                        rows.forEach(row => {
+                            const text = row.innerText.toLowerCase();
+                            row.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+                        });
+                    }
+                    
+                    window.onload = generateData;
+                </script>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

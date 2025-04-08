@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+    <style>
+        :root {
+            --primary: #1DA1F2;
+            --background: #15202B;
+            --card-bg: #192734;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
+            color: white;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            height: 90vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            height: 90vh;
+            overflow-y: auto;
+        }
+
+        .post-card {
+            background: #22303C;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        .notification {
+            background: #22303C;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        #postInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #22303C;
+            border: none;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .cloudinary-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .hashtag {
+            color: var(--primary);
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .comment-section {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid #38444D;
+        }
+
+        .time-ago {
+            color: #8899A6;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <h2>Profile</h2>
+            <div id="profile">
+                <img src="https://i.pravatar.cc/50" alt="avatar" class="user-avatar">
+                <h3>Sarah Johnson</h3>
+                <p>@sarahdesigns</p>
+                <div class="stats">
+                    <p>📊 1.2k followers • 589 following</p>
+                </div>
+                <button onclick="followUser()" id="followButton">Follow</button>
+            </div>
+            <hr>
+            <h3>Trending Hashtags</h3>
+            <div id="hashtags"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="post-form">
+                <textarea id="postInput" placeholder="What's happening?"></textarea>
+                <button class="cloudinary-button" id="uploadWidget">📷 Upload Image</button>
+                <button onclick="createPost()" style="float: right;">Post ➔</button>
+            </div>
+            <div id="postsContainer"></div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="sidebar">
+            <h2>📢 Notifications</h2>
+            <div id="notifications"></div>
+            <hr>
+            <h2>💬 Active Chat</h2>
+            <div id="chatMessages"></div>
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+            <hr>
+            <h2>📈 Analytics</h2>
+            <canvas id="analyticsChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Extensive Sample Data
+        let posts = [
+            {
+                id: 1,
+                user: {
+                    name: "Mike Chen",
+                    handle: "@mikechen",
+                    avatar: "https://i.pravatar.cc/40?img=1"
+                },
+                content: "Just launched our new AI-powered analytics feature! 🚀 #TechUpdate #Innovation",
+                likes: 142,
+                comments: [
+                    { user: "@sarahdesigns", text: "This looks amazing! Can't wait to try it!", likes: 12 },
+                    { user: "@dev_john", text: "Great work team! 👏", likes: 8 }
+                ],
+                hashtags: ["#TechUpdate", "#Innovation"],
+                image: "",
+                timestamp: new Date(Date.now() - 3600000)
+            },
+            {
+                id: 2,
+                user: {
+                    name: "Digital Marketing Pro",
+                    handle: "@marketingexpert",
+                    avatar: "https://i.pravatar.cc/40?img=2"
+                },
+                content: "5 social media trends you can't ignore in 2024: 1. AI content creation 2. Vertical video 3. ... ✍️ #Marketing #Trends",
+                likes: 289,
+                comments: [
+                    { user: "@sarahdesigns", text: "Completely agree about vertical video!", likes: 24 }
+                ],
+                hashtags: ["#Marketing", "#Trends"],
+                image: "https://source.unsplash.com/random/800x600",
+                timestamp: new Date(Date.now() - 7200000)
+            }
+        ];
+
+        let notifications = [
+            { text: "🔔 @jennylee started following you", time: new Date(Date.now() - 300000) },
+            { text: "❤️ @mikechen liked your post", time: new Date(Date.now() - 1800000) },
+            { text: "💬 @dev_john commented on your post", time: new Date(Date.now() - 3600000) }
+        ];
+
+        let chatMessages = [
+            { user: "@mikechen", text: "Hey Sarah, want to collaborate on the next project?", time: "10:30 AM" },
+            { user: "You", text: "Definitely! Let's schedule a call", time: "10:32 AM" }
+        ];
+
+        let hashtags = [
+            { tag: "#TechUpdate", posts: 12800 },
+            { tag: "#Marketing", posts: 9200 },
+            { tag: "#DesignTips", posts: 7450 }
+        ];
+
+        let isFollowing = false;
+        let currentUser = {
+            name: "Sarah Johnson",
+            handle: "@sarahdesigns",
+            followers: 1250,
+            following: 589
+        };
+
+        // Cloudinary Upload Widget
+        const cloudinaryWidget = cloudinary.createUploadWidget({
+            cloudName: 'demo',
+            uploadPreset: 'preset1'
+        }, (error, result) => {
+            if (!error && result.event === "success") {
+                console.log('Uploaded image:', result.info.url);
+            }
+        });
+
+        document.getElementById('uploadWidget').addEventListener('click', () => {
+            cloudinaryWidget.open();
+        });
+
+        // Post Functions
+        function createPost() {
+            const content = document.getElementById('postInput').value;
+            const post = {
+                id: Date.now(),
+                user: currentUser,
+                content,
+                likes: 0,
+                comments: [],
+                hashtags: content.match(/#\w+/g) || [],
+                timestamp: new Date()
+            };
+            posts.unshift(post);
+            renderPosts();
+            document.getElementById('postInput').value = '';
+        }
+
+        function likePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            post.likes++;
+            renderPosts();
+        }
+
+        function addComment(postId) {
+            const commentInput = document.getElementById(`commentInput-${postId}`);
+            const comment = {
+                user: currentUser.handle,
+                text: commentInput.value,
+                likes: 0
+            };
+            const post = posts.find(p => p.id === postId);
+            post.comments.push(comment);
+            commentInput.value = '';
+            renderPosts();
+        }
+
+        // Analytics
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Likes', 'Posts', 'Followers', 'Engagement'],
+                datasets: [{
+                    label: 'Last 7 Days',
+                    data: [1420, 28, 156, 24.8],
+                    backgroundColor: ['#1DA1F2', '#17BF63', '#E0245E', '#794BC4']
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Helper Functions
+        function timeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            const intervals = {
+                year: 31536000,
+                month: 2592000,
+                day: 86400,
+                hour: 3600,
+                minute: 60,
+                second: 1
+            };
+            
+            for (let [unit, secondsInUnit] of Object.entries(intervals)) {
+                const interval = Math.floor(seconds / secondsInUnit);
+                if (interval >= 1) {
+                    return `${interval} ${unit}${interval === 1 ? '' : 's'} ago`;
+                }
+            }
+            return 'Just now';
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = posts.map(post => `
+                <div class="post-card">
+                    <div style="display: flex; align-items: center;">
+                        <img src="${post.user.avatar}" class="user-avatar">
+                        <div>
+                            <strong>${post.user.name}</strong>
+                            <div class="time-ago">${timeAgo(post.timestamp)} • ${post.user.handle}</div>
+                        </div>
+                    </div>
+                    <p>${post.content}</p>
+                    ${post.image ? `<img src="${post.image}" style="width: 100%; border-radius: 8px; margin: 10px 0;">` : ''}
+                    <div>${post.hashtags.map(tag => `<span class="hashtag">${tag}</span>`).join('')}</div>
+                    <div class="post-actions">
+                        <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
+                        <span>💬 ${post.comments.length}</span>
+                    </div>
+                    <div class="comment-section">
+                        ${post.comments.map(comment => `
+                            <div style="margin: 8px 0;">
+                                <strong>${comment.user}</strong>
+                                <div>${comment.text}</div>
+                                <div class="time-ago">${timeAgo(post.timestamp)} • ❤️ ${comment.likes}</div>
+                            </div>
+                        `).join('')}
+                        <input type="text" id="commentInput-${post.id}" placeholder="Add comment...">
+                        <button onclick="addComment(${post.id})">Post</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notifications');
+            container.innerHTML = notifications.map(notification => `
+                <div class="notification">
+                    <div>${notification.text}</div>
+                    <div class="time-ago">${timeAgo(notification.time)}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderChat() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = chatMessages.map(msg => `
+                <div class="notification" style="margin: 8px 0;">
+                    <strong>${msg.user}</strong>
+                    <div>${msg.text}</div>
+                    <div class="time-ago">${msg.time}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderHashtags() {
+            const container = document.getElementById('hashtags');
+            container.innerHTML = hashtags.map(tag => `
+                <div style="margin: 5px 0;">
+                    <span class="hashtag">${tag.tag}</span>
+                    <span class="time-ago">${tag.posts.toLocaleString()} posts</span>
+                </div>
+            `).join('');
+        }
+
+        function followUser() {
+            isFollowing = !isFollowing;
+            document.getElementById('followButton').textContent = 
+                isFollowing ? 'Following ✓' : 'Follow';
+            currentUser.followers += isFollowing ? 1 : -1;
+            document.querySelector('#profile .stats p').textContent = 
+                `📊 ${currentUser.followers.toLocaleString()} followers • ${currentUser.following} following`;
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            // Add random notifications
+            if (Math.random() > 0.5) {
+                const users = ['@techguru', '@designmaster', '@startupfan'];
+                const types = ['liked your post', 'started following you', 'mentioned you'];
+                const typeIndex = Math.floor(Math.random() * 3);
+                const selectedType = types[typeIndex];
+                const emoji = ['❤️', '🔔', '@'][typeIndex];
+                
+                notifications.unshift({
+                    text: `${emoji} ${users[Math.floor(Math.random() * users.length)]} ${selectedType}`,
+                    time: new Date()
+                });
+                renderNotifications();
+            }
+        }, 15000);
+
+        // Initial Renders
+        renderPosts();
+        renderNotifications();
+        renderChat();
+        renderHashtags();
+    </script>
+</body>
+</html>

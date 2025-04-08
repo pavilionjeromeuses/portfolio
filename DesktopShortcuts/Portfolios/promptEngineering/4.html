@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryForge - AI Narrative Collaboratory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Merriweather&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f3e9d0;
+            --ink: #2a241b;
+            --accent: #8b5e3c;
+            --highlight: #d4af37;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            padding: 20px;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==') var(--parchment);
+            color: var(--ink);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        .story-tome {
+            background: var(--parchment);
+            padding: 30px;
+            border: 3px solid var(--accent);
+            border-radius: 5px;
+            min-height: 80vh;
+            position: relative;
+        }
+
+        .story-tome::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, transparent 95%, rgba(0,0,0,0.05)),
+                        linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 100% 24px;
+            pointer-events: none;
+        }
+
+        .chronicle-controls {
+            background: var(--parchment);
+            padding: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 5px;
+        }
+
+        .narrative-entry {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 3px solid var(--highlight);
+            background: rgba(255,255,255,0.8);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .narrative-entry:hover {
+            transform: translateX(10px);
+        }
+
+        .user-prompt {
+            font-family: 'Cinzel Decorative', cursive;
+            border-color: var(--accent);
+            background: rgba(139, 94, 60, 0.1);
+        }
+
+        .ai-response {
+            border-color: var(--highlight);
+            background: rgba(212, 175, 55, 0.1);
+            font-style: italic;
+        }
+
+        .worldbuilding-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 5px;
+        }
+
+        .constraint-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            background: var(--accent);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cinzel Decorative', cursive;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: var(--highlight);
+            transform: scale(1.05);
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid var(--accent);
+            border-radius: 5px;
+            background: rgba(255,255,255,0.8);
+            font-family: 'Merriweather', serif;
+            margin: 15px 0;
+        }
+
+        .genre-selector {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--accent);
+            background: var(--parchment);
+            font-family: 'Cinzel Decorative', cursive;
+            margin: 10px 0;
+        }
+
+        .tutorial-note {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-left: 3px solid var(--highlight);
+            margin: 15px 0;
+        }
+
+        .plot-branch {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="story-tome">
+            <h1 style="font-family: 'Cinzel Decorative', cursive; color: var(--accent);">StoryForge v1.0</h1>
+            <div id="narrative-flow">
+                <!-- Initial Story Elements -->
+                <div class="narrative-entry ai-response">
+                    <h3>📜 Prologue Initiated</h3>
+                    <p>Welcome to StoryForge, your collaborative narrative platform. Let's craft legends together...</p>
+                    <div class="worldbuilding-info">
+                        <div>
+                            <h4>Current Genre</h4>
+                            <p id="current-genre">Fantasy</p>
+                        </div>
+                        <div>
+                            <h4>Active Characters</h4>
+                            <div id="current-characters">None yet</div>
+                        </div>
+                        <div>
+                            <h4>Established Setting</h4>
+                            <p id="current-setting">To be determined</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chronicle-controls">
+            <h2>Chronicle Controls</h2>
+            
+            <select class="genre-selector" id="genre" onchange="updateGenre(this.value)">
+                <option value="fantasy">🏰 Fantasy</option>
+                <option value="sci-fi">🚀 Sci-Fi</option>
+                <option value="mystery">🔍 Mystery</option>
+                <option value="horror">🕯️ Horror</option>
+                <option value="steampunk">⚙️ Steampunk</option>
+            </select>
+
+            <div class="tutorial-note">
+                <strong>Prompt Engineering Tip:</strong> Start with establishing context: 
+                "In a [genre] world where [unique premise], [character] must [action] while [conflict]..."
+            </div>
+
+            <button onclick="newChronicle()">🆕 New Chronicle</button>
+            <button onclick="undoAction()">⏮️ Undo Last</button>
+            <button onclick="saveChronicle()">💾 Save Progress</button>
+
+            <h3>Narrative Input</h3>
+            <textarea id="story-input" placeholder="Weave your narrative direction here..."></textarea>
+            
+            <div class="plot-branch">
+                <button onclick="addPlotTwist()">🎭 Add Twist</button>
+                <button onclick="introduceCharacter()">👤 New Character</button>
+                <button onclick="resolveConflict()">⚔️ Resolve Conflict</button>
+            </div>
+
+            <div id="active-constraints">
+                <h4>Active Narrative Constraints</h4>
+                <div id="constraints-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const narrativeDB = {
+            fantasy: {
+                characters: ['Sir Galen of the Silver Hand', 'Lythia the Moonweaver'],
+                settings: ['The Crystal Spires of Aeloria', 'Forgotten Caverns of Drakmor'],
+                conflicts: ['The Dragonstar is fading', 'The Shadow Court rises'],
+                tones: ['Epic', 'Mystical']
+            },
+            sciFi: {
+                characters: ['Commander Jax Vega', 'Dr. Lysandra Null'],
+                settings: ['Neo-Titan Orbital Colony', 'The Quantum Reef'],
+                conflicts: ['The AI Overmind is evolving', 'Time dilation storms'],
+                tones: ['Tech-Noir', 'Cosmic Horror']
+            },
+            mystery: {
+                characters: ['Inspector Reginald Caine', 'Madame Zorina'],
+                settings: ['The Obsidian Club', 'Whispering Manor'],
+                conflicts: ['The Clockwork Murders', 'Vanishing Parliament'],
+                tones: ['Slow-Burn', 'Psychological']
+            }
+        };
+
+        let currentStory = {
+            genre: 'fantasy',
+            characters: [],
+            setting: '',
+            tone: '',
+            conflicts: [],
+            timeline: [],
+            constraints: []
+        };
+
+        function newChronicle() {
+            currentStory = {
+                genre: document.getElementById('genre').value,
+                characters: [],
+                setting: '',
+                tone: '',
+                conflicts: [],
+                timeline: [],
+                constraints: []
+            };
+            updateDisplay();
+            addNarrativeEntry('system', 'New chronicle initialized in ' + currentStory.genre + ' genre...');
+            initializeGenreElements();
+        }
+
+        function initializeGenreElements() {
+            const genreData = narrativeDB[currentStory.genre];
+            currentStory.constraints = [
+                `Genre: ${currentStory.genre}`,
+                `Tone: ${genreData.tones[0]}`
+            ];
+            updateConstraints();
+        }
+
+        function updateConstraints() {
+            const display = document.getElementById('constraints-display');
+            display.innerHTML = currentStory.constraints
+                .map(c => `<div class="constraint-badge">${c}</div>`)
+                .join('');
+        }
+
+        function simulateAIResponse(prompt) {
+            const responses = {
+                fantasy: [
+                    "The ancient runes glow faintly as...",
+                    "A draconic voice echoes through the chamber...",
+                    "The magical currents shift unexpectedly..."
+                ],
+                sciFi: [
+                    "The quantum drive fluctuates dangerously...",
+                    "Neural interface warnings flash red...",
+                    "An unknown biosign appears on scanners..."
+                ],
+                mystery: [
+                    "The pocket watch stops abruptly at 3:17 AM...",
+                    "A cryptic note surfaces in the library...",
+                    "The portrait's eyes seem to follow you..."
+                ]
+            };
+
+            let response = responses[currentStory.genre][Math.floor(Math.random() * 3)];
+            
+            // Add contextual elements
+            if(currentStory.characters.length > 0) {
+                response = response.replace(/\.\.\./, `, ${currentStory.characters[0]} notices...`);
+            }
+            if(currentStory.setting) {
+                response = `Within ${currentStory.setting}, ` + response;
+            }
+            
+            return response + " How shall we proceed?";
+        }
+
+        function addNarrativeEntry(type, text) {
+            const entry = document.createElement('div');
+            entry.className = `narrative-entry ${type === 'user' ? 'user-prompt' : 'ai-response'}`;
+            
+            const content = type === 'user' 
+                ? `<h3>✍️ Author's Directive</h3><p>${text}</p>`
+                : `<h3>🤖 Narrative Engine Response</h3><p>${text}</p>`;
+            
+            entry.innerHTML = content;
+            document.getElementById('narrative-flow').appendChild(entry);
+        }
+
+        function addPlotTwist() {
+            const twists = {
+                fantasy: ['A betrayal is revealed!', 'Ancient prophecy awakens!'],
+                sciFi: ['Alien artifact activates!', 'Time paradox detected!'],
+                mystery: ['Hidden room discovered!', 'Secret twin revealed!']
+            };
+            const twist = twists[currentStory.genre][Math.floor(Math.random() * 2)];
+            addNarrativeEntry('system', `🔄 Plot Twist: ${twist}`);
+            currentStory.constraints.push(`Active Twist: ${twist}`);
+            updateConstraints();
+        }
+
+        document.getElementById('story-input').onkeypress = function(e) {
+            if(e.key === 'Enter' && !e.shiftKey) {
+                submitPrompt();
+                e.preventDefault();
+            }
+        };
+
+        function submitPrompt() {
+            const input = document.getElementById('story-input').value.trim();
+            if(!input) return;
+
+            addNarrativeEntry('user', input);
+            
+            // Process constraints
+            if(input.toLowerCase().includes('introduce')) {
+                const newChar = narrativeDB[currentStory.genre].characters.pop();
+                currentStory.characters.push(newChar);
+                currentStory.constraints.push(`Character: ${newChar}`);
+            }
+            
+            if(input.toLowerCase().includes('setting')) {
+                currentStory.setting = narrativeDB[currentStory.genre].settings.shift();
+                currentStory.constraints.push(`Setting: ${currentStory.setting}`);
+            }
+
+            setTimeout(() => {
+                const aiResponse = simulateAIResponse(input);
+                addNarrativeEntry('ai', aiResponse);
+                updateConstraints();
+            }, 800);
+
+            document.getElementById('story-input').value = '';
+        }
+
+        function updateDisplay() {
+            document.getElementById('current-genre').textContent = currentStory.genre;
+            document.getElementById('current-characters').textContent = currentStory.characters.join(', ') || 'None';
+            document.getElementById('current-setting').textContent = currentStory.setting || 'Unestablished';
+        }
+
+        function undoAction() {
+            const flow = document.getElementById('narrative-flow');
+            if(flow.children.length > 1) {
+                flow.removeChild(flow.lastElementChild);
+                currentStory.timeline.pop();
+            }
+        }
+
+        // Initialize first chronicle
+        newChronicle();
+    </script>
+</body>
+</html>

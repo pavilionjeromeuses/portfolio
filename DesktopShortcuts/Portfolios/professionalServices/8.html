@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Legal Document Generator</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            padding: 2rem;
+            background: var(--light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        button {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .template-btn {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 2px 5px rgba(52,152,219,0.3);
+        }
+
+        .template-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .editor-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        #documentEditor {
+            width: 100%;
+            height: 500px;
+            padding: 1.5rem;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            margin: 1rem 0;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+        }
+
+        .ai-suggestions {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dfe6e9;
+        }
+
+        .suggestion-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            border-left: 4px solid var(--secondary);
+            background: white;
+            transition: 0.2s;
+        }
+
+        .suggestion-item:hover {
+            transform: translateX(5px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: var(--primary);
+        }
+
+        .template-info {
+            background: #e8f4fc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--secondary);
+        }
+
+        .risk-warning {
+            color: var(--accent);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #fef5f5;
+        }
+
+        .section-note {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin: 0.5rem 0;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem;
+            color: var(--primary);
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚖️ AI Legal Document Generator</h1>
+            <p>Generate compliant legal documents 70% faster with AI assistance</p>
+        </header>
+
+        <div class="template-selector">
+            <button class="template-btn" onclick="loadTemplate('nda')">Non-Disclosure Agreement</button>
+            <button class="template-btn" onclick="loadTemplate('toc')">Terms & Conditions</button>
+            <button class="template-btn" onclick="loadTemplate('clauses')">Contract Clauses</button>
+        </div>
+
+        <div class="editor-container">
+            <div class="template-info" id="templateInfo">
+                Select a template to begin drafting your document
+            </div>
+            
+            <textarea id="documentEditor" placeholder="Start drafting your document here..."></textarea>
+            
+            <div style="text-align: center; margin: 1.5rem 0;">
+                <button class="template-btn" onclick="showAISuggestions()">🦾 Get AI Suggestions</button>
+                <button class="template-btn" onclick="exportDocument()">📄 Export Document</button>
+            </div>
+
+            <div class="ai-suggestions" id="aiSuggestions"></div>
+        </div>
+
+        <div class="loading" id="loading">
+            ⏳ AI is analyzing your document...
+        </div>
+
+        <footer>
+            <p>⚠️ This tool provides template documents only - consult legal counsel for specific advice</p>
+            <p>Average time savings: 70% faster than manual drafting</p>
+        </footer>
+    </div>
+
+    <script>
+        const legalTemplates = {
+            nda: {
+                title: "Non-Disclosure Agreement",
+                sections: [
+                    `PARTIES:
+1. Disclosing Party: [Full Legal Name]
+   Address: [Registered Address]
+   Represented by: [Authorized Signatory]
+
+2. Receiving Party: [Full Legal Name]
+   Address: [Registered Address]
+   Represented by: [Authorized Signatory]
+
+Effective Date: [DD/MM/YYYY]`,
+                    
+                    `DEFINITIONS:
+1. "Confidential Information" means:
+   - Technical data, trade secrets, know-how
+   - Business plans, financial information
+   - Customer lists, supplier agreements
+   - Product designs, marketing strategies
+
+Exclusions:
+a) Publicly available information
+b) Rightfully received from third parties
+c) Independently developed
+d) Required by law to disclose`,
+                    
+                    `OBLIGATIONS:
+1. Non-Disclosure: Maintain strict confidentiality for [5] years
+2. Limited Use: Only for [Purpose of Disclosure]
+3. Security: Implement reasonable protection measures
+4. Return/Destroy: Upon request or termination
+5. Employee Access: Limit to need-to-know basis`,
+                    
+                    `GENERAL PROVISIONS:
+1. Governing Law: [Jurisdiction]
+2. Entire Agreement
+3. Severability
+4. Waiver
+5. Notice Requirements`
+                ],
+                clauses: [
+                    "Survival Clause: Obligations persist post-termination",
+                    "Injunctive Relief: For breach of confidentiality",
+                    "Assignment Restrictions: Prior written consent required",
+                    "Legal Fees: Prevailing party entitled to costs"
+                ]
+            },
+            
+            toc: {
+                title: "Terms and Conditions",
+                sections: [
+                    `ACCEPTANCE:
+By accessing [Website/Service], users agree to:
+- Comply with these terms
+- Be legally bound
+- Warrant legal capacity`,
+                    
+                    `PAYMENT TERMS:
+1. Fees: [Amount] payable within [30] days
+2. Late Payments: [1.5%] monthly interest
+3. Taxes: Excluding [applicable taxes]
+4. Refunds: [Policy description]`,
+                    
+                    `LIABILITY:
+1. No consequential damages
+2. Maximum liability: Fees paid
+3. Product warranties: [As per manufacturer]
+4. Force Majeure provisions`,
+                    
+                    `TERMINATION:
+1. By either party with [30] days notice
+2. Immediate termination for material breach
+3. Post-termination obligations
+4. Survival clauses`
+                ],
+                clauses: [
+                    "Auto-Renewal: [Annual/Monthly] renewal terms",
+                    "Content License: Limited, non-exclusive rights",
+                    "Dispute Resolution: Binding arbitration",
+                    "Amendments: Written notice required"
+                ]
+            },
+            
+            clauses: {
+                title: "Common Contract Clauses",
+                sections: [
+                    `INTELLECTUAL PROPERTY:
+1. Ownership: Retained by [Company]
+2. License: Non-exclusive, non-transferable
+3. Restrictions: Reverse engineering prohibited
+4. Infringement: Notification requirements`,
+                    
+                    `EMPLOYMENT TERMS:
+1. At-Will Employment
+2. Non-Compete: [12] months post-termination
+3. Non-Solicitation: Clients & employees
+4. Invention Assignment`,
+                    
+                    `DATA PROTECTION:
+1. GDPR/CCPA compliance
+2. Data processing terms
+3. Security obligations
+4. Breach notification timelines`
+                ],
+                clauses: [
+                    "Entire Agreement: Supersedes prior agreements",
+                    "Severability: Invalid provisions severed",
+                    "Counterparts: Electronic signatures valid",
+                    "Third-Party Rights: No beneficiary status"
+                ]
+            }
+        };
+
+        const aiKnowledge = {
+            riskDetection: {
+                keywords: {
+                    "confidential": ["Extend duration to 3+ years", "Add security protocols"],
+                    "indemnify": ["Cap liability amount", "Include notice requirements"],
+                    "terminat": ["Define cure period", "Specify material breach"],
+                    "warrant": ["Limit duration", "Exclude implied warranties"]
+                },
+                
+                clauses: {
+                    "Governing Law": ["New York", "Delaware", "England & Wales"],
+                    "Arbitration": ["AAA", "JAMS", "ICC Rules"],
+                    "Notice": ["Email", "Registered Mail", "Overnight Courier"]
+                },
+                
+                durations: {
+                    "NDA": ["1 year", "2 years", "5 years"],
+                    "Non-Compete": ["6 months", "1 year", "2 years"],
+                    "Warranty": ["30 days", "1 year", "Lifetime"]
+                }
+            },
+            
+            clauseBank: [
+                "Force Majeure: Pandemic, natural disasters, government actions",
+                "Assignment: Prior written consent required",
+                "Waiver: No implied waiver of rights",
+                "Counterparts: Electronic signatures valid",
+                "Survival: Confidentiality, indemnification, payment",
+                "Severability: Invalid provisions don't void agreement",
+                "Entire Agreement: Supersedes prior understandings"
+            ],
+            
+            complianceCheck: {
+                regions: {
+                    "California": ["CCPA compliance required", "Specific termination rights"],
+                    "EU": ["GDPR data protection", "Right to be forgotten"],
+                    "Singapore": ["PDPA obligations", "Data localization"]
+                }
+            }
+        };
+
+        function loadTemplate(type) {
+            const template = legalTemplates[type];
+            const editor = document.getElementById('documentEditor');
+            const infoBox = document.getElementById('templateInfo');
+            
+            let content = `// ${template.title}\n\n`;
+            template.sections.forEach((section, index) => {
+                content += `SECTION ${index + 1}:\n${section}\n\n`;
+            });
+            
+            content += `RECOMMENDED CLAUSES:\n`;
+            template.clauses.forEach((clause, index) => {
+                content += `• ${clause}\n`;
+            });
+
+            editor.value = content;
+            
+            // Update template info
+            infoBox.innerHTML = `
+                <strong>${template.title} Drafting Guide:</strong>
+                <div class="section-note">
+                    ${getTemplateTips(type)}
+                    <br>Replace [bracketed] terms with specific details
+                </div>
+            `;
+        }
+
+        function getTemplateTips(type) {
+            const tips = {
+                nda: "• Customize confidential information definitions\n• Specify permitted disclosures\n• Include return/destruction procedures",
+                toc: "• Clarify payment terms\n• Include dispute resolution process\n• Specify termination rights",
+                clauses: "• Ensure local law compliance\n• Consider industry standards\n• Define key terms explicitly"
+            };
+            return tips[type] || "Use // for comments\n• Delete unused sections\n• Consult jurisdiction-specific requirements";
+        }
+
+        function showAISuggestions() {
+            const content = document.getElementById('documentEditor').value.toLowerCase();
+            const suggestions = [];
+            
+            // Risk-based suggestions
+            Object.entries(aiKnowledge.riskDetection.keywords).forEach(([keyword, recs]) => {
+                if(content.includes(keyword)) suggestions.push(...recs.map(r => `Risk: ${r}`));
+            });
+
+            // Clause alternatives
+            Object.entries(aiKnowledge.riskDetection.clauses).forEach(([clause, options]) => {
+                if(content.includes(clause.toLowerCase())) {
+                    suggestions.push(`${clause} Options: ${options.join(", ")}`);
+                }
+            });
+
+            // Duration suggestions
+            Object.entries(aiKnowledge.riskDetection.durations).forEach(([type, options]) => {
+                if(content.includes(type.toLowerCase())) {
+                    suggestions.push(`Standard ${type} Durations: ${options.join(", ")}`);
+                }
+            });
+
+            // Additional clauses
+            aiKnowledge.clauseBank.forEach(clause => {
+                if(!content.includes(clause.split(":")[0].toLowerCase())) {
+                    suggestions.push(`Add Clause: ${clause}`);
+                }
+            });
+
+            // Compliance checks
+            Object.entries(aiKnowledge.complianceCheck.regions).forEach(([region, requirements]) => {
+                if(content.includes(region.toLowerCase())) {
+                    suggestions.push(...requirements.map(r => `Compliance: ${r}`));
+                }
+            });
+
+            displaySuggestions(suggestions);
+        }
+
+        function displaySuggestions(suggestions) {
+            const suggestionsDiv = document.getElementById('aiSuggestions');
+            suggestionsDiv.innerHTML = '<h3>⚡ AI Recommendations:</h3>';
+            
+            if(suggestions.length === 0) {
+                suggestionsDiv.innerHTML += '<div class="section-note">No suggestions needed - document appears compliant</div>';
+                return;
+            }
+
+            suggestions.forEach(suggestion => {
+                const div = document.createElement('div');
+                div.className = suggestion.startsWith('Risk:') || suggestion.startsWith('Compliance:') 
+                    ? 'suggestion-item risk-warning' 
+                    : 'suggestion-item';
+                
+                div.innerHTML = suggestion.replace(/:/, ': <span class="section-note">') + '</span>';
+                div.onclick = () => insertSuggestion(suggestion.split(':')[0]);
+                suggestionsDiv.appendChild(div);
+            });
+        }
+
+        function insertSuggestion(text) {
+            const editor = document.getElementById('documentEditor');
+            const cursorPos = editor.selectionStart;
+            const currentValue = editor.value;
+            
+            editor.value = currentValue.slice(0, cursorPos) + text + currentValue.slice(cursorPos);
+            editor.focus();
+        }
+
+        function exportDocument() {
+            const content = document.getElementById('documentEditor').value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `legal-doc-${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+        }
+
+        // Auto-save simulation
+        let saveTimeout;
+        document.getElementById('documentEditor').addEventListener('input', () => {
+            const loading = document.getElementById('loading');
+            clearTimeout(saveTimeout);
+            loading.style.display = 'block';
+            
+            saveTimeout = setTimeout(() => {
+                loading.style.display = 'none';
+                // Simulated auto-save
+                localStorage.setItem('legalDocAutoSave', document.getElementById('documentEditor').value);
+            }, 1500);
+        });
+
+        // Load auto-saved content
+        window.onload = () => {
+            const saved = localStorage.getItem('legalDocAutoSave');
+            if(saved) document.getElementById('documentEditor').value = saved;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Pulse Analyzer | Real-time Trend Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/compromise"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #3b82f6;
+            --accent: #6366f1;
+            --text: #e2e8f0;
+            --background: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem 0;
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            border-radius: 1rem;
+            box-shadow: 0 4px 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: -0.05em;
+        }
+
+        .header p {
+            color: rgba(226, 232, 240, 0.9);
+            margin: 0.5rem 0 0;
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        input, select, button {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        button {
+            background: var(--secondary);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--background);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+
+        .card h2 {
+            margin: 0 0 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .social-feed {
+            grid-column: 1 / -1;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .post {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(226, 232, 240, 0.8);
+        }
+
+        .post-platform {
+            width: 24px;
+            height: 24px;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: none;
+            place-items: center;
+            z-index: 100;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Social Pulse Analyzer</h1>
+            <p>Real-time Social Sentiment & Trend Forecasting</p>
+        </div>
+
+        <div class="control-panel">
+            <input type="text" id="keyword" placeholder="🔍 Enter topic or keyword...">
+            <select id="platform">
+                <option value="all">All Platforms</option>
+                <option value="twitter">Twitter</option>
+                <option value="reddit">Reddit</option>
+            </select>
+            <button onclick="analyzeSocialData()">
+                <span>🚀 Analyze Now</span>
+            </button>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2>Sentiment Analysis</h2>
+                <div class="metric">
+                    <span>Overall Sentiment Score</span>
+                    <span class="metric-value" id="sentimentScore">0</span>
+                </div>
+                <canvas id="sentimentChart"></canvas>
+            </div>
+
+            <div class="card">
+                <h2>Trend Forecast</h2>
+                <div class="metric">
+                    <span>Predicted 24h Momentum</span>
+                    <span class="metric-value" id="momentum">0%</span>
+                </div>
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <div class="card social-feed">
+                <h2>Live Social Feed</h2>
+                <div id="socialPosts"></div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        const sampleData = {
+            twitter: [
+                { 
+                    text: "🚀 $TSLA just announced their new AI chip - this is HUGE for autonomous vehicles! #StocksToWatch 📈",
+                    user: "@TechInvestorPro",
+                    likes: 2450,
+                    retweets: 892,
+                    timestamp: "2023-08-15T09:30:00",
+                    sentiment: 0.8
+                },
+                {
+                    text: "The new climate policy is causing major concerns in energy sectors. Oil stocks plummeting ⚠️ #EnergyCrisis",
+                    user: "@EcoAnalyst",
+                    likes: 1560,
+                    retweets: 432,
+                    timestamp: "2023-08-15T09:45:00",
+                    sentiment: -0.6
+                }
+            ],
+            reddit: [
+                {
+                    text: "Reddit's IPO plans revealed - potential 2024 market disruptor! [r/Stocks]",
+                    user: "u/MarketWatcher2023",
+                    upvotes: 5890,
+                    comments: 1245,
+                    timestamp: "2023-08-15T10:00:00",
+                    sentiment: 0.7
+                },
+                {
+                    text: "Political turmoil in Europe causing EUR/USD volatility. Safe haven assets rising... [r/Finance]",
+                    user: "u/GlobalFinanceGuru",
+                    upvotes: 4321,
+                    comments: 897,
+                    timestamp: "2023-08-15T10:15:00",
+                    sentiment: -0.4
+                }
+            ],
+            stocks: [
+                { ticker: "TSLA", price: 850.34, change: 4.2 },
+                { ticker: "AAPL", price: 189.12, change: -0.8 },
+                { ticker: "NVDA", price: 456.78, change: 2.7 }
+            ],
+            trends: [
+                { name: "AI Regulation", momentum: 82.4 },
+                { name: "Crypto ETFs", momentum: 68.9 },
+                { name: "Renewable Energy", momentum: 75.3 }
+            ]
+        };
+
+        let sentimentChart, trendChart;
+
+        async function analyzeSocialData() {
+            showLoading(true);
+            const keyword = document.getElementById('keyword').value;
+            const platform = document.getElementById('platform').value;
+
+            // Simulated analysis delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const filteredPosts = filterPosts(keyword, platform);
+            const sentiment = analyzeSentiment(filteredPosts);
+            const trends = predictTrends(filteredPosts);
+
+            renderSentiment(sentiment);
+            renderTrends(trends);
+            renderSocialFeed(filteredPosts);
+            showLoading(false);
+        }
+
+        function filterPosts(keyword, platform) {
+            let posts = [];
+            if (platform === 'all') {
+                posts = [...sampleData.twitter, ...sampleData.reddit];
+            } else {
+                posts = sampleData[platform];
+            }
+            
+            return posts.filter(post => 
+                post.text.toLowerCase().includes(keyword.toLowerCase())
+            );
+        }
+
+        function analyzeSentiment(posts) {
+            const scores = posts.map(post => {
+                const doc = window.nlp(post.text);
+                const adjectives = doc.adjectives().out('array');
+                const verbs = doc.verbs().out('array');
+                
+                let score = adjectives.reduce((acc, word) => 
+                    acc + (getWordSentiment(word) * 2), 0);
+
+                score += verbs.reduce((acc, word) => 
+                    acc + getWordSentiment(word), 0);
+
+                // Emoji analysis
+                const emojis = post.text.match(/[\u{1F600}-\u{1F64F}]/gu) || [];
+                score += emojis.reduce((acc, emoji) => 
+                    acc + (positiveEmojis.includes(emoji) ? 1 : negativeEmojis.includes(emoji) ? -1 : 0), 0);
+
+                return score;
+            });
+
+            const average = scores.reduce((a, b) => a + b, 0) / scores.length;
+            return {
+                score: average.toFixed(2),
+                positive: scores.filter(s => s > 0).length,
+                neutral: scores.filter(s => s === 0).length,
+                negative: scores.filter(s => s < 0).length
+            };
+        }
+
+        function predictTrends(posts) {
+            const baseMomentum = posts.length * 0.5;
+            const hourlyTrend = Array.from({length: 24}, (_, i) => ({
+                hour: DateTime.now().plus({hours: i}).toFormat('ha'),
+                value: baseMomentum + Math.random() * 10 * Math.sin(i/2.5)
+            }));
+
+            return {
+                momentum: ((hourlyTrend[23].value - baseMomentum) / baseMomentum * 100).toFixed(1),
+                data: hourlyTrend
+            };
+        }
+
+        function renderSentiment(sentiment) {
+            document.getElementById('sentimentScore').textContent = sentiment.score;
+            
+            if (sentimentChart) sentimentChart.destroy();
+            const ctx = document.getElementById('sentimentChart').getContext('2d');
+            sentimentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Positive', 'Neutral', 'Negative'],
+                    datasets: [{
+                        data: [sentiment.positive, sentiment.neutral, sentiment.negative],
+                        backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        }
+
+        function renderTrends(trendData) {
+            document.getElementById('momentum').textContent = `${trendData.momentum}%`;
+            
+            if (trendChart) trendChart.destroy();
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: trendData.data.map(d => d.hour),
+                    datasets: [{
+                        label: 'Trend Momentum Index',
+                        data: trendData.data.map(d => d.value),
+                        borderColor: '#3b82f6',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: { 
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSocialFeed(posts) {
+            const container = document.getElementById('socialPosts');
+            container.innerHTML = posts.map(post => `
+                <div class="post">
+                    <div class="post-header">
+                        ${platformIcon(post.user.includes('@') ? 'twitter' : 'reddit')}
+                        <span>${post.user}</span>
+                        <span style="margin-left:auto">${new Date(post.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <div>${post.text}</div>
+                    <div class="post-footer">
+                        ${post.likes ? `👍 ${post.likes}` : `⬆️ ${post.upvotes}`}
+                        ${post.retweets ? `🔄 ${post.retweets}` : `💬 ${post.comments}`}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function platformIcon(platform) {
+            return platform === 'twitter' ? 
+                `<svg class="post-platform" viewBox="0 0 24 24"><path fill="#1DA1F2" d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>` :
+                `<svg class="post-platform" viewBox="0 0 24 24"><path fill="#FF4500" d="M12 0A12 12 0 001.02 16.88c.884.66 2.014 1.092 3.274 1.356.12-.008.265-.04.265-.08 0-.2-.3-.36-.66-.6-1.5-.96-2.46-2.44-2.46-4.08 0-1.64.66-3.22 1.86-4.38 1.2-1.16 2.76-1.8 4.44-1.8 1.74 0 3.36.66 4.56 1.86 1.2 1.2 1.86 2.82 1.86 4.56 0 2.84-1.68 5.16-4.02 6.06.6.18 1.38.3 2.34.3 4.08 0 7.02-3.14 7.02-7.02 0-3.9-3.12-7.02-7.02-7.02zm-3.6 15.54c-.06.06-.12.06-.18.06-.06 0-.12 0-.18-.06-.06-.06-.06-.12-.06-.18 0-.06 0-.12.06-.18.06-.06.12-.06.18-.06.06 0 .12 0 .18.06.06.06.06.12.06.18 0 .06 0 .12-.06.18zm.9 0c0 .12-.09.21-.21.21-.12 0-.21-.09-.21-.21 0-.12.09-.21.21-.21.12 0 .21.09.21.21zm.9 0c0 .12-.09.21-.21.21-.12 0-.21-.09-.21-.21 0-.12.09-.21.21-.21.12 0 .21.09.21.21z"/></svg>`;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'grid' : 'none';
+        }
+
+        // Enhanced sentiment dictionaries
+        const positiveWords = ['excellent', 'amazing', 'bullish', 'growth', 'profit', 'success', 'win', 'positive', 'optimistic'];
+        const negativeWords = ['bearish', 'loss', 'risk', 'danger', 'crash', 'drop', 'decline', 'negative', 'pessimistic'];
+        const positiveEmojis = ['🚀', '📈', '💎', '🤑', '✅', '👍'];
+        const negativeEmojis = ['⚠️', '📉', '💣', '😱', '❌', '👎'];
+
+        function getWordSentiment(word) {
+            word = word.toLowerCase();
+            if (positiveWords.includes(word)) return 1;
+            if (negativeWords.includes(word)) return -1;
+            return 0;
+        }
+
+        // Initialize with sample data
+        analyzeSocialData();
+    </script>
+</body>
+</html>

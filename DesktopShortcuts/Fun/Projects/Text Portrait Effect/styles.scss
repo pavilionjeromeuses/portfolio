@@ -1,0 +1,78 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    font-family: Arial, sans-serif;
+
+    a                   {text-decoration: none;}
+    a:visited           {text-decoration: none;}
+    a:hover             {text-decoration: none;}
+    a:focus             {text-decoration: none;}
+    a:hover, a:active   {text-decoration: none;}
+
+    .header {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        padding: 10px 20px;
+        color: black;
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+
+    p {
+        font-size: 4px;
+        line-height: 4px;
+        text-align: justify;
+        -webkit-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background: url(bg.jpeg) no-repeat center;
+        background-attachment: fixed;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: rgba(255, 255, 255, 0);
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #333;
+        padding: 10px 20px;
+        color: white;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+
+        .footer-text {
+            font-size: 14px;
+            color: white;
+        }
+        .footer-buttons {
+            display: flex;
+            gap: 10px;
+            margin-right: 40px;
+        }
+        .footer-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: white;
+            color: black;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+        .footer-button:hover {
+            color: white;
+            background-color: black;
+        }
+
+        .upload-input {
+            display: none;
+        }
+    }
+}

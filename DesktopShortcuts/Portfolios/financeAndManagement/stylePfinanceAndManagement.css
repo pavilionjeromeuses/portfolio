@@ -1,0 +1,126 @@
+body{
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #fff;
+	background: #332E32;
+}
+
+#content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto; /* Allow content to expand */
+}
+
+.fare-monthcontainer {
+    display: flex; /* Arrange sets side by side */
+    gap: 20px; /* Space between sets */
+}
+
+.set {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.fare-month {
+    margin: 0 4px;
+    display: inline-block;
+    width: 88px;
+    text-align: center;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.fare-rates {
+    overflow-x: auto; /* Enable horizontal scroll */
+    white-space: nowrap; /* Keep items in one line */
+}
+
+.ttl1,.ttl2{
+	color: #fff !important;
+}
+
+.fare-calendar .fare-rates {
+	position: relative;
+	background: #332E32;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer {
+	color: #092a5e ;
+	/*display:table-cell;*/
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month {
+	margin: 0 4px;
+	/*vertical-align: bottom;*/
+	display: inline-block;
+	width: 88px;
+	text-align: center;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month a
+, .fare-calendar .fare-rates .fare-monthcontainer .fare-month span {
+	display: block;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month span:first-of-type {
+	margin-bottom: 7px;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month span:last-of-type {
+	margin: 10px 0 7px;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month button.btn2 {
+	width: 60px;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month span.fare-price {
+	min-height: 20px;
+	background-color: #FFF ;
+	transform-origin: 100% 100%;
+	-webkit-animation: priceAnimation 0.5s 1 ease-in-out;
+	-moz-animation: priceAnimation 0.5s 1 ease-in-out;
+	-o-animation: priceAnimation 0.5s 1 ease-in-out;
+	border-radius: 3px;
+	/*                        -webkit-transition: all 0.5s 1 ease-in-out;
+	-moz-transition: all 0.5s 1 ease-in-out;
+	-o-transition: all 0.5s 1 ease-in-out; */
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month span.fare-price.cheapest {
+	background-color: white ;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month span.fare-price:hover {
+	background-color: #ccc ;
+	cursor: pointer;
+}
+
+.fare-calendar .fare-rates .fare-monthcontainer .fare-month span.fare-price.cheapest:hover {
+	background-color: #C13773 ;
+	cursor: pointer;
+}
+
+
+@-webkit-keyframes priceAnimation {
+	from {-webkit-transform: scaleY(0.1);}
+	to {-webkit-transform: scaleY(1.0);}
+}
+
+@-moz-keyframes priceAnimation {
+	from {-moz-transform:scaleY(0.1);}
+	to {-moz-transform:scaleY(1.0);}
+}
+
+@-o-keyframes priceAnimation {
+	from {-o-transform:scaleY(0.1);}
+	to {-o-transform:scaleY(1.0);}
+}

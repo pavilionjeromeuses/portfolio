@@ -1,0 +1,136 @@
+.neural-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100vh;
+    overflow: hidden;
+    place-items: center;
+    position: relative;
+}
+
+.ai-node {
+    --o: 15px;
+    --b: 4px;
+    --neon-cyan: #00f7ff;
+    --neon-magenta: #ff00ff;
+    width: 180px;
+    transform: scale(0.9);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.ai-node:hover {
+    transform: scale(1) translateZ(30px);
+    z-index: 2;
+    filter: saturate(2) brightness(1.2);
+}
+
+.ai-node:nth-child(odd) {
+    transform: translateY(25%);
+}
+
+.ai-node::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    background: linear-gradient(45deg, 
+        var(--neon-cyan), 
+        var(--neon-magenta));
+    z-index: -1;
+    filter: blur(25px);
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.ai-node:hover::before {
+    opacity: 0.6;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, 
+        #0a0a1a 0%, 
+        #000033 100%);
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+    .neural-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .ai-node:nth-child(odd) {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 992px) {
+    .neural-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .ai-node {
+        width: 160px;
+    }
+}
+
+@media (max-width: 768px) {
+    .neural-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ai-node {
+        width: 140px;
+        clip-path: none;
+        border-radius: 8px;
+    }
+}
+
+/* Add these new styles */
+body {
+    position: relative;
+    overflow: hidden;
+}
+
+#neuralCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.neural-grid {
+    position: relative;
+    z-index: 2;
+}
+
+.ai-node {
+    /* Add pulsating shadow */
+    filter: drop-shadow(0 0 5px rgba(0, 247, 255, 0.3));
+    animation: node-pulse 3s ease-in-out infinite;
+}
+
+@keyframes node-pulse {
+    0%, 100% { transform: scale(0.95); }
+    50% { transform: scale(1.02); }
+}
+
+/* Add neural connection effect */
+.ai-node::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #00f7ff33;
+    border-radius: 8px;
+    animation: connection-pulse 2s infinite;
+}
+
+@keyframes connection-pulse {
+    0% { opacity: 0; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(0.95); }
+}

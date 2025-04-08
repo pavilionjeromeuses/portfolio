@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automating Document Approval - SignEase Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #2d3436;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            padding: 4rem 2rem;
+            color: white;
+            border-radius: 0 0 2rem 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .approved { background: #dcfce7; color: #166534; }
+        .pending { background: #fef9c3; color: #854d0e; }
+        .rejected { background: #fee2e2; color: #991b1b; }
+
+        .document-id {
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Automating Document Approval</h1>
+        <p>SignEase Solutions Workflow Automation Dashboard</p>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="documentGrid"></div>
+    </div>
+
+    <script>
+        const departments = ['Legal', 'Finance', 'HR', 'Engineering', 'Marketing'];
+        const statuses = ['approved', 'pending', 'rejected'];
+        const approvers = ['Alex Chen', 'Samira Khan', 'Jordan Smith', 'Taylor O\'Connor', 'Morgan Lee'];
+        
+        const generateData = () => {
+            const container = document.getElementById('documentGrid');
+            let html = '';
+
+            for(let i = 1; i <= 100; i++) {
+                const dept = departments[Math.floor(Math.random() * departments.length)];
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const approver = approvers[Math.floor(Math.random() * approvers.length)];
+                const daysAgo = Math.floor(Math.random() * 30);
+
+                html += `
+                    <div class="card">
+                        <div class="document-id">DOC-${String(i).padStart(4, '0')}</div>
+                        <h3>${dept} Policy Update v${i}</h3>
+                        <p class="text-secondary">Department: ${dept}</p>
+                        <p>Approver: ${approver}</p>
+                        <p>Submitted: ${daysAgo} days ago</p>
+                        <div class="status ${status}">${status.toUpperCase()}</div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        generateData();
+    </script>
+</body>
+</html>

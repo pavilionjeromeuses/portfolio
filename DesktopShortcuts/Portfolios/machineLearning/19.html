@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Learner - ML Recommendation Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;700&family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --matrix-green: #00ff00;
+            --deep-purple: #2a044a;
+            --ai-pink: #ff2d70;
+            --tech-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        body {
+            background: var(--tech-gradient);
+            color: rgba(255,255,255,0.9);
+            line-height: 1.8;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%230B486B" d="M43.1,-53.2C55.4,-42.5,64.3,-27.9,66.3,-12.1C68.3,3.7,63.4,20.7,54.4,34.7C45.4,48.7,32.3,59.7,16.9,66.4C1.5,73.1,-16.2,75.5,-30.1,69.7C-44,63.9,-54.1,50,-61.4,34.7C-68.7,19.4,-73.3,2.7,-69.6,-11.4C-65.9,-25.5,-53.9,-37,-40.7,-47.5C-27.5,-58,-13.7,-67.5,1.3,-69.3C16.3,-71.1,32.7,-65.2,43.1,-53.2Z" transform="translate(100 100)"/></svg>');
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0,243,255,0.2);
+        }
+
+        .neural-loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, var(--neon-blue) 0%, transparent 70%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        .recommendation-engine {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .user-profile {
+            background: rgba(0,0,0,0.4);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--ai-pink);
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: rgba(15, 12, 41, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,243,255,0.2);
+            border-color: var(--neon-blue);
+        }
+
+        .resource-type {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--ai-pink);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .difficulty {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+        }
+
+        .beginner { background: rgba(0,255,0,0.1); color: var(--matrix-green); }
+        .intermediate { background: rgba(255,165,0,0.1); color: orange; }
+        .advanced { background: rgba(255,0,0,0.1); color: #ff2d70; }
+
+        .ai-pill {
+            background: rgba(255,45,112,0.2);
+            color: var(--ai-pink);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        button {
+            background: var(--neon-blue);
+            color: var(--deep-purple);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: var(--ai-pink);
+            color: white;
+            box-shadow: 0 0 20px rgba(255,45,112,0.5);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--neon-blue);
+            width: 0;
+            transition: width 0.5s;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background: rgba(0,243,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>NEURAL LEARNER</h1>
+            <p>Adaptive Machine Learning Education Platform</p>
+            <div class="neural-loader" id="loader"></div>
+        </header>
+
+        <div class="recommendation-engine">
+            <div class="user-profile">
+                <h2>Learning Profile</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="learningProgress"></div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>124</h3>
+                        <p>Concepts Mastered</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>98%</h3>
+                        <p>Recommendation Accuracy</p>
+                    </div>
+                </div>
+                <h3>Preferred Learning Styles</h3>
+                <div class="ai-pill">Visual Learning</div>
+                <div class="ai-pill">Project-Based</div>
+                <div class="ai-pill">Research Papers</div>
+            </div>
+
+            <div class="recommendation-interface">
+                <div class="interest-selector">
+                    <h2>Knowledge Exploration Matrix</h2>
+                    <select id="interestSelect">
+                        <option value="fundamentals">ML Fundamentals</option>
+                        <option value="deep-learning">Deep Learning Architectures</option>
+                        <option value="nlp">Natural Language Processing</option>
+                        <option value="cv">Computer Vision</option>
+                        <option value="rl">Reinforcement Learning</option>
+                        <option value="ethics">AI Ethics & Safety</option>
+                        <option value="production">ML Production Systems</option>
+                        <option value="math">Mathematical Foundations</option>
+                    </select>
+                    <button onclick="generateRecommendations()">Generate Learning Path</button>
+                </div>
+
+                <div id="recommendations" class="hidden">
+                    <h2>Personalized Knowledge Matrix</h2>
+                    <div class="recommendations-grid" id="recommendationsGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const knowledgeBase = [
+            {
+                title: "The Mathematical Building Blocks of Neural Networks",
+                description: "Deep dive into linear algebra, calculus, and probability theory essential for ML",
+                type: "course",
+                difficulty: "intermediate",
+                format: "interactive",
+                duration: "8h",
+                tags: ["math", "fundamentals"],
+                rating: "4.9",
+                projects: 3,
+                prerequisites: ["basic calculus"],
+                link: "#"
+            },
+            {
+                title: "Transformers Architecture: From Attention to BERT",
+                description: "Comprehensive guide to transformer models and their applications in NLP",
+                type: "research-paper",
+                difficulty: "advanced",
+                format: "paper",
+                duration: "2h",
+                tags: ["nlp", "deep-learning"],
+                authors: ["Vaswani et al."],
+                conference: "NeurIPS 2017",
+                link: "#"
+            },
+            {
+                title: "Production ML Systems: From Notebook to Deployment",
+                description: "Building scalable ML pipelines with TensorFlow Extended and Kubeflow",
+                type: "course",
+                difficulty: "intermediate",
+                format: "video",
+                duration: "12h",
+                tags: ["production", "devops"],
+                rating: "4.7",
+                projects: 5,
+                link: "#"
+            },
+            {
+                title: "Ethical AI: Bias Detection and Mitigation",
+                description: "Identifying and addressing ethical challenges in machine learning systems",
+                type: "course",
+                difficulty: "intermediate",
+                format: "interactive",
+                duration: "6h",
+                tags: ["ethics", "fundamentals"],
+                rating: "4.8",
+                caseStudies: 4,
+                link: "#"
+            },
+            {
+                title: "Deep Reinforcement Learning: From DQN to PPO",
+                description: "Mastering value-based and policy gradient methods in RL",
+                type: "book",
+                difficulty: "advanced",
+                format: "text",
+                duration: "15h",
+                tags: ["rl", "deep-learning"],
+                author: "John Doe",
+                publisher: "AI Press",
+                link: "#"
+            },
+            {
+                title: "Computer Vision with Modern Architectures",
+                description: "Implementing ResNet, EfficientNet, and Vision Transformers",
+                type: "course",
+                difficulty: "intermediate",
+                format: "video",
+                duration: "10h",
+                tags: ["cv", "deep-learning"],
+                rating: "4.8",
+                projects: 4,
+                link: "#"
+            },
+            {
+                title: "Probabilistic Machine Learning: Advanced Topics",
+                description: "Bayesian neural networks and Gaussian processes",
+                type: "research-paper",
+                difficulty: "advanced",
+                format: "paper",
+                duration: "3h",
+                tags: ["math", "deep-learning"],
+                authors: ["Kevin Murphy"],
+                conference: "JMLR 2022",
+                link: "#"
+            },
+            {
+                title: "MLOps: Continuous Delivery for AI Systems",
+                description: "Implementing CI/CD pipelines for machine learning",
+                type: "course",
+                difficulty: "intermediate",
+                format: "interactive",
+                duration: "7h",
+                tags: ["production", "devops"],
+                rating: "4.6",
+                projects: 2,
+                link: "#"
+            }
+        ];
+
+        let userProfile = {
+            knowledgeLevel: 42,
+            completedResources: [],
+            preferredFormats: ["interactive", "video"],
+            learningHistory: [],
+            interactionCount: 0,
+            lastUpdated: new Date()
+        };
+
+        function generateRecommendations() {
+            const loader = document.getElementById('loader');
+            const recommendationsDiv = document.getElementById('recommendations');
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                const interest = document.getElementById('interestSelect').value;
+                updateUserProfile(interest);
+                
+                const filtered = knowledgeBase.filter(resource => 
+                    resource.tags.includes(interest) && 
+                    !userProfile.completedResources.includes(resource.title)
+                );
+
+                displayRecommendations(filtered);
+                loader.style.display = 'none';
+                recommendationsDiv.classList.remove('hidden');
+                updateProgressBar();
+            }, 1500);
+        }
+
+        function updateUserProfile(interest) {
+            userProfile.interactionCount++;
+            userProfile.learningHistory.push({
+                interest,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('neuralLearnerProfile', JSON.stringify(userProfile));
+        }
+
+        function displayRecommendations(resources) {
+            const grid = document.getElementById('recommendationsGrid');
+            grid.innerHTML = '';
+            
+            resources.forEach(resource => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+                
+                let metaData = '';
+                if(resource.type === 'course') {
+                    metaData = `
+                        <div class="ai-pill">${resource.projects} Projects</div>
+                        <div class="ai-pill">${resource.rating}/5 Rating</div>
+                    `;
+                } else if(resource.type === 'research-paper') {
+                    metaData = `
+                        <div class="ai-pill">${resource.conference}</div>
+                        <div class="ai-pill">${resource.authors.join(', ')}</div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="resource-type">${formatType(resource.type)}</div>
+                    <h3>${resource.title}</h3>
+                    <div class="difficulty ${resource.difficulty}">
+                        <i class="fas fa-brain"></i>
+                        ${resource.difficulty.toUpperCase()}
+                    </div>
+                    <p>${resource.description}</p>
+                    ${metaData}
+                    <div style="margin-top: 1rem;">
+                        <a href="${resource.link}" class="ai-pill" target="_blank">
+                            <i class="fas fa-rocket"></i> Launch Resource
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function formatType(type) {
+            const icons = {
+                'course': '🎓',
+                'research-paper': '📄',
+                'book': '📚'
+            };
+            return icons[type] || '📖';
+        }
+
+        function updateProgressBar() {
+            const progress = Math.min(userProfile.interactionCount * 5, 100);
+            document.getElementById('learningProgress').style.width = `${progress}%`;
+        }
+
+        // Initialize
+        if(localStorage.getItem('neuralLearnerProfile')) {
+            userProfile = JSON.parse(localStorage.getItem('neuralLearnerProfile'));
+        }
+        updateProgressBar();
+    </script>
+</body>
+</html>

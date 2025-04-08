@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BoardFlow Systems - Workforce Productivity Metrics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #2d3436;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+        }
+
+        h1 {
+            color: #2d3436;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #6c5ce7, #0984e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background: #6c5ce7;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .chart-container {
+            margin: 3rem 0;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            th, td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BoardFlow Systems<br>Workforce Productivity Metrics</h1>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>📊 Overall Productivity</h3>
+                <p class="metric-value">84.6%</p>
+                <p class="metric-trend" style="color: #00b894;">↑ 12% MoM Growth</p>
+            </div>
+            <div class="metric-card">
+                <h3>⏱️ Average Task Completion</h3>
+                <p class="metric-value">2.4 Days</p>
+                <p class="metric-trend" style="color: #d63031;">↓ 18% YoY</p>
+            </div>
+            <div class="metric-card">
+                <h3>🤝 Team Collaboration</h3>
+                <p class="metric-value">92.1%</p>
+                <p class="metric-trend" style="color: #00b894;">↑ 8% QoQ</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="productivityChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Employees</th>
+                    <th>Projects Completed</th>
+                    <th>Avg. Time per Task</th>
+                    <th>Collaboration Score</th>
+                    <th>Productivity Index</th>
+                </tr>
+            </thead>
+            <tbody id="metricsData">
+                <!-- Sample data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Generate sample data
+        const generateData = () => {
+            const data = [];
+            const startDate = new Date(2024, 0, 1);
+            
+            for(let i = 0; i < 100; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                
+                data.push({
+                    date: date.toLocaleDateString(),
+                    employees: Math.floor(Math.random() * 50 + 50),
+                    projectsCompleted: Math.floor(Math.random() * 15 + 5),
+                    avgTime: (Math.random() * 3 + 1).toFixed(1),
+                    collaboration: Math.floor(Math.random() * 15 + 85),
+                    productivity: Math.floor(Math.random() * 15 + 80)
+                });
+            }
+            return data;
+        }
+
+        // Populate table
+        const metricsData = document.getElementById('metricsData');
+        const sampleData = generateData();
+
+        sampleData.forEach(item => {
+            metricsData.innerHTML += `
+                <tr>
+                    <td>${item.date}</td>
+                    <td>${item.employees}</td>
+                    <td>${item.projectsCompleted}</td>
+                    <td>${item.avgTime} days</td>
+                    <td>${item.collaboration}%</td>
+                    <td>${item.productivity}%</td>
+                </tr>
+            `;
+        });
+
+        // Initialize chart
+        const ctx = document.getElementById('productivityChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sampleData.map(item => item.date),
+                datasets: [{
+                    label: 'Productivity Index',
+                    data: sampleData.map(item => item.productivity),
+                    borderColor: '#6c5ce7',
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Productivity Trend - Last 100 Days'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearPath Consulting - Office Policy Handbook</title>
+    <style>
+        :root {
+            --primary: #2A5C82;
+            --secondary: #5DA9E9;
+            --accent: #FF6B6B;
+            --light: #F4F7FA;
+            --dark: #2D3142;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 0 0 2rem 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .policy-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .policy-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .policy-number {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.9em;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 2rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>ClearPath Consulting</h1>
+            <p>Office Policy Handbook</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Work Hours & Attendance -->
+        <section>
+            <h2>Work Hours & Attendance</h2>
+            <div class="policy-grid">
+                <article class="policy-card">
+                    <div class="category-tag">Attendance</div>
+                    <div class="policy-number">Policy #001</div>
+                    <h3>Core Working Hours</h3>
+                    <p>All employees must be available between 10 AM - 3 PM local time, with flexible start/end times.</p>
+                </article>
+
+                <article class="policy-card">
+                    <div class="category-tag">Remote Work</div>
+                    <div class="policy-number">Policy #002</div>
+                    <h3>WFH Approval Process</h3>
+                    <p>Remote work requests must be submitted 48 hours in advance through the HR portal.</p>
+                </article>
+
+                <!-- Add 8 more policies in this category -->
+            </div>
+        </section>
+
+        <!-- Code of Conduct -->
+        <section>
+            <h2>Code of Conduct</h2>
+            <div class="policy-grid">
+                <article class="policy-card">
+                    <div class="category-tag">Ethics</div>
+                    <div class="policy-number">Policy #011</div>
+                    <h3>Conflict of Interest</h3>
+                    <p>Employees must disclose any potential conflicts of interest within 5 business days of identification.</p>
+                </article>
+
+                <article class="policy-card">
+                    <div class="category-tag">Communication</div>
+                    <div class="policy-number">Policy #012</div>
+                    <h3>Email Etiquette</h3>
+                    <p>All client-facing emails must use company templates and be proofread before sending.</p>
+                </article>
+                <!-- Add 8 more policies -->
+            </div>
+        </section>
+
+        <!-- Technology & Security -->
+        <section>
+            <h2>Technology & Security</h2>
+            <div class="policy-grid">
+                <article class="policy-card">
+                    <div class="category-tag">Security</div>
+                    <div class="policy-number">Policy #021</div>
+                    <h3>Password Requirements</h3>
+                    <p>All system passwords must be 12 characters minimum with MFA enabled wherever available.</p>
+                </article>
+
+                <article class="policy-card">
+                    <div class="category-tag">Equipment</div>
+                    <div class="policy-number">Policy #022</div>
+                    <h3>Device Encryption</h3>
+                    <p>All company-issued devices must have disk encryption enabled at all times.</p>
+                </article>
+                <!-- Add 8 more policies -->
+            </div>
+        </section>
+
+        <!-- Continue with 7 more sections (Benefits, Leave, Performance, etc.) -->
+        
+    </main>
+
+    <footer class="container" style="margin: 3rem 0; text-align: center; color: #666;">
+        <p>© 2023 ClearPath Consulting. Last updated: October 2023</p>
+        <p>This handbook contains 100 policies across 10 categories. Printed copies available upon request.</p>
+    </footer>
+</body>
+</html>

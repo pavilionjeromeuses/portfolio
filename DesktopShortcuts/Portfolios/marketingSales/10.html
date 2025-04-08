@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdVision - Paid Ads Performance Dashboard</title>
+    
+    <!-- Styles -->
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        canvas {
+            width: 100%!important;
+            height: 400px!important;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            background: #e0e7ff;
+            color: var(--primary);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>AdVision Performance Dashboard</h1>
+            <p>Campaign Optimization Toolkit</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Total Spend</h3>
+                <div class="metric-value">$24,500</div>
+                <div class="pill"><i class="fas fa-arrow-trend-up"></i> 12% vs previous</div>
+            </div>
+            <div class="card">
+                <h3>ROAS</h3>
+                <div class="metric-value">3.8x</div>
+                <div class="pill"><i class="fas fa-arrow-trend-down"></i> 8% optimization needed</div>
+            </div>
+            <div class="card">
+                <h3>Conversion Rate</h3>
+                <div class="metric-value">6.2%</div>
+                <div class="pill"><i class="fas fa-check"></i> Meeting target</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>Campaign Performance</h3>
+                <canvas id="performanceChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>ROAS Comparison</h3>
+                <canvas id="roasChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Audit Recommendations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Issue</th>
+                        <th>Action</th>
+                        <th>Priority</th>
+                    </tr>
+                </thead>
+                <tbody id="recommendations">
+                    <!-- Data populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const campaignData = {
+            labels: ['Brand Awareness', 'Retargeting', 'New Product', 'Seasonal'],
+            datasets: [{
+                label: 'Cost per Conversion',
+                data: [45, 28, 60, 35],
+                backgroundColor: '#6366f155',
+                borderColor: '#6366f1',
+                tension: 0.4
+            },{
+                label: 'Conversions',
+                data: [1200, 850, 600, 950],
+                backgroundColor: '#4f46e555',
+                borderColor: '#4f46e5',
+                tension: 0.4
+            }]
+        };
+
+        const roasData = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Current ROAS',
+                data: [2.8, 3.1, 3.5, 3.2],
+                borderColor: '#6366f1',
+                tension: 0.4
+            },{
+                label: 'Target ROAS',
+                data: [3.5, 3.8, 4.0, 4.2],
+                borderColor: '#4f46e5',
+                tension: 0.4,
+                borderDash: [5,5]
+            }]
+        };
+
+        const recommendations = [
+            { campaign: 'Retargeting', issue: 'High frequency', action: 'Adjust bidding strategy', priority: 'High' },
+            { campaign: 'New Product', issue: 'Low CTR', action: 'Refresh creatives', priority: 'Medium' },
+            { campaign: 'Seasonal', issue: 'Budget allocation', action: 'Increase daily budget', priority: 'Critical' },
+            { campaign: 'Brand Awareness', issue: 'Audience overlap', action: 'Exclude existing customers', priority: 'Medium' }
+        ];
+
+        // Initialize Charts
+        new Chart(document.getElementById('performanceChart'), {
+            type: 'line',
+            data: campaignData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('roasChart'), {
+            type: 'line',
+            data: roasData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Populate recommendations table
+        const tbody = document.getElementById('recommendations');
+        recommendations.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.campaign}</td>
+                <td>${item.issue}</td>
+                <td>${item.action}</td>
+                <td><span class="pill">${item.priority}</span></td>
+            `;
+            tbody.appendChild(row);
+        });
+    </script>
+</body>
+</html>

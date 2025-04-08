@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink & Imagination | Literary Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2A363B;
+            --accent: #E84A5F;
+            --gold: #FFC107;
+            --parchment: #FFF5E1;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(45deg, #fdf6e3 0%, #fff5e1 100%);
+            color: #3E3C38;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(42,54,59,0.8), rgba(42,54,59,0.8)),
+                        url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ...'); /* Simplified base64 paper texture */
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: var(--parchment);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .story-card {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 3rem;
+            background: var(--parchment);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+            position: relative;
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--accent);
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border: 2px solid var(--gold);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .story-card:hover::before {
+            opacity: 0.3;
+        }
+
+        .genre-tag {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(232,74,95,0.1);
+            border-radius: 30px;
+            margin: 1rem 0;
+        }
+
+        .word-count {
+            position: absolute;
+            bottom: -25px;
+            right: 0;
+            background: var(--primary);
+            color: var(--parchment);
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9em;
+            clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .deco-flourish {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .deco-flourish.top-left {
+            top: 30px;
+            left: 30px;
+            transform: rotate(15deg);
+        }
+
+        .deco-flourish.bottom-right {
+            bottom: 30px;
+            right: 30px;
+            transform: rotate(-15deg);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            background: var(--primary);
+            color: var(--parchment);
+            margin-top: 5rem;
+            border-top: 2px solid var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .story-card {
+                margin: 2rem 1rem;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Ink & Imagination</h1>
+    </div>
+
+    <!-- Decorative elements -->
+    <svg class="deco-flourish top-left" width="100" height="100" viewBox="0 0 24 24">
+        <path fill="var(--primary)" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 2a8 8 0 100 16 8 8 0 000-16zm3.833 5.337a1 1 0 011.664-1.11C18.486 9.8 19 11.32 19 12c0 .68-.514 2.2-1.503 3.773a1 1 0 01-1.664-1.11C16.514 13.2 17 12.32 17 12c0-.68-.486-1.8-1.167-2.663z"/>
+    </svg>
+
+    <div class="story-card">
+        <div class="genre-tag"><i class="fas fa-clock"></i> Speculative Fiction</div>
+        <h2>The Clockmaker's Last Wind</h2>
+        <p class="opening-line">Time didn't just pass in Elias Crowe's shop - it pooled in the corners like spilled mercury...</p>
+        <p>[... Story continues with interactive elements visualized through CSS animations ...]</p>
+        <div class="word-count">850 Words</div>
+    </div>
+
+    <div class="story-card">
+        <div class="genre-tag"><i class="fas fa-feather"></i> Literary Realism</div>
+        <h2>Beneath the Floorboard</h2>
+        <p class="opening-line">The envelope crackled like autumn leaves in Mia's trembling hands...</p>
+        <p>[... Text appears to emerge from simulated paper texture background ...]</p>
+        <div class="word-count">500 Words</div>
+    </div>
+
+    <div class="story-card">
+        <div class="genre-tag"><i class="fas fa-rocket"></i> Sci-Fi Novel</div>
+        <h2>The Memory Thief</h2>
+        <p class="opening-line">Rain memories sold best during the dry season - people would pay double to remember what water felt like...</p>
+        <p>[... Hover effects reveal subtle cyberpunk-inspired glitch animations ...]</p>
+        <div class="word-count">2,300 Words</div>
+    </div>
+
+    <svg class="deco-flourish bottom-right" width="100" height="100" viewBox="0 0 24 24">
+        <path fill="var(--primary)" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 2a8 8 0 100 16 8 8 0 000-16zm-3.833 5.337a1 1 0 01-1.664-1.11C5.514 9.8 5 11.32 5 12c0 .68.514 2.2 1.503 3.773a1 1 0 011.664-1.11C7.486 13.2 7 12.32 7 12c0-.68.486-1.8 1.167-2.663z"/>
+    </svg>
+
+    <footer>
+        <p>Crafted with <i class="fas fa-heart" style="color: var(--accent)"></i> for stories that linger</p>
+        <p style="opacity: 0.8;">© 2023 Ink & Imagination</p>
+    </footer>
+</body>
+</html>

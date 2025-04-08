@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalFit AI - Smart Fitness Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4A90E2;
+            --accent: #FF6B6B;
+            --background: #f8f9fa;
+            --text: #2d3436;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-recommendation {
+            background: linear-gradient(135deg, #6C63FF20, #4A90E220);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-recommendation::before {
+            content: "🤖";
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            opacity: 0.1;
+            font-size: 3rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        input, select, button {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary)20;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .entries {
+            margin-top: 2rem;
+        }
+
+        .chart-container {
+            margin-top: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .entry-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-tag {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .workout-tag { background: #6C63FF20; color: var(--primary); }
+        .meal-tag { background: #4A90E220; color: var(--secondary); }
+    </style>
+</head>
+<body>
+    <h1>VitalFit AI <i class="fas fa-brain"></i></h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card glass-card">
+            <div class="stat-value">2,450</div>
+            <div class="stat-label">Calories Burned</div>
+        </div>
+        <div class="stat-card glass-card">
+            <div class="stat-value">1,820</div>
+            <div class="stat-label">Calories Consumed</div>
+        </div>
+        <div class="stat-card glass-card">
+            <div class="stat-value">98%</div>
+            <div class="stat-label">Daily Goal Progress</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Workout Section -->
+        <div class="glass-card">
+            <h2><i class="fas fa-dumbbell"></i> Workout Tracker</h2>
+            <form id="workoutForm">
+                <input type="text" placeholder="🏋️ Exercise name" required>
+                <input type="number" placeholder="⏱ Duration (minutes)" required>
+                <input type="number" placeholder="🔥 Calories burned" required>
+                <button type="submit">Add Workout <i class="fas fa-plus"></i></button>
+            </form>
+            
+            <div class="ai-recommendation">
+                <h3>AI Personal Trainer Recommendation</h3>
+                <p id="workoutSuggestion">Analyzing your recent activity...</p>
+                <button onclick="generateWorkoutSuggestion()" style="margin-top: 1rem;">
+                    <i class="fas fa-magic"></i> Generate New Workout
+                </button>
+            </div>
+
+            <div class="entries">
+                <h3>Today's Workouts</h3>
+                <div id="workoutList">
+                    <div class="entry-item">
+                        <span>🏃 Morning Run (45min)</span>
+                        <div>
+                            <span class="category-tag workout-tag">Cardio</span>
+                            <strong>450 kcal</strong>
+                        </div>
+                    </div>
+                    <div class="entry-item">
+                        <span>💪 Weight Training (60min)</span>
+                        <div>
+                            <span class="category-tag workout-tag">Strength</span>
+                            <strong>600 kcal</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutrition Section -->
+        <div class="glass-card">
+            <h2><i class="fas fa-utensils"></i> Nutrition Tracker</h2>
+            <form id="nutritionForm">
+                <input type="text" placeholder="🍎 Meal name" required>
+                <input type="number" placeholder="🔥 Calories" required>
+                <select>
+                    <option>🥞 Breakfast</option>
+                    <option>🥗 Lunch</option>
+                    <option>🍲 Dinner</option>
+                    <option>🍪 Snack</option>
+                </select>
+                <button type="submit">Add Meal <i class="fas fa-plus"></i></button>
+            </form>
+
+            <div class="ai-recommendation">
+                <h3>AI Nutritionist Recommendation</h3>
+                <p id="mealSuggestion">Analyzing your diet pattern...</p>
+                <button onclick="generateMealSuggestion()" style="margin-top: 1rem;">
+                    <i class="fas fa-magic"></i> Generate New Meal Plan
+                </button>
+            </div>
+
+            <div class="entries">
+                <h3>Today's Nutrition</h3>
+                <div id="mealList">
+                    <div class="entry-item">
+                        <span>🥑 Avocado Toast</span>
+                        <div>
+                            <span class="category-tag meal-tag">Breakfast</span>
+                            <strong>320 kcal</strong>
+                        </div>
+                    </div>
+                    <div class="entry-item">
+                        <span>🍗 Grilled Chicken Salad</span>
+                        <div>
+                            <span class="category-tag meal-tag">Lunch</span>
+                            <strong>450 kcal</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Charts -->
+    <div class="glass-card chart-container">
+        <h2><i class="fas fa-chart-line"></i> Progress Analytics</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <canvas id="progressChart"></canvas>
+            <canvas id="calorieChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced AI recommendations
+        const workoutSuggestions = [
+            "Based on your activity, try a 30-minute HIIT circuit: 40s sprint/20s rest x 8 rounds",
+            "Recovery recommendation: Yoga flow focusing on hip mobility and shoulder stability",
+            "Strength focus: 4x8 Barbell squats @70% 1RM followed by Romanian deadlifts",
+            "Endurance builder: 5km tempo run at 5:30/km pace followed by core circuit",
+            "Power development: Box jumps (5x5) + Clean pulls (4x4) @80% 1RM"
+        ];
+
+        const mealSuggestions = [
+            "Post-workout recovery: 30g whey protein shake + banana + 50g oats",
+            "High-protein lunch: Grilled salmon (200g) + quinoa (1 cup) + roasted broccoli",
+            "Vegetarian option: Lentil curry with brown rice and spinach raita",
+            "Low-carb dinner: Zucchini noodles with turkey meatballs and marinara",
+            "Snack idea: Greek yogurt with mixed berries and 15g almond butter"
+        ];
+
+        // Chart initialization with realistic data
+        const ctx1 = document.getElementById('progressChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Calories Burned',
+                    data: [680, 720, 810, 650, 920, 580, 750],
+                    borderColor: '#6C63FF',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: '#6C63FF20'
+                },
+                {
+                    label: 'Calories Consumed',
+                    data: [1850, 1920, 1780, 2100, 1650, 2300, 1950],
+                    borderColor: '#4A90E2',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: '#4A90E220'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Weekly Energy Balance'
+                    }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('calorieChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Protein', 'Carbs', 'Fats'],
+                datasets: [{
+                    data: [35, 45, 20],
+                    backgroundColor: ['#6C63FF', '#4A90E2', '#FF6B6B'],
+                    hoverOffset: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' },
+                    title: {
+                        display: true,
+                        text: 'Macronutrient Distribution'
+                    }
+                }
+            }
+        });
+
+        // Form handlers with animations
+        document.getElementById('workoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const [name, duration, calories] = e.target.elements;
+            const entry = document.createElement('div');
+            entry.className = 'entry-item';
+            entry.innerHTML = `
+                <span>${name.value} (${duration.value}min)</span>
+                <div>
+                    <span class="category-tag workout-tag">${duration.value > 30 ? 'Endurance' : 'Strength'}</span>
+                    <strong>${calories.value} kcal</strong>
+                </div>
+            `;
+            document.getElementById('workoutList').prepend(entry);
+            e.target.reset();
+        });
+
+        document.getElementById('nutritionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const [meal, calories, type] = e.target.elements;
+            const entry = document.createElement('div');
+            entry.className = 'entry-item';
+            entry.innerHTML = `
+                <span>${meal.value}</span>
+                <div>
+                    <span class="category-tag meal-tag">${type.value}</span>
+                    <strong>${calories.value} kcal</strong>
+                </div>
+            `;
+            document.getElementById('mealList').prepend(entry);
+            e.target.reset();
+        });
+
+        // AI Suggestion generators
+        function generateWorkoutSuggestion() {
+            const suggestion = workoutSuggestions[Math.floor(Math.random() * workoutSuggestions.length)];
+            document.getElementById('workoutSuggestion').innerHTML = `
+                <i class="fas fa-bolt" style="color: var(--primary)"></i> ${suggestion}
+            `;
+        }
+
+        function generateMealSuggestion() {
+            const suggestion = mealSuggestions[Math.floor(Math.random() * mealSuggestions.length)];
+            document.getElementById('mealSuggestion').innerHTML = `
+                <i class="fas fa-seedling" style="color: var(--secondary)"></i> ${suggestion}
+            `;
+        }
+
+        // Initial setup
+        generateWorkoutSuggestion();
+        generateMealSuggestion();
+        setInterval(() => {
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.style.transform = `rotate(${Math.random() * 0.5 - 0.25}deg)`;
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

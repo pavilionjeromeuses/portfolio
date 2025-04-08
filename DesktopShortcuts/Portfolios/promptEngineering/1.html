@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineer's Travel Assistant</title>
+    <style>
+        :root {
+            --primary-color: #2A3B4C;
+            --secondary-color: #5C7A8C;
+            --accent-color: #FF6B6B;
+            --background-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--background-gradient);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .context-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+
+        .chat-interface {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .chat-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            margin: -25px -25px 25px;
+        }
+
+        .message {
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 75%;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .user-message {
+            background: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-radius: 15px 15px 3px 15px;
+        }
+
+        .bot-message {
+            background: #f8f9fa;
+            margin-right: auto;
+            border-radius: 15px 15px 15px 3px;
+            border: 1px solid #dee2e6;
+        }
+
+        .context-badge {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 2px;
+        }
+
+        .prompt-examples {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 8px rgba(255,107,107,0.2);
+        }
+
+        button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            color: #6c757d;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #dee2e6;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="context-panel">
+            <h2>Context Manager 🧠</h2>
+            <div id="contextDisplay"></div>
+            
+            <div class="prompt-examples">
+                <h3>Prompt Engineering Examples</h3>
+                <p>Try these context-aware prompts:</p>
+                <ul>
+                    <li>"Update my budget to $3000"</li>
+                    <li>"Change style to luxury"</li>
+                    <li>"What was my previous destination?"</li>
+                    <li>"Combine beach and cultural activities"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chat-interface">
+            <div class="chat-header">
+                <h1>Travel Prompt Engineer</h1>
+                <p>Context-Aware Trip Planning Assistant</p>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages"></div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="dot" style="animation-delay: 0s"></div>
+                <div class="dot" style="animation-delay: 0.2s"></div>
+                <div class="dot" style="animation-delay: 0.4s"></div>
+            </div>
+            
+            <input type="text" id="userInput" placeholder="Craft your prompt... (e.g., 'Plan a cultural trip to Japan')">
+            <button onclick="handleUserInput()">Generate Response</button>
+        </div>
+    </div>
+
+    <script>
+        const travelKnowledgeBase = {
+            destinations: {
+                japan: {
+                    cultural: ["Tokyo Imperial Palace", "Kyoto Temples", "Tea Ceremony Experience"],
+                    adventure: ["Mount Fuji Hiking", "Okinawa Diving", "Snow Monkey Park"],
+                    luxury: ["Ryokan Stay", "Kaiseki Dining", "Private Geisha Performance"]
+                },
+                italy: {
+                    cultural: ["Colosseum Tour", "Vatican Museums", "Venice Architecture"],
+                    adventure: ["Dolomites Trekking", "Amalfi Coast Sailing", "Volcano Hiking"],
+                    luxury: ["Tuscan Villa Stay", "Private Gondola Ride", "Michelin Star Dining"]
+                }
+            },
+            budgetTiers: {
+                low: { daily: "$50-100", accommodation: "Hostels/Budget Hotels" },
+                medium: { daily: "$150-300", accommodation: "3-4 Star Hotels" },
+                high: { daily: "$500+", accommodation: "Luxury Hotels/Private Villas" }
+            },
+            seasons: {
+                spring: ["Cherry Blossom Viewing", "Spring Festivals"],
+                summer: ["Beach Activities", "Summer Sports"],
+                winter: ["Ski Resorts", "Northern Lights Tours"]
+            }
+        };
+
+        let conversationContext = {
+            budget: { amount: 5000, currency: "USD" },
+            travelStyle: "cultural",
+            duration: 7,
+            destinations: [],
+            preferences: {
+                activities: [],
+                dietary: "none",
+                pace: "moderate"
+            },
+            history: []
+        };
+
+        function updateContext(userInput) {
+            const numberMatch = userInput.match(/\$?(\d{3,})/);
+            if (numberMatch) {
+                conversationContext.budget.amount = parseInt(numberMatch[1]);
+            }
+
+            const styles = ["cultural", "adventure", "luxury", "family", "romantic"];
+            styles.forEach(style => {
+                if (userInput.toLowerCase().includes(style)) {
+                    conversationContext.travelStyle = style;
+                }
+            });
+
+            Object.keys(travelKnowledgeBase.destinations).forEach(destination => {
+                if (userInput.toLowerCase().includes(destination)) {
+                    if (!conversationContext.destinations.includes(destination)) {
+                        conversationContext.destinations.push(destination);
+                    }
+                }
+            });
+
+            conversationContext.history.push({
+                input: userInput,
+                timestamp: new Date().toISOString()
+            });
+
+            updateContextDisplay();
+        }
+
+        function generateResponse() {
+            const recs = [];
+            const { destinations, travelStyle, budget } = conversationContext;
+            
+            destinations.forEach(dest => {
+                const destData = travelKnowledgeBase.destinations[dest];
+                if (destData && destData[travelStyle]) {
+                    recs.push(`<strong>${dest.charAt(0).toUpperCase() + dest.slice(1)}:</strong> ` +
+                        destData[travelStyle].slice(0, 3).join(", "));
+                }
+            });
+
+            const budgetTier = budget.amount > 10000 ? "high" : 
+                             budget.amount > 3000 ? "medium" : "low";
+            
+            return `✈️ Based on your preferences:
+<div class="context-badge">Style: ${conversationContext.travelStyle}</div>
+<div class="context-badge">Budget: ${budget.currency}${budget.amount}</div>
+<div class="context-badge">Destinations: ${conversationContext.destinations.join(", ")}</div>
+
+🌍 Recommended Itinerary:
+${recs.join("<br>")}
+
+💡 Suggestions:
+- Accommodation level: ${travelKnowledgeBase.budgetTiers[budgetTier].accommodation}
+- Daily budget: ${travelKnowledgeBase.budgetTiers[budgetTier].daily}
+- Recommended activities: ${getSeasonalActivities()}
+
+Would you like to refine any details or add specific preferences?`;
+        }
+
+        function getSeasonalActivities() {
+            const month = new Date().getMonth();
+            const season = month < 2 || month === 11 ? "winter" :
+                          month < 5 ? "spring" :
+                          month < 8 ? "summer" : "autumn";
+            return travelKnowledgeBase.seasons[season].join(", ");
+        }
+
+        function updateContextDisplay() {
+            const contextDiv = document.getElementById('contextDisplay');
+            contextDiv.innerHTML = `
+                <h4>Active Context</h4>
+                <div class="context-badge">💰 Budget: ${conversationContext.budget.currency}${conversationContext.budget.amount}</div>
+                <div class="context-badge">🎭 Style: ${conversationContext.travelStyle}</div>
+                <div class="context-badge">📍 Destinations: ${conversationContext.destinations.join(", ") || 'None'}</div>
+                <div class="context-badge">⏱ History: ${conversationContext.history.length} exchanges</div>
+            `;
+        }
+
+        // UI Functions
+        function appendMessage(role, content) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            messageDiv.innerHTML = content;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function handleUserInput() {
+            const inputField = document.getElementById('userInput');
+            const userMessage = inputField.value.trim();
+            if (!userMessage) return;
+
+            appendMessage('user', userMessage);
+            inputField.value = '';
+            
+            document.getElementById('typingIndicator').style.display = 'flex';
+            
+            setTimeout(() => {
+                updateContext(userMessage);
+                const botResponse = generateResponse();
+                document.getElementById('typingIndicator').style.display = 'none';
+                appendMessage('bot', botResponse);
+            }, 1500);
+        }
+
+        // Initialize
+        updateContextDisplay();
+        appendMessage('bot', `Welcome to Travel Prompt Engineering! 🌟<br>
+            I'm an AI that helps craft perfect travel experiences through contextual conversations.<br>
+            Start by telling me about your travel interests or ask about destinations!`);
+
+        // Handle Enter key
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleUserInput();
+        });
+    </script>
+</body>
+</html>

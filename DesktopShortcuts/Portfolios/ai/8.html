@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroFinance AI - Market Prediction Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #0a1a2a;
+            --background: #000d1a;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--background);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #000d1a 0%, #001a2a 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, var(--primary) 10px, var(--primary) 20px);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .terminal-box {
+            background: rgba(0, 15, 30, 0.9);
+            border: 1px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .chart-container {
+            height: 600px;
+            position: relative;
+            background: #000510;
+            border: 1px solid #003320;
+        }
+
+        button {
+            background: linear-gradient(45deg, #003320, #001a00);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #005030, #002a10);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .model-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background: #000510;
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .candle {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            margin-right: 8px;
+            border: 1px solid;
+        }
+
+        .green { background: #00ff88; border-color: #00cc66; }
+        .red { background: #ff4444; border-color: #cc0000; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🅽🅴🆄🆁🅾🅵🅸🅽🅰🅽🅲🅴  🅰🅸</h1>
+        <p>Multi-Horizon Market Prediction Engine</p>
+    </div>
+
+    <div class="grid-container">
+        <!-- Left Panel -->
+        <div class="terminal-box">
+            <h2>🄼🄾🄳🄴🄻 🄲🄾🄽🅃🅁🄾🄻</h2>
+            <div class="model-stats">
+                <div class="stat-box">
+                    <h3>LSTM V3.1.5</h3>
+                    <p>Accuracy: 78.4%</p>
+                    <p>Lookback: 60 days</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Transformer V2.4</h3>
+                    <p>Accuracy: 82.1%</p>
+                    <p>Attention Heads: 8</p>
+                </div>
+            </div>
+
+            <div>
+                <label>Asset Pair:</label>
+                <select id="assetPair" style="width:100%; margin:10px 0; padding:8px; background:#000d1a; color:var(--primary); border:1px solid var(--primary);">
+                    <option value="BTC-USD">BTC/USD - Bitcoin</option>
+                    <option value="ETH-USD">ETH/USD - Ethereum</option>
+                    <option value="TSLA">TSLA - Tesla Inc</option>
+                    <option value="NVDA">NVDA - NVIDIA Corp</option>
+                </select>
+            </div>
+
+            <div style="margin:20px 0;">
+                <button onclick="runAnalysis()" style="width:100%;">🄶🄴🄽🄴🅁🄰🅃🄴 🄵🄾🅁🄴🄲🄰🅂🅃</button>
+                <button onclick="runBacktest()" style="width:100%; margin-top:10px;">🅁🅄🄽 🄱🄰🄲🄺🅃🄴🅂🅃 (3Y)</button>
+            </div>
+
+            <h3>🄻🄸🅅🄴 🄼🄰🅁🄺🄴🅃 🄳🄰🅃🄰</h3>
+            <div id="marketTicker" style="border:1px solid #004422; padding:10px;">
+                Loading real-time data...
+            </div>
+        </div>
+
+        <!-- Main Chart -->
+        <div class="terminal-box">
+            <h2>🄿🅁🄸🄲🄴 🄰🄽🄳 🅅🄾🄻🅄🄼🄴 🄰🄽🄰🄻🅈🅂🄸🅂</h2>
+            <div class="chart-container">
+                <canvas id="marketChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="terminal-box">
+            <h2>🅁🄸🅂🄺 🄼🄰🄽🄰🄶🄴🄼🄴🄽🅃</h2>
+            <div class="model-stats">
+                <div class="stat-box">
+                    <h3>Portfolio Protection</h3>
+                    <p>Stop-Loss: 5.2%</p>
+                    <p>Take-Profit: 8.7%</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Position Sizing</h3>
+                    <p>Volatility: 2.8%</p>
+                    <p>Allocation: 15%</p>
+                </div>
+            </div>
+
+            <h3>🄱🄰🄲🄺🅃🄴🅂🅃 🅁🄴🅂🅄🄻🅃🅂</h3>
+            <div id="backtestResults" style="margin-top:15px;">
+                <p>Total Return: <span id="totalReturn">+184.2%</span></p>
+                <p>Max Drawdown: <span id="maxDrawdown">-22.4%</span></p>
+                <p>Sharpe Ratio: <span id="sharpeRatio">1.84</span></p>
+                <p>Win Rate: <span id="winRate">63.7%</span></p>
+            </div>
+
+            <h3 style="margin-top:20px;">🄰🄸 🄿🅁🄴🄳🄸🄲🅃🄸🄾🄽 🄻🄴🄶🄴🄽🄳</h3>
+            <div style="margin-top:10px;">
+                <p><span class="candle green"></span> Bullish Signal</p>
+                <p><span class="candle red"></span> Bearish Signal</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let marketChart;
+        const historicalData = generateHistoricalData();
+        const predictionData = generatePredictionData();
+
+        function generateHistoricalData() {
+            let data = [];
+            let price = 100;
+            const startDate = new Date(2023, 0, 1);
+            
+            for(let i = 0; i < 180; i++) { // 6 months data
+                const volatility = Math.random() * 3 + 1;
+                const direction = Math.random() > 0.45 ? 1 : -1;
+                price = price * (1 + (direction * volatility * 0.01));
+                
+                data.push({
+                    date: new Date(startDate.setDate(startDate.getDate() + 1)),
+                    open: price,
+                    high: price * (1 + Math.random() * 0.02),
+                    low: price * (1 - Math.random() * 0.02),
+                    close: price,
+                    volume: Math.random() * 1000000 + 500000
+                });
+            }
+            return data;
+        }
+
+        function generatePredictionData() {
+            let predictions = [];
+            let currentPrice = historicalData[historicalData.length - 1].close;
+            
+            for(let i = 0; i < 30; i++) { // 30-day prediction
+                predictions.push({
+                    date: new Date(historicalData[historicalData.length - 1].date.getTime() + (i+1)*86400000),
+                    lower: currentPrice * (1 - (0.5 + Math.random()*0.5)/100),
+                    upper: currentPrice * (1 + (0.5 + Math.random()*0.5)/100),
+                    prediction: currentPrice * (1 + (Math.random()*0.8 - 0.4)/100)
+                });
+                currentPrice = predictions[i].prediction;
+            }
+            return predictions;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            
+            marketChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Actual Price',
+                        data: historicalData.map(d => ({x: d.date, y: d.close})),
+                        borderColor: '#00ff88',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'AI Prediction',
+                        data: predictionData.map(d => ({x: d.date, y: d.prediction})),
+                        borderColor: '#ff4444',
+                        borderWidth: 2,
+                        borderDash: [5,5],
+                        pointRadius: 0,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: { unit: 'month' },
+                            grid: { color: '#003320' }
+                        },
+                        y: {
+                            grid: { color: '#003320' },
+                            ticks: { callback: value => `$${value.toFixed(2)}` }
+                        }
+                    },
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                predictionZone: {
+                                    type: 'box',
+                                    xMin: historicalData[historicalData.length - 1].date,
+                                    xMax: predictionData[predictionData.length - 1].date,
+                                    backgroundColor: 'rgba(255, 68, 68, 0.1)',
+                                    borderWidth: 0
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function runAnalysis() {
+            // Simulate AI processing
+            document.getElementById('marketTicker').innerHTML = `
+                <strong>Current Price:</strong> $${historicalData[historicalData.length - 1].close.toFixed(2)}<br>
+                <strong>24h Change:</strong> <span style="color:#00ff88">+2.4%</span><br>
+                <strong>Market Sentiment:</strong> 62.7% Bullish<br>
+                <strong>Next 7D Forecast:</strong> $${predictionData[6].prediction.toFixed(2)}
+            `;
+
+            // Add prediction confidence bands
+            marketChart.data.datasets.push({
+                label: 'Confidence Interval',
+                data: predictionData.map(d => ({x: d.date, y: d.upper})),
+                borderColor: 'rgba(255, 68, 68, 0.2)',
+                backgroundColor: 'rgba(255, 68, 68, 0.1)',
+                fill: '+1',
+                pointRadius: 0,
+                tension: 0.1
+            });
+
+            marketChart.update();
+        }
+
+        function runBacktest() {
+            document.getElementById('totalReturn').textContent = 
+                `+${(Math.random()*200 + 50).toFixed(1)}%`;
+            document.getElementById('maxDrawdown').textContent = 
+                `-${(Math.random()*30 + 10).toFixed(1)}%`;
+            document.getElementById('sharpeRatio').textContent = 
+                (Math.random()*2 + 1).toFixed(2);
+            document.getElementById('winRate').textContent = 
+                `${(Math.random()*40 + 50).toFixed(1)}%`;
+        }
+
+        // Initialize on load
+        window.onload = initChart;
+        setInterval(() => {
+            const ticker = document.getElementById('marketTicker');
+            if(ticker) {
+                ticker.style.borderColor = 
+                    ticker.style.borderColor === '#004422' ? '#006633' : '#004422';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

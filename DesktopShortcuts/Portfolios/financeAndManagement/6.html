@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&A Synergy Analyzer - Disney-Fox Case Study</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Enhanced CSS */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            background: white;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 20px rgba(0,0,0,0.08);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin: 2rem 0;
+        }
+
+        .calculator {
+            background: #e8f4fc;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 12px 24px;
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        }
+
+        .risk-item {
+            padding: 1.5rem;
+            background: #fff3f5;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .synergy-breakdown {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .timeline-item {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .toggle-content {
+            cursor: pointer;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .financial-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .metric-box {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Disney-Fox M&A Synergy Analyzer</h1>
+        <p>Comprehensive Analysis of $71.3 Billion Acquisition</p>
+    </div>
+
+    <!-- Deal Overview Section -->
+    <div class="section">
+        <h2>Deal Structure & Financials</h2>
+        <div class="financial-metrics">
+            <div class="metric-box">
+                <h3>Deal Value</h3>
+                <p>$71.3B</p>
+                <small>Combined Enterprise Value</small>
+            </div>
+            <div class="metric-box">
+                <h3>Premium Paid</h3>
+                <p>35%</p>
+                <small>Over Fox's 60-day average</small>
+            </div>
+            <div class="metric-box">
+                <h3>Synergy Target</h3>
+                <p>$3.5B</p>
+                <small>Annual cost savings by 2021</small>
+            </div>
+        </div>
+
+        <h3>Transaction Details</h3>
+        <ul>
+            <li>📅 Announced: December 14, 2017</li>
+            <li>✅ Closed: March 20, 2019</li>
+            <li>💵 Consideration: 50% Cash, 50% Stock</li>
+            <li>📊 Disney Shareholders: 63% ownership</li>
+            <li>📈 Fox Shareholders: 37% ownership</li>
+        </ul>
+    </div>
+
+    <!-- Enhanced Synergy Calculator -->
+    <div class="section">
+        <h2>Synergy Calculator</h2>
+        <div class="calculator">
+            <div class="grid">
+                <div>
+                    <h3>Revenue Synergies</h3>
+                    <label>Streaming Subscriptions (M):</label>
+                    <input type="number" id="streamingSubs" value="50"><br>
+                    <label>Content Licensing ($M):</label>
+                    <input type="number" id="contentLicense" value="1200"><br>
+                </div>
+                <div>
+                    <h3>Cost Synergies</h3>
+                    <label>Staff Reductions ($M):</label>
+                    <input type="number" id="staffReductions" value="800"><br>
+                    <label>Facility Savings ($M):</label>
+                    <input type="number" id="facilitySavings" value="400"><br>
+                </div>
+                <div>
+                    <h3>Other Factors</h3>
+                    <label>Integration Costs ($M):</label>
+                    <input type="number" id="integrationCosts" value="1500"><br>
+                    <label>Tax Benefits ($M):</label>
+                    <input type="number" id="taxBenefits" value="300"><br>
+                </div>
+            </div>
+            <button onclick="calculateSynergies()">Calculate Net Synergies</button>
+            <h3 id="netSynergy">Net Synergy Value: $1,200M</h3>
+        </div>
+        <canvas id="synergyChart"></canvas>
+    </div>
+
+    <!-- Expanded Risk Analysis -->
+    <div class="section">
+        <h2>Risk Analysis Matrix <span class="toggle-content" onclick="toggleRiskDetails()">[Show Details]</span></h2>
+        <div class="grid" id="riskDetails" style="display: none;">
+            <div class="risk-item">
+                <h3>Cultural Integration (High Risk)</h3>
+                <p>🔄 Combining 200k+ employees across 40+ countries</p>
+                <p>📉 30% turnover risk in first 18 months</p>
+                <p>🛠️ Mitigation: $750M change management program</p>
+            </div>
+            <div class="risk-item">
+                <h3>Regulatory Compliance (Medium Risk)</h3>
+                <p>🌍 15 jurisdictions requiring approval</p>
+                <p>💸 $2.5B divestiture required (including Sky News)</p>
+                <p>⏳ 14-month approval process timeline</p>
+            </div>
+            <!-- Additional risk items -->
+        </div>
+    </div>
+
+    <!-- Financial Projections -->
+    <div class="section">
+        <h2>5-Year Financial Projections</h2>
+        <canvas id="financialChart"></canvas>
+        <table class="data-table">
+            <tr>
+                <th>Year</th>
+                <th>Revenue ($B)</th>
+                <th>Cost Savings ($B)</th>
+                <th>EPS Impact</th>
+            </tr>
+            <tr>
+                <td>2019</td>
+                <td>72.4</td>
+                <td>1.2</td>
+                <td>-0.15</td>
+            </tr>
+            <!-- Additional rows -->
+        </table>
+    </div>
+
+    <!-- Enhanced Integration Checklist -->
+    <div class="section">
+        <h2>Integration Roadmap</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>Q1 2019</h3>
+                <p>🔄 Leadership alignment</p>
+                <p>📋 Regulatory approvals</p>
+            </div>
+            <!-- Additional timeline items -->
+        </div>
+        
+        <h3>Departmental Checklists</h3>
+        <div class="grid">
+            <div>
+                <h4>📺 Content Integration</h4>
+                <ul class="checklist">
+                    <li><input type="checkbox"> Merge film libraries</li>
+                    <!-- Additional items -->
+                </ul>
+            </div>
+            <div>
+                <h4>💻 Technology Systems</h4>
+                <ul class="checklist">
+                    <li><input type="checkbox"> Consolidate AWS infrastructure</li>
+                    <!-- Additional items -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced JavaScript
+        const synergyData = {
+            revenueSources: ['Streaming', 'Licensing', 'Theatrical', 'Consumer Products'],
+            costCategories: ['Labor', 'Facilities', 'Marketing', 'Production']
+        };
+
+        function calculateSynergies() {
+            const streaming = parseInt(document.getElementById('streamingSubs').value) * 120; // $120 ARPU
+            const content = parseInt(document.getElementById('contentLicense').value);
+            const staff = parseInt(document.getElementById('staffReductions').value);
+            const facilities = parseInt(document.getElementById('facilitySavings').value);
+            const costs = parseInt(document.getElementById('integrationCosts').value);
+            const tax = parseInt(document.getElementById('taxBenefits').value);
+
+            const totalSynergy = streaming + content + staff + facilities + tax - costs;
+            document.getElementById('netSynergy').textContent = 
+                `Net Synergy Value: $${totalSynergy.toLocaleString()}M`;
+
+            updateCharts([streaming, content, staff, facilities], [costs, tax]);
+        }
+
+        let chart1, chart2;
+        function updateCharts(synergyValues, costValues) {
+            const ctx1 = document.getElementById('synergyChart').getContext('2d');
+            const ctx2 = document.getElementById('financialChart').getContext('2d');
+
+            if(chart1) chart1.destroy();
+            if(chart2) chart2.destroy();
+
+            chart1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Streaming', 'Licensing', 'Staff', 'Facilities'],
+                    datasets: [{
+                        label: 'Synergy Contributions ($M)',
+                        data: synergyValues,
+                        backgroundColor: '#3498db'
+                    }]
+                },
+                options: { responsive: true, indexAxis: 'y' }
+            });
+
+            chart2 = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: 'Projected Revenue ($B)',
+                        data: [72.4, 78.2, 84.5, 89.1, 93.4],
+                        borderColor: '#2ecc71'
+                    }]
+                }
+            });
+        }
+
+        function toggleRiskDetails() {
+            const risks = document.getElementById('riskDetails');
+            risks.style.display = risks.style.display === 'none' ? 'grid' : 'none';
+        }
+
+        // Initialize charts
+        updateCharts([6000, 1200, 800, 400], [1500, 300]);
+        
+        // Checklist functionality
+        document.querySelectorAll('.checklist input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                this.parentElement.style.opacity = this.checked ? 0.5 : 1;
+            });
+        });
+
+        // Advanced interactions
+        document.querySelectorAll('.toggle-content').forEach(item => {
+            item.addEventListener('click', () => {
+                item.textContent = item.textContent.includes('[Show]') 
+                    ? '[Hide Details]' 
+                    : '[Show Details]';
+            });
+        });
+    </script>
+</body>
+</html>

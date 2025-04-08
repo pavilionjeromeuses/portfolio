@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clignotement</title>
+    <style>
+        /* Previous CSS remains the same */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .filters {
+            padding: 1rem;
+            background: #f4f4f4;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            margin: 0.5rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .bundle-badge {
+            background: #ff9900;
+            color: white;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .measurement-guide {
+            color: #0066cc;
+            text-decoration: none;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .assembly-info {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Clignotement</h1>
+        <p>Inspire your space with beautiful room setups</p>
+    </header>
+
+    <div class="filters">
+        <!-- Filter controls remain the same -->
+        <div class="filter-group">
+            <label>Room Type:</label>
+            <select id="roomFilter">
+                <option value="">All</option>
+                <option>Living Room</option>
+                <option>Bedroom</option>
+                <option>Dining Room</option>
+                <option>Home Office</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Color:</label>
+            <select id="colorFilter">
+                <option value="">All</option>
+                <option>White</option>
+                <option>Black</option>
+                <option>Wood</option>
+                <option>Grey</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Material:</label>
+            <select id="materialFilter">
+                <option value="">All</option>
+                <option>Wood</option>
+                <option>Metal</option>
+                <option>Fabric</option>
+                <option>Leather</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="products-grid" id="productsContainer">
+        <!-- Updated Product Cards -->
+        <div class="product-card" data-room="Living Room" data-color="Grey" data-material="Fabric">
+            <img src="https://ourhome.ph/cdn/shop/files/SOMER.jpg?v=1717466100&width=1200" alt="Modern Living Room" class="product-image">
+            <div class="product-info">
+                <span class="bundle-badge">Bundle Deal</span>
+                <h3>Contemporary Sectional Sofa</h3>
+                <p>3-seater + Ottoman + Throw Pillows</p>
+                <p class="assembly-info">Assembly Time: 2.5 hours</p>
+                <a href="#" class="measurement-guide">Download Measurement Guide</a>
+            </div>
+        </div>
+
+        <div class="product-card" data-room="Bedroom" data-color="White" data-material="Wood">
+            <img src="https://softframedesigns.com/cdn/shop/articles/life-friendly-furniture.png?v=1692114906" alt="Modern Bedroom Set" class="product-image">
+            <div class="product-info">
+                <h3>Minimalist Bed Frame</h3>
+                <p>Queen Size + 2 Nightstands</p>
+                <p class="assembly-info">Assembly Time: 1.5 hours</p>
+                <a href="#" class="measurement-guide">Download Measurement Guide</a>
+            </div>
+        </div>
+
+        <div class="product-card" data-room="Dining Room" data-color="Black" data-material="Metal">
+            <img src="https://ourhome.ph/cdn/shop/files/CARLTON.png?v=1739858787&width=1200" alt="Modern Dining Set" class="product-image">
+            <div class="product-info">
+                <span class="bundle-badge">Bundle Deal</span>
+                <h3>Industrial Dining Table</h3>
+                <p>Table + 4 Metal Chairs</p>
+                <p class="assembly-info">Assembly Time: 2 hours</p>
+                <a href="#" class="measurement-guide">Download Measurement Guide</a>
+            </div>
+        </div>
+
+        <div class="product-card" data-room="Home Office" data-color="Wood" data-material="Wood">
+            <img src="https://www.furnituresourcephils.com/wp-content/uploads/2023/02/DJ1V-C-2-desks-1.jpg" alt="Home Office Setup" class="product-image">
+            <div class="product-info">
+                <h3>Scandinavian Desk Set</h3>
+                <p>Desk + Chair + Storage Unit</p>
+                <p class="assembly-info">Assembly Time: 1 hour</p>
+                <a href="#" class="measurement-guide">Download Measurement Guide</a>
+            </div>
+        </div>
+
+        <div class="product-card" data-room="Living Room" data-color="Wood" data-material="Wood">
+            <img src="https://assets.weimgs.com/weimgs/rk/images/wcm/products/202443/0018/img250m.jpg" alt="Living Room Storage" class="product-image">
+            <div class="product-info">
+                <h3>Modular Wall Shelf System</h3>
+                <p>Customizable configurations</p>
+                <p class="assembly-info">Assembly Time: 45 minutes</p>
+                <a href="#" class="measurement-guide">Download Measurement Guide</a>
+            </div>
+        </div>
+
+        <div class="product-card" data-room="Bedroom" data-color="Grey" data-material="Fabric">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnhYsHQMD6YmzKD9M6X3KPPQ3Q-l2oaOaZpA&s" alt="Bedroom Storage" class="product-image">
+            <div class="product-info">
+                <span class="bundle-badge">Bundle Deal</span>
+                <h3>Smart Storage Wardrobe</h3>
+                <p>3-door wardrobe + Mirror</p>
+                <p class="assembly-info">Assembly Time: 3 hours</p>
+                <a href="#" class="measurement-guide">Download Measurement Guide</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Previous JavaScript remains the same
+        const filters = {
+            room: '',
+            color: '',
+            material: ''
+        };
+
+        function updateFilters(type, value) {
+            filters[type] = value;
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                const matchesRoom = !filters.room || product.dataset.room === filters.room;
+                const matchesColor = !filters.color || product.dataset.color === filters.color;
+                const matchesMaterial = !filters.material || product.dataset.material === filters.material;
+
+                if (matchesRoom && matchesColor && matchesMaterial) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('roomFilter').addEventListener('change', (e) => updateFilters('room', e.target.value));
+        document.getElementById('colorFilter').addEventListener('change', (e) => updateFilters('color', e.target.value));
+        document.getElementById('materialFilter').addEventListener('change', (e) => updateFilters('material', e.target.value));
+    </script>
+</body>
+</html>

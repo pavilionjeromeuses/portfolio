@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Architecture Showcase - Dev Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --gradient-start: #2c3e50;
+            --gradient-end: #3498db;
+            --accent-color: #2ecc71;
+        }
+        
+        body {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .command-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 5rem 0;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        .code-card {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .code-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .command-prompt {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            padding: 1rem;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .keyword {
+            color: #569cd6;
+        }
+        
+        .comment {
+            color: #6a9955;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #3498db, var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .diagram-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 2rem 0;
+        }
+
+        .command-timeline {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 2rem;
+            margin-left: 1rem;
+        }
+
+        .timeline-event {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -2.35rem;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .pattern-structure {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background: #2d2d2d;
+            border-radius: 8px;
+        }
+
+        .structure-component {
+            padding: 1.5rem;
+            border: 1px solid #404040;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="command-header text-center mb-5">
+        <div class="container">
+            <h1 class="display-4 gradient-text fw-bold mb-3">
+                <i class="bi bi-terminal-fill"></i> Command Architecture
+            </h1>
+            <p class="lead">Mastering Decoupled Execution in Software Systems</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Command Pattern Overview -->
+        <section class="mb-5">
+            <h2 class="gradient-text mb-4">Command Pattern Fundamentals</h2>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="code-card p-4 rounded-3 h-100">
+                        <h4><i class="bi bi-diagram-3"></i> Structural Overview</h4>
+                        <div class="pattern-structure mt-4">
+                            <div class="structure-component">
+                                <h6>Invoker</h6>
+                                <p class="text-muted mb-0">Triggers command execution</p>
+                            </div>
+                            <div class="structure-component">
+                                <h6>Command Interface</h6>
+                                <p class="text-muted mb-0">execute() / undo() methods</p>
+                            </div>
+                            <div class="structure-component">
+                                <h6>Concrete Command</h6>
+                                <p class="text-muted mb-0">Implements execution logic</p>
+                            </div>
+                            <div class="structure-component">
+                                <h6>Receiver</h6>
+                                <p class="text-muted mb-0">Business logic component</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="code-card p-4 rounded-3 h-100">
+                        <h4><i class="bi bi-lightning-charge"></i> Key Benefits</h4>
+                        <div class="command-timeline mt-4">
+                            <div class="timeline-event">
+                                <h5>Decoupling</h5>
+                                <p class="text-muted">Separation of invocation and implementation</p>
+                            </div>
+                            <div class="timeline-event">
+                                <h5>Undo/Redo</h5>
+                                <p class="text-muted">Maintain command history for reversal</p>
+                            </div>
+                            <div class="timeline-event">
+                                <h5>Composite Commands</h5>
+                                <p class="text-muted">Create macro command systems</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expanded Code Samples -->
+        <section class="mb-5">
+            <h2 class="gradient-text mb-4">Multi-Platform Implementations</h2>
+            <div class="row g-4">
+                <!-- CLI Implementation -->
+                <div class="col-md-6">
+                    <div class="code-card p-4 rounded-3 h-100">
+                        <h4><i class="bi bi-terminal"></i> Advanced CLI System</h4>
+                        <pre class="command-prompt mt-3">
+<span class="keyword">class</span> <span style="color: #4ec9b0">CommandProcessor</span> {
+    <span class="keyword">private</span> Stack<Command> _history = new Stack<>();
+    
+    <span class="keyword">public void</span> <span style="color: #dcdcaa">ExecuteCommand</span>(Command cmd) {
+        cmd.Execute();
+        _history.Push(cmd);
+    }
+    
+    <span class="keyword">public void</span> <span style="color: #dcdcaa">UndoLast</span>() {
+        if (_history.Count > 0) {
+            var cmd = _history.Pop();
+            cmd.Undo();
+        }
+    }
+}</pre>
+                        <div class="mt-3">
+                            <h5>Features:</h5>
+                            <ul>
+                                <li>Transactional command execution</li>
+                                <li>Unlimited undo/redo history</li>
+                                <li>Command batching support</li>
+                                <li>Asynchronous execution queue</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Implementation -->
+                <div class="col-md-6">
+                    <div class="code-card p-4 rounded-3 h-100">
+                        <h4><i class="bi bi-phone"></i> Mobile Command Stack</h4>
+                        <pre class="command-prompt mt-3">
+<span class="keyword">class</span> <span style="color: #4ec9b0">ViewModel</span> : ViewModel() {
+    <span class="keyword">val</span> commandStack = CommandStack()
+    
+    <span class="keyword">fun</span> <span style="color: #dcdcaa">handleUserAction</span>(action: UserAction) {
+        <span class="keyword">when</span>(action) {
+            <span class="keyword">is</span> DeleteItem -> commandStack.execute(
+                DeleteCommand(action.itemId)
+            )
+            <span class="keyword">is</span> UpdatePosition -> commandStack.execute(
+                MoveCommand(action.x, action.y)
+            )
+        }
+    }
+}</pre>
+                        <div class="mt-3">
+                            <h5>Features:</h5>
+                            <ul>
+                                <li>Gesture-based command binding</li>
+                                <li>Cross-platform command serialization</li>
+                                <li>Context-aware command validation</li>
+                                <li>Offline command queuing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Extended Interactive Demo -->
+        <section class="mb-5">
+            <h2 class="gradient-text mb-4">Smart Home Control Demo</h2>
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="code-card p-4 rounded-3">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="code-card p-3">
+                                    <h5><i class="bi bi-lightbulb"></i> Lighting</h5>
+                                    <div class="btn-group w-100 mt-2">
+                                        <button class="btn btn-success" onclick="executeCommand('lightOn')">On</button>
+                                        <button class="btn btn-danger" onclick="executeCommand('lightOff')">Off</button>
+                                    </div>
+                                    <div class="command-prompt mt-2 p-2 small">
+                                        Brightness: <span id="brightnessValue">100%</span>
+                                        <input type="range" class="w-100" oninput="updateBrightness(this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="code-card p-3">
+                                    <h5><i class="bi bi-thermometer"></i> Thermostat</h5>
+                                    <div class="btn-group w-100 mt-2">
+                                        <button class="btn btn-info" onclick="executeCommand('tempDown')">-</button>
+                                        <button class="btn btn-light" disabled><span id="tempValue">22</span>°C</button>
+                                        <button class="btn btn-info" onclick="executeCommand('tempUp')">+</button>
+                                    </div>
+                                    <div class="command-prompt mt-2 p-2 small">
+                                        Mode: <span id="thermostatMode">Heating</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="command-prompt p-3 mt-3" id="systemStatus">
+                            System Status: All systems normal
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="code-card p-4 rounded-3 h-100">
+                        <h5>Command History</h5>
+                        <div id="commandHistory" class="command-prompt p-3 mt-3" 
+                            style="height: 300px; overflow-y: auto;">
+                        </div>
+                        <div class="mt-3 btn-group w-100">
+                            <button class="btn btn-secondary" onclick="undoCommand()">
+                                <i class="bi bi-arrow-counterclockwise"></i> Undo
+                            </button>
+                            <button class="btn btn-secondary" onclick="redoCommand()">
+                                Redo <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-World Applications -->
+        <section class="mb-5">
+            <h2 class="gradient-text mb-4">Industry Applications</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="code-card p-4 h-100">
+                        <h4><i class="bi bi-robot"></i> Robotics</h4>
+                        <ul>
+                            <li>Movement command queues</li>
+                            <li>Sensor input processing</li>
+                            <li>Emergency stop systems</li>
+                            <li>Macro command sequences</li>
+                        </ul>
+                        <pre class="command-prompt mt-3 small">
+robot.execute(
+    new CompositeCommand(
+        new MoveArmCommand(120°),
+        new GrabItemCommand(),
+        new RetractArmCommand()
+    )
+);</pre>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="code-card p-4 h-100">
+                        <h4><i class="bi bi-cash-coin"></i> FinTech</h4>
+                        <ul>
+                            <li>Transaction processing</li>
+                            <li>Audit trail systems</li>
+                            <li>Batch settlement</li>
+                            <li>Rollback mechanisms</li>
+                        </ul>
+                        <pre class="command-prompt mt-3 small">
+transactionManager.Execute(
+    new TransferCommand(
+        from: "ACC123", 
+        to: "ACC456", 
+        amount: 500.00
+    )
+);</pre>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="code-card p-4 h-100">
+                        <h4><i class="bi bi-controller"></i> Gaming</h4>
+                        <ul>
+                            <li>Input handling systems</li>
+                            <li>Replay/Reversi systems</li>
+                            <li>AI behavior trees</li>
+                            <li>Multiplayer sync</li>
+                        </ul>
+                        <pre class="command-prompt mt-3 small">
+inputHandler.QueueCommand(
+    new PlayerMoveCommand(
+        direction: Vector3.forward,
+        force: 10f
+    )
+);</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Deep Dive -->
+        <section class="mb-5">
+            <h2 class="gradient-text mb-4">Advanced Implementation Details</h2>
+            <div class="accordion" id="techAccordion">
+                <div class="accordion-item code-card">
+                    <h5 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                            data-bs-target="#collapseOne">
+                            Command Serialization
+                        </button>
+                    </h5>
+                    <div id="collapseOne" class="accordion-collapse collapse show" 
+                        data-bs-parent="#techAccordion">
+                        <div class="accordion-body">
+                            <pre>
+public string SerializeCommand(Command cmd) {
+    return JsonConvert.SerializeObject(cmd, new JsonSerializerSettings {
+        TypeNameHandling = TypeNameHandling.All
+    });
+}
+
+public Command DeserializeCommand(string json) {
+    return JsonConvert.DeserializeObject<Command>(json, 
+        new JsonSerializerSettings {
+            TypeNameHandling = TypeNameHandling.Auto
+        });
+}</pre>
+                            <p class="mt-2">Supports distributed systems and offline operation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item code-card">
+                    <h5 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" 
+                            data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            Composite Command Pattern
+                        </button>
+                    </h5>
+                    <div id="collapseTwo" class="accordion-collapse collapse" 
+                        data-bs-parent="#techAccordion">
+                        <div class="accordion-body">
+                            <pre>
+public class MacroCommand : Command {
+    private List<Command> _commands = new List<Command>();
+    
+    public void Add(Command cmd) => _commands.Add(cmd);
+    
+    public void Execute() {
+        foreach(var cmd in _commands) {
+            cmd.Execute();
+        }
+    }
+    
+    public void Undo() {
+        foreach(var cmd in Enumerable.Reverse(_commands)) {
+            cmd.Undo();
+        }
+    }
+}</pre>
+                            <p class="mt-2">Enables complex operation sequencing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="command-header text-center py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Pattern Variants</h5>
+                    <ul class="list-unstyled">
+                        <li>Simple Command</li>
+                        <li>Composite Command</li>
+                        <li>Transactional Command</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Documentation</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Implementation Guide</a></li>
+                        <li><a href="#" class="text-white">Case Studies</a></li>
+                        <li><a href="#" class="text-white">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-light mb-2" 
+                        onclick="location.href='mailto:contact@example.com'">
+                        <i class="bi bi-envelope"></i> Contact
+                    </button>
+                    <div class="mt-2">
+                        <a href="#" class="text-white me-2"><i class="bi bi-github"></i></a>
+                        <a href="#" class="text-white me-2"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-file-earmark-code"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let commandHistory = [];
+        let historyPointer = -1;
+        let systemState = {
+            lights: { on: false, brightness: 100 },
+            thermostat: { temp: 22, mode: 'heating' }
+        };
+
+        function executeCommand(command) {
+            const timestamp = new Date().toLocaleTimeString();
+            const newEntry = { 
+                timestamp,
+                command,
+                beforeState: JSON.parse(JSON.stringify(systemState))
+            };
+
+            switch(command) {
+                case 'lightOn':
+                    systemState.lights.on = true;
+                    break;
+                case 'lightOff':
+                    systemState.lights.on = false;
+                    break;
+                case 'tempUp':
+                    systemState.thermostat.temp++;
+                    break;
+                case 'tempDown':
+                    systemState.thermostat.temp--;
+                    break;
+            }
+
+            newEntry.afterState = JSON.parse(JSON.stringify(systemState));
+            commandHistory = commandHistory.slice(0, historyPointer + 1);
+            commandHistory.push(newEntry);
+            historyPointer = commandHistory.length - 1;
+            
+            updateUI();
+            updateHistoryDisplay();
+        }
+
+        function updateBrightness(value) {
+            systemState.lights.brightness = value;
+            document.getElementById('brightnessValue').textContent = `${value}%`;
+            updateUI();
+        }
+
+        function undoCommand() {
+            if (historyPointer >= 0) {
+                systemState = JSON.parse(
+                    JSON.stringify(commandHistory[historyPointer].beforeState)
+                );
+                historyPointer--;
+                updateUI();
+                updateHistoryDisplay();
+            }
+        }
+
+        function redoCommand() {
+            if (historyPointer < commandHistory.length - 1) {
+                historyPointer++;
+                systemState = JSON.parse(
+                    JSON.stringify(commandHistory[historyPointer].afterState)
+                );
+                updateUI();
+                updateHistoryDisplay();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('brightnessValue').textContent = 
+                `${systemState.lights.brightness}%`;
+            document.getElementById('tempValue').textContent = 
+                systemState.thermostat.temp;
+            document.getElementById('thermostatMode').textContent = 
+                systemState.thermostat.mode;
+        }
+
+        function updateHistoryDisplay() {
+            const historyElement = document.getElementById('commandHistory');
+            historyElement.innerHTML = commandHistory
+                .map((entry, index) => `
+                    <div class="${index === historyPointer ? 'text-info' : 'text-muted'} 
+                        small mb-2">
+                        [${entry.timestamp}] ${entry.command}
+                    </div>
+                `).join('');
+        }
+    </script>
+</body>
+</html>

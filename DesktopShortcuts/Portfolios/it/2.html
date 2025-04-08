@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureCloud Nexus - Enterprise File Sharing</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A73E8;
+            --secondary: #34A853;
+            --danger: #EA4335;
+            --dark: #202124;
+            --light: #F8F9FA;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: var(--dark);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .file-uploader {
+            border: 3px dashed var(--primary);
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .file-uploader:hover {
+            border-color: var(--secondary);
+            background: rgba(255,255,255,1);
+        }
+
+        .file-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .file-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            position: relative;
+            transition: transform 0.2s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .security-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audit-log {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            height: fit-content;
+        }
+
+        .version-history {
+            background: rgba(255,255,255,0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="brand">
+                <i class="fas fa-shield-alt"></i>
+                <h1>SecureCloud Nexus</h1>
+            </div>
+            <div class="live-stats">
+                <div class="stat-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>24 Active Users</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-lock"></i>
+                    <span>256-bit Encryption</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard">
+            <div class="sidebar">
+                <h3>Access Controls</h3>
+                <div class="role-selector">
+                    <label>Your Role:</label>
+                    <select id="roleSelect" class="role-select">
+                        <option value="admin">Security Admin</option>
+                        <option value="editor">Content Editor</option>
+                        <option value="viewer">Limited Viewer</option>
+                    </select>
+                </div>
+                
+                <div class="file-stats">
+                    <h4>System Status</h4>
+                    <div class="stat-item">
+                        <i class="fas fa-database"></i>
+                        <span>1.2TB / 2TB Used</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-file-shield"></i>
+                        <span>4,812 Protected Files</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="file-uploader" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt fa-4x"></i>
+                    <h3>Secure File Upload Zone</h3>
+                    <p>Drag & Drop files for AES-256 encryption and cloud storage</p>
+                    <input type="file" id="fileInput" hidden>
+                </div>
+
+                <div class="file-grid" id="fileList"></div>
+            </div>
+        </div>
+
+        <div class="audit-log">
+            <h3>Security Audit Trail</h3>
+            <div id="auditEntries"></div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="version-history" id="versionModal">
+        <h3>Version History <i class="fas fa-history"></i></h3>
+        <div id="versionContent"></div>
+        <button onclick="closeModal()">Close</button>
+    </div>
+
+    <script>
+        // Extensive Sample Data
+        const files = [
+            {
+                id: 1,
+                name: 'Q4 Financial Report.pdf',
+                version: 3,
+                encrypted: true,
+                accessLevel: 'admin',
+                lastModified: '2024-03-15T14:30:00Z',
+                size: '2.4MB',
+                owner: 'Sarah Johnson',
+                collaborators: ['Mike Chen', 'Lisa Rodriguez'],
+                versions: [
+                    { version: 1, date: '2024-03-10', changes: 'Initial draft' },
+                    { version: 2, date: '2024-03-12', changes: 'Updated figures' },
+                    { version: 3, date: '2024-03-15', changes: 'Final review' }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Product Roadmap.pptx',
+                version: 5,
+                encrypted: true,
+                accessLevel: 'editor',
+                lastModified: '2024-03-14T09:45:00Z',
+                size: '5.1MB',
+                owner: 'Michael Chen',
+                collaborators: ['Emma Wilson', 'David Smith'],
+                versions: [
+                    { version: 1, date: '2024-02-28', changes: 'Initial concept' },
+                    { version: 5, date: '2024-03-14', changes: 'Q3 milestones added' }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Client Database.xlsx',
+                version: 2,
+                encrypted: true,
+                accessLevel: 'admin',
+                lastModified: '2024-03-13T16:20:00Z',
+                size: '8.9MB',
+                owner: 'Lisa Rodriguez',
+                collaborators: ['Sarah Johnson'],
+                versions: [
+                    { version: 1, date: '2024-03-01', changes: 'Initial upload' },
+                    { version: 2, date: '2024-03-13', changes: 'New client entries' }
+                ]
+            }
+        ];
+
+        const auditLogs = [
+            { timestamp: '2024-03-15T14:35:00Z', event: 'File uploaded: Q4 Financial Report.pdf', user: 'Sarah Johnson' },
+            { timestamp: '2024-03-15T13:20:00Z', event: 'User login from new device', user: 'Mike Chen' },
+            { timestamp: '2024-03-15T12:45:00Z', event: 'File shared with external partner', user: 'System' }
+        ];
+
+        // System Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFiles();
+            renderAuditLog();
+            setInterval(updateLiveStats, 3000);
+        });
+
+        // File Rendering
+        function renderFiles() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = files.map(file => `
+                <div class="file-card">
+                    <div class="security-badge">
+                        <i class="fas fa-lock"></i>
+                        AES-256 Encrypted
+                    </div>
+                    <h4>${file.name}</h4>
+                    <div class="file-meta">
+                        <p><i class="fas fa-history"></i> Version ${file.version}</p>
+                        <p><i class="fas fa-user"></i> ${file.owner}</p>
+                        <p><i class="fas fa-users"></i> ${file.collaborators.length} collaborators</p>
+                    </div>
+                    <div class="file-actions">
+                        <button onclick="handleDownload(${file.id})">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button onclick="showVersionHistory(${file.id})">
+                            <i class="fas fa-code-branch"></i> History
+                        </button>
+                        ${document.getElementById('roleSelect').value === 'admin' ? 
+                            `<button onclick="manageAccess(${file.id})">
+                                <i class="fas fa-shield-alt"></i> Permissions
+                            </button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Audit Log Rendering
+        function renderAuditLog() {
+            const auditEntries = document.getElementById('auditEntries');
+            auditEntries.innerHTML = auditLogs.map(log => `
+                <div class="audit-entry">
+                    <div class="audit-time">${new Date(log.timestamp).toLocaleString()}</div>
+                    <div class="audit-event">
+                        <i class="fas fa-clipboard-check"></i>
+                        ${log.event}
+                    </div>
+                    <div class="audit-user">${log.user}</div>
+                </div>
+            `).join('');
+        }
+
+        // Security Functions
+        async function encryptFile(file) {
+            // In real implementation: Use Web Crypto API
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const encryptedFile = new File([file], `encrypted_${file.name}`, {
+                        type: file.type
+                    });
+                    resolve(encryptedFile);
+                }, 1500);
+            });
+        }
+
+        // Version History Modal
+        function showVersionHistory(fileId) {
+            const file = files.find(f => f.id === fileId);
+            const versionContent = document.getElementById('versionContent');
+            versionContent.innerHTML = file.versions.map(version => `
+                <div class="version-entry">
+                    <h4>Version ${version.version} (${version.date})</h4>
+                    <p>${version.changes}</p>
+                </div>
+            `).join('');
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('versionModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('versionModal').style.display = 'none';
+        }
+
+        // Live System Updates
+        function updateLiveStats() {
+            const stats = document.querySelectorAll('.stat-item');
+            stats.forEach(stat => {
+                if(stat.textContent.includes('Active Users')) {
+                    stat.querySelector('span').textContent = 
+                        `${Math.floor(Math.random() * 10) + 20} Active Users`;
+                }
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('dropZone').addEventListener('click', () => 
+            document.getElementById('fileInput').click());
+        document.getElementById('roleSelect').addEventListener('change', () => {
+            renderFiles();
+            addAuditEntry('Access level changed');
+        });
+        document.getElementById('overlay').addEventListener('click', closeModal);
+
+        // Helper Functions
+        function addAuditEntry(event) {
+            auditLogs.unshift({
+                timestamp: new Date().toISOString(),
+                event: event,
+                user: 'System'
+            });
+            renderAuditLog();
+        }
+
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const encryptedFile = await encryptFile(file);
+                files.unshift({
+                    id: files.length + 1,
+                    name: file.name,
+                    version: 1,
+                    encrypted: true,
+                    accessLevel: document.getElementById('roleSelect').value,
+                    lastModified: new Date().toISOString(),
+                    size: `${(file.size / 1024 / 1024).toFixed(1)}MB`,
+                    owner: 'Current User',
+                    collaborators: [],
+                    versions: [{ version: 1, date: new Date().toLocaleDateString(), changes: 'Initial upload' }]
+                });
+                
+                addAuditEntry(`File uploaded: ${file.name}`);
+                renderFiles();
+            } catch (error) {
+                console.error('Encryption error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

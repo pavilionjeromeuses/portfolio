@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 NFT Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7B61FF;
+            --dark: #0A0B1E;
+            --neon: #00FF9D;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--dark);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .wallet-info {
+            float: right;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .connect-btn {
+            background: var(--primary);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(123, 97, 255, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #151632, #0A0B1E);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #252747;
+        }
+
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .nft-card {
+            background: #151632;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #252747;
+            transition: transform 0.3s;
+        }
+
+        .nft-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .nft-image {
+            height: 280px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .royalty-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 255, 157, 0.15);
+            color: var(--neon);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .nft-info {
+            padding: 20px;
+        }
+
+        .auction-timer {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .bid-history {
+            margin-top: 15px;
+            border-top: 1px solid #252747;
+            padding-top: 15px;
+        }
+
+        .form-panel {
+            background: #151632;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            margin: 40px auto;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #0A0B1E;
+            border: 1px solid #252747;
+            color: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wallet-info">
+            <div class="connect-btn" id="connectWallet">
+                <i class="fas fa-wallet"></i> Connect Wallet
+            </div>
+            <div id="walletAddress"></div>
+        </div>
+
+        <header style="text-align: center; margin: 50px 0;">
+            <h1 style="font-size: 2.5em; margin: 0;"><span style="color: var(--primary);">Web3</span> NFT Marketplace</h1>
+            <p>Mint, Trade, and Earn Royalties on Digital Assets</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total NFTs</h3>
+                <p style="font-size: 2em; margin: 10px 0; color: var(--neon);">1,240</p>
+                <small>+12.4% last month</small>
+            </div>
+            <div class="stat-card">
+                <h3>Active Auctions</h3>
+                <p style="font-size: 2em; margin: 10px 0; color: var(--neon);">86</p>
+                <small>24 ending soon</small>
+            </div>
+            <div class="stat-card">
+                <h3>Total Volume</h3>
+                <p style="font-size: 2em; margin: 10px 0; color: var(--neon);">Ξ 4,582</p>
+                <small>$12.8M USD</small>
+            </div>
+            <div class="stat-card">
+                <h3>Royalties Paid</h3>
+                <p style="font-size: 2em; margin: 10px 0; color: var(--neon);">Ξ 458</p>
+                <small>To creators</small>
+            </div>
+        </div>
+
+        <div class="nft-grid" id="nftGrid">
+            <!-- Sample NFT Data -->
+            <div class="nft-card">
+                <div class="nft-image" style="background-image: url('https://source.unsplash.com/random/800x600?digital,art')">
+                    <div class="royalty-badge">10% Royalty</div>
+                </div>
+                <div class="nft-info">
+                    <h3>Digital Dreams #1</h3>
+                    <p>Creator: @cryptoartist</p>
+                    <div class="auction-timer">
+                        <i class="fas fa-hourglass-half"></i> 2h 15m left
+                        <div>Current Bid: Ξ 1.25</div>
+                    </div>
+                    <button class="connect-btn" style="width: 100%;">Place Bid</button>
+                    <div class="bid-history">
+                        <small>Last bid: Ξ 1.10 by 0x3f...c2d4</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More Sample NFTs -->
+            <!-- Add 5-6 more NFT cards with different data -->
+        </div>
+
+        <div class="form-panel">
+            <h2 style="text-align: center; margin-bottom: 25px;"><i class="fas fa-plus-circle"></i> Mint New NFT</h2>
+            <form id="mintForm">
+                <input type="text" class="form-input" placeholder="NFT Name">
+                <input type="text" class="form-input" placeholder="Metadata URI (IPFS)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="number" class="form-input" placeholder="Royalty %" min="0" max="30" step="0.1">
+                    <input type="number" class="form-input" placeholder="Initial Price (ETH)">
+                </div>
+                <button class="connect-btn" type="submit" style="width: 100%; margin-top: 15px;">
+                    Mint NFT (Ξ 0.05 Gas Fee)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let userAddress = null;
+        let sampleNFTs = [
+            {
+                id: 1,
+                name: "CryptoPunk #9999",
+                image: "https://source.unsplash.com/random/800x600?punk",
+                price: "Ξ 45.50",
+                royalty: "7.5%",
+                owner: "0x892...1f4a",
+                bids: [
+                    { amount: "Ξ 42.00", bidder: "0x3f...c2d4" },
+                    { amount: "Ξ 43.75", bidder: "0x7a...e9b1" }
+                ]
+            },
+            // Add 10 more sample NFTs
+        ];
+
+        // Enhanced Web3 functionality
+        class Marketplace {
+            constructor() {
+                this.nfts = [];
+                this.auctions = [];
+                this.royaltyRegistry = new Map();
+            }
+
+            async connectWallet() {
+                if (window.ethereum) {
+                    try {
+                        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                        userAddress = accounts[0];
+                        document.getElementById('walletAddress').innerHTML = `
+                            <small>Connected as:</small><br>
+                            ${userAddress.slice(0,6)}...${userAddress.slice(-4)}
+                        `;
+                        this.loadMarketData();
+                    } catch (error) {
+                        console.error("Wallet connection failed:", error);
+                    }
+                } else {
+                    alert('Please install MetaMask!');
+                }
+            }
+
+            loadMarketData() {
+                const nftGrid = document.getElementById('nftGrid');
+                // Populate with dynamic data
+                nftGrid.innerHTML = sampleNFTs.map(nft => `
+                    <div class="nft-card">
+                        <div class="nft-image" style="background-image: url('${nft.image}')">
+                            <div class="royalty-badge">${nft.royalty} Royalty</div>
+                        </div>
+                        <div class="nft-info">
+                            <h3>${nft.name}</h3>
+                            <p>Owner: ${nft.owner}</p>
+                            <div class="auction-timer">
+                                <i class="fas fa-hourglass-half"></i> ${Math.floor(Math.random()*24)}h ${Math.floor(Math.random()*60)}m left
+                                <div>Current Bid: ${nft.price}</div>
+                            </div>
+                            <button class="connect-btn" style="width: 100%;" 
+                                onclick="placeBid(${nft.id})">
+                                Place Bid
+                            </button>
+                            <div class="bid-history">
+                                ${nft.bids.map(bid => `
+                                    <div><small>${bid.amount} by ${bid.bidder}</small></div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            placeBid(nftId) {
+                const bidAmount = prompt('Enter your bid amount in ETH:');
+                if (bidAmount) {
+                    const nft = sampleNFTs.find(n => n.id === nftId);
+                    nft.bids.push({
+                        amount: `Ξ ${parseFloat(bidAmount).toFixed(2)}`,
+                        bidder: userAddress.slice(0,6)+'...'+userAddress.slice(-4)
+                    });
+                    this.loadMarketData();
+                }
+            }
+        }
+
+        const marketplace = new Marketplace();
+        document.getElementById('connectWallet').addEventListener('click', () => marketplace.connectWallet());
+
+        // Initialize sample data
+        for (let i = 2; i <= 12; i++) {
+            sampleNFTs.push({
+                id: i,
+                name: `Digital Art #${i}`,
+                image: `https://source.unsplash.com/random/800x600?digital,art${i}`,
+                price: `Ξ ${(Math.random()*10).toFixed(2)}`,
+                royalty: `${Math.floor(Math.random()*15)+5}%`,
+                owner: `0x${Math.random().toString(16).substr(2, 6)}...${Math.random().toString(16).substr(2, 4)}`,
+                bids: []
+            });
+        }
+
+        // Simulate live updates
+        setInterval(() => {
+            document.querySelectorAll('.auction-timer').forEach(timer => {
+                const hours = Math.floor(Math.random()*24);
+                const minutes = Math.floor(Math.random()*60);
+                timer.innerHTML = `
+                    <i class="fas fa-hourglass-half"></i> ${hours}h ${minutes}m left
+                    <div>Current Bid: Ξ ${(Math.random()*10).toFixed(2)}</div>
+                `;
+            });
+        }, 10000);
+    </script>
+</body>
+</html>

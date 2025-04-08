@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen AI Job Board</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modern CSS Reset */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -0.025em;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1440px;
+            margin: 100px auto 40px;
+            padding: 0 2rem;
+        }
+
+        /* Job Grid */
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Job Card */
+        .job-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            position: relative;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-match {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+
+        .job-meta i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .salary {
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Buttons */
+        .button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .button-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: var(--secondary);
+        }
+
+        .button-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid #cbd5e1;
+        }
+
+        .button-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        /* Search */
+        .search-box {
+            width: 100%;
+            padding: 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+                margin-top: 80px;
+            }
+
+            .job-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">AIJobs</div>
+            <div class="flex gap-4">
+                <button class="button button-primary" onclick="showEmailAlertModal()">
+                    <i class="fas fa-bell"></i> Email Alerts
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <input type="text" class="search-box" placeholder="🔍 Search for jobs, skills, or companies...">
+
+        <div class="job-grid" id="jobListings">
+            <!-- Job listings will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="emailModal" onclick="hideEmailAlertModal()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <h2 style="margin-bottom: 1.5rem;">✨ Create Job Alert</h2>
+            <input type="email" id="userEmail" placeholder="your.email@example.com" 
+                   class="search-box" style="margin: 1rem 0">
+            <div class="flex gap-2" style="margin-top: 1.5rem;">
+                <button class="button button-primary" onclick="saveEmailAlert()">
+                    <i class="fas fa-check"></i> Confirm
+                </button>
+                <button class="button button-secondary" onclick="hideEmailAlertModal()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Expanded Sample Data
+        const jobs = [
+            {
+                title: "Senior AI Engineer",
+                company: "NeuroTech",
+                location: "San Francisco, CA",
+                salary: "$180k - $220k",
+                type: "Remote",
+                experience: "5+ years",
+                description: "Lead development of next-generation AI models for enterprise solutions. Require expertise in TensorFlow, PyTorch, and NLP.",
+                match: 94,
+                bookmarked: false,
+                posted: "2d ago",
+                benefits: ["Stock options", "Unlimited PTO", "Flex hours"]
+            },
+            {
+                title: "UX Designer (AI Products)",
+                company: "FutureLab",
+                location: "New York, NY",
+                salary: "$130k - $160k",
+                type: "Hybrid",
+                experience: "3+ years",
+                description: "Design intuitive interfaces for AI-powered applications. Strong portfolio required with focus on complex systems.",
+                match: 88,
+                bookmarked: false,
+                posted: "1d ago",
+                benefits: ["401k matching", "Health insurance", "Conference budget"]
+            },
+            {
+                title: "Data Science Lead",
+                company: "Quantum Analytics",
+                location: "Austin, TX",
+                salary: "$160k - $190k",
+                type: "On-site",
+                experience: "7+ years",
+                description: "Lead team building predictive models for financial markets. Expertise in time-series analysis required.",
+                match: 91,
+                bookmarked: false,
+                posted: "3d ago",
+                benefits: ["Bonus structure", "Relocation package", "Gym membership"]
+            },
+            {
+                title: "Machine Learning Ops",
+                company: "CloudNest",
+                location: "Remote",
+                salary: "$150k - $180k",
+                type: "Remote",
+                experience: "4+ years",
+                description: "Implement and optimize ML pipelines in cloud environments. AWS/GCP experience required.",
+                match: 89,
+                bookmarked: false,
+                posted: "5h ago",
+                benefits: ["Unlimited cloud credits", "Remote stipend", "Team retreats"]
+            },
+            {
+                title: "AI Ethics Researcher",
+                company: "EthicalAI",
+                location: "London, UK",
+                salary: "£90k - £120k",
+                type: "Hybrid",
+                experience: "PhD required",
+                description: "Research ethical implications of generative AI systems. Publish papers and guide policy.",
+                match: 85,
+                bookmarked: false,
+                posted: "1w ago",
+                benefits: ["Research budget", "Academic collaboration", "Flex schedule"]
+            },
+            {
+                title: "Computer Vision Engineer",
+                company: "VisionWorks",
+                location: "Boston, MA",
+                salary: "$140k - $170k",
+                type: "On-site",
+                experience: "3+ years",
+                description: "Develop CV systems for medical imaging applications. Strong OpenCV/Python skills required.",
+                match: 92,
+                bookmarked: false,
+                posted: "4d ago",
+                benefits: ["Health insurance", "Continuing education", "Stock options"]
+            }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderJobs();
+            loadBookmarks();
+        });
+
+        // Render Job Listings
+        function renderJobs() {
+            const container = document.getElementById('jobListings');
+            container.innerHTML = jobs.map((job, index) => `
+                <div class="job-card">
+                    <div class="ai-match">${job.match}% Match</div>
+                    <div class="company-logo">${job.company.slice(0,2)}</div>
+                    
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${job.title}</h2>
+                    <div class="job-meta">
+                        <span><i class="fas fa-building"></i>${job.company}</span>
+                        <span><i class="fas fa-map-marker-alt"></i>${job.location}</span>
+                    </div>
+                    
+                    <div class="job-meta">
+                        <span><i class="fas fa-clock"></i>${job.posted}</span>
+                        <span><i class="fas fa-briefcase"></i>${job.experience}</span>
+                        <span class="salary">${job.salary}</span>
+                    </div>
+                    
+                    <p style="color: #64748b; margin: 1.5rem 0;">${job.description}</p>
+                    
+                    <div class="flex" style="gap: 0.75rem; margin-top: 1.5rem;">
+                        <button class="button button-primary" onclick="applyForJob(${index})">
+                            <i class="fas fa-paper-plane"></i> Quick Apply
+                        </button>
+                        <button class="button ${job.bookmarked ? 'button-primary' : 'button-secondary'}" 
+                                onclick="toggleBookmark(${index})">
+                            <i class="fas fa-bookmark"></i> 
+                        </button>
+                        <button class="button button-secondary" onclick="showDetails(${index})">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Core Functions
+        function applyForJob(index) {
+            const job = jobs[index];
+            const response = confirm(`Apply for ${job.title} at ${job.company}?`);
+            if (response) {
+                alert(`Application sent!\nWe'll contact you at ${localStorage.getItem('userEmail') || 'your registered email'}`);
+            }
+        }
+
+        function toggleBookmark(index) {
+            jobs[index].bookmarked = !jobs[index].bookmarked;
+            localStorage.setItem('bookmarks', JSON.stringify(jobs));
+            renderJobs();
+        }
+
+        function showDetails(index) {
+            const job = jobs[index];
+            const benefits = job.benefits.map(b => `<li>${b}</li>`).join('');
+            const html = `
+                <h3 style="margin-bottom: 1rem;">${job.title}</h3>
+                <div class="job-meta">
+                    <span>📍 ${job.location}</span>
+                    <span>⏳ ${job.posted}</span>
+                    <span class="salary">${job.salary}</span>
+                </div>
+                <h4 style="margin: 1rem 0 0.5rem;">Benefits:</h4>
+                <ul style="padding-left: 1.5rem; color: #64748b;">${benefits}</ul>
+            `;
+            alert(html.replace(/<[^>]*>/g, ''));
+        }
+
+        // Email Alerts
+        function showEmailAlertModal() {
+            document.getElementById('emailModal').style.display = 'block';
+        }
+
+        function hideEmailAlertModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        function saveEmailAlert() {
+            const email = document.getElementById('userEmail').value;
+            if (email.includes('@')) {
+                localStorage.setItem('jobAlertsEmail', email);
+                alert(`✅ Alerts activated for ${email}`);
+                hideEmailAlertModal();
+            } else {
+                alert('Please enter a valid email address');
+            }
+        }
+
+        // Enhanced Salary Estimator
+        function estimateSalary(role) {
+            const experience = prompt('Years of experience:');
+            if (!experience) return;
+            
+            const baseSalaries = {
+                'engineer': 120000,
+                'designer': 90000,
+                'researcher': 100000,
+                'lead': 150000,
+                'ops': 110000
+            };
+            
+            const roleKey = Object.keys(baseSalaries).find(key => role.toLowerCase().includes(key));
+            const base = roleKey ? baseSalaries[roleKey] : 80000;
+            const bonus = experience * 5000;
+            const estimate = base + bonus;
+            
+            alert(`Estimated salary range based on ${experience} years experience:
+            $${estimate - 15000} - $${estimate + 25000}`);
+        }
+    </script>
+</body>
+</html>

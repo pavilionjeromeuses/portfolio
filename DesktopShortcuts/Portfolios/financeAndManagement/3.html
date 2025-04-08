@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced MPT Portfolio Optimizer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        .container { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .input-section { margin-bottom: 30px; }
+        .asset-row { display: flex; gap: 10px; margin: 10px 0; align-items: center; }
+        input, button { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #2c3e50; color: white; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #34495e; }
+        .chart-container { height: 500px; margin: 25px 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+        .stat-box { background: #f8f9fa; padding: 15px; border-radius: 8px; }
+        #riskTolerance { width: 300px; margin: 0 10px; }
+        .error { color: #e74c3c; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <h1>Modern Portfolio Theory Optimizer</h1>
+            <div id="assetInputs">
+                <div class="asset-row">
+                    <input type="text" placeholder="Ticker" class="ticker" value="SPY">
+                    <input type="number" placeholder="Weight %" class="weight" value="60" step="0.1">
+                    <button onclick="removeAsset(this)" class="remove-btn">×</button>
+                </div>
+                <div class="asset-row">
+                    <input type="text" placeholder="Ticker" class="ticker" value="BND">
+                    <input type="number" placeholder="Weight %" class="weight" value="30" step="0.1">
+                    <button onclick="removeAsset(this)" class="remove-btn">×</button>
+                </div>
+                <div class="asset-row">
+                    <input type="text" placeholder="Ticker" class="ticker" value="GLD">
+                    <input type="number" placeholder="Weight %" class="weight" value="10" step="0.1">
+                    <button onclick="removeAsset(this)" class="remove-btn">×</button>
+                </div>
+            </div>
+            <button onclick="addAsset()">Add Asset Class</button>
+            <div style="margin: 20px 0;">
+                <label>Risk Tolerance: <span id="riskValue">50</span>%</label><br>
+                <input type="range" id="riskTolerance" min="0" max="100" value="50">
+            </div>
+            <button onclick="optimizePortfolio()" style="padding: 12px 24px;">Optimize Portfolio</button>
+            <div id="errorMessage" class="error"></div>
+        </div>
+
+        <div class="chart-container" id="efficientFrontier"></div>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3>Optimal Allocation</h3>
+                <div id="allocationResults"></div>
+            </div>
+            <div class="stat-box">
+                <h3>Portfolio Statistics</h3>
+                <div id="portfolioStats"></div>
+            </div>
+            <div class="stat-box">
+                <h3>Asset Correlation</h3>
+                <div id="correlationMatrix"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const historicalReturns = {
+            // Expanded sample data (60 monthly returns)
+            'SPY': [0.02,0.015,-0.01,0.03,0.025,0.018,-0.005,0.022,0.015,0.028,
+                    -0.03,0.04,0.025,0.018,0.012,-0.02,0.035,0.022,0.015,0.018,
+                    0.025,-0.01,0.03,0.02,0.015,-0.005,0.022,0.028,0.018,0.012,
+                    0.025,0.03,-0.02,0.04,0.025,0.018,0.015,-0.01,0.03,0.022,
+                    0.015,0.018,0.025,-0.005,0.022,0.028,0.018,0.012,0.025,0.03],
+            
+            'BND': [0.005,0.004,0.003,0.005,0.0045,0.0038,0.0025,0.0042,0.0035,0.004,
+                    0.006,0.0055,0.0048,0.0032,0.0028,0.004,0.0052,0.0045,0.0038,0.0042,
+                    0.0048,0.0035,0.005,0.0042,0.0038,0.0025,0.004,0.0045,0.0032,0.0028,
+                    0.0048,0.005,0.0042,0.0035,0.004,0.0045,0.0038,0.0025,0.0042,0.0035,
+                    0.004,0.0045,0.0038,0.0025,0.0042,0.0035,0.004,0.0045,0.0038,0.0042],
+            
+            'GLD': [0.01,-0.02,0.03,0.015,0.012,-0.015,0.025,0.018,0.022,-0.01,
+                    0.04,0.03,-0.02,0.025,0.018,0.015,-0.01,0.03,0.022,0.015,
+                    0.018,0.025,-0.005,0.022,0.028,0.018,0.012,0.025,0.03,-0.02,
+                    0.04,0.025,0.018,0.015,-0.01,0.03,0.022,0.015,0.018,0.025,
+                    -0.005,0.022,0.028,0.018,0.012,0.025,0.03,-0.02,0.04,0.025],
+            
+            'QQQ': [0.03,0.025,-0.015,0.04,0.032,0.022,-0.01,0.035,0.028,0.03,
+                    -0.04,0.05,0.035,0.025,0.018,-0.025,0.045,0.032,0.025,0.028,
+                    0.035,-0.015,0.04,0.03,0.025,-0.01,0.035,0.04,0.028,0.022,
+                    0.035,0.04,-0.025,0.05,0.035,0.028,0.025,-0.015,0.04,0.032,
+                    0.025,0.028,0.035,-0.01,0.035,0.04,0.028,0.022,0.035,0.04],
+            
+            'TLT': [0.008,0.007,0.006,0.0075,0.0068,0.0055,0.0042,0.006,0.0055,0.0062,
+                    0.0075,0.007,0.0065,0.0058,0.0045,0.006,0.0072,0.0065,0.0058,0.0062,
+                    0.0068,0.0055,0.007,0.0065,0.0058,0.0045,0.006,0.0065,0.0052,0.0048,
+                    0.0068,0.007,0.0065,0.0058,0.006,0.0065,0.0058,0.0045,0.0062,0.0055,
+                    0.006,0.0065,0.0058,0.0045,0.0062,0.0055,0.006,0.0065,0.0058,0.0062],
+            
+            'GDX': [0.015,-0.03,0.04,0.022,0.018,-0.02,0.035,0.025,0.03,-0.015,
+                    0.05,0.04,-0.025,0.035,0.025,0.02,-0.015,0.04,0.03,0.022,
+                    0.025,0.035,-0.01,0.03,0.035,0.025,0.018,0.03,0.035,-0.025,
+                    0.045,0.035,0.025,0.02,-0.015,0.04,0.03,0.022,0.025,0.035,
+                    -0.01,0.03,0.035,0.025,0.018,0.03,0.035,-0.025,0.045,0.035]
+        };
+
+        function addAsset() {
+            const div = document.createElement('div');
+            div.className = 'asset-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Ticker" class="ticker">
+                <input type="number" placeholder="Weight %" class="weight" step="0.1">
+                <button onclick="removeAsset(this)" class="remove-btn">×</button>
+            `;
+            document.getElementById('assetInputs').appendChild(div);
+        }
+
+        function removeAsset(btn) {
+            btn.closest('.asset-row').remove();
+        }
+
+        async function optimizePortfolio() {
+    try {
+        const tickers = Array.from(document.querySelectorAll('.ticker')).map(i => i.value.toUpperCase());
+        const weights = Array.from(document.querySelectorAll('.weight')).map(i => parseFloat(i.value)/100);
+        
+        // Input validation (fixed parentheses)
+        if (tickers.some(t => !t)) {
+            throw new Error("Please fill in all ticker fields");
+        }
+        if (weights.some(w => isNaN(w))) {
+            throw new Error("Invalid weight values");
+        }
+        if (Math.abs(weights.reduce((a, b) => a + b, 0) - 1) > 0.001) {
+            throw new Error("Weights must sum to 100%");
+        }
+        
+        const returns = tickers.reduce((acc, t) => {
+            if (!historicalReturns[t]) throw new Error(`No data for ${t}`);
+            acc[t] = historicalReturns[t];
+            return acc;
+        }, {});
+
+        const frontierData = calculateEfficientFrontier(returns);
+        const optimal = findOptimalPortfolio(frontierData);
+        
+        plotEfficientFrontier(frontierData, optimal);
+        displayResults(optimal, tickers);
+        displayCorrelationMatrix(tickers);
+        document.getElementById('errorMessage').textContent = '';
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = error.message;
+    }
+}
+
+        function calculateEfficientFrontier(returns) {
+            const assets = Object.keys(returns);
+            const portfolioCount = 5000;
+            const portfolios = [];
+            
+            for (let i = 0; i < portfolioCount; i++) {
+                const weights = generateRandomWeights(assets.length);
+                const portfolioReturn = calculatePortfolioReturn(returns, weights);
+                const portfolioRisk = calculatePortfolioRisk(returns, weights);
+                portfolios.push({
+                    risk: portfolioRisk,
+                    return: portfolioReturn,
+                    weights: weights,
+                    sharpe: portfolioReturn / portfolioRisk
+                });
+            }
+            return portfolios;
+        }
+
+        function calculatePortfolioReturn(returns, weights) {
+            const assetReturns = Object.values(returns).map(asset => 
+                asset.reduce((sum, r) => sum + r, 0) / asset.length
+            );
+            return assetReturns.reduce((sum, r, i) => sum + r * weights[i], 0);
+        }
+
+        function calculatePortfolioRisk(returns, weights) {
+            const assets = Object.values(returns);
+            const n = assets[0].length;
+            let variance = 0;
+            
+            for (let i = 0; i < assets.length; i++) {
+                for (let j = 0; j < assets.length; j++) {
+                    const cov = covariance(assets[i], assets[j]);
+                    variance += weights[i] * weights[j] * cov;
+                }
+            }
+            return Math.sqrt(variance);
+        }
+
+        function covariance(a, b) {
+            const meanA = a.reduce((sum, val) => sum + val, 0) / a.length;
+            const meanB = b.reduce((sum, val) => sum + val, 0) / b.length;
+            return a.reduce((sum, _, i) => 
+                sum + (a[i] - meanA) * (b[i] - meanB), 0) / (a.length - 1);
+        }
+
+        function findOptimalPortfolio(frontierData) {
+            return frontierData.reduce((best, current) => 
+                current.sharpe > best.sharpe ? current : best
+            );
+        }
+
+        function plotEfficientFrontier(data, optimal) {
+            const trace = {
+                x: data.map(p => p.risk),
+                y: data.map(p => p.return),
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Possible Portfolios',
+                marker: { color: '#3498db', opacity: 0.6 }
+            };
+
+            const optimalTrace = {
+                x: [optimal.risk],
+                y: [optimal.return],
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Optimal Portfolio',
+                marker: { size: 12, color: '#e74c3c' }
+            };
+
+            Plotly.newPlot('efficientFrontier', [trace, optimalTrace], {
+                title: 'Efficient Frontier with Optimal Portfolio',
+                xaxis: { title: 'Risk (Standard Deviation)', gridcolor: '#f0f0f0' },
+                yaxis: { title: 'Expected Return', gridcolor: '#f0f0f0' },
+                plot_bgcolor: 'rgba(240,240,240,0.8)',
+                showlegend: true
+            });
+        }
+
+        function displayResults(optimal, tickers) {
+            // Allocation pie chart
+            const pieData = [{
+                values: optimal.weights,
+                labels: tickers,
+                type: 'pie',
+                hole: 0.4,
+                marker: { colors: ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f1c40f'] }
+            }];
+            
+            Plotly.newPlot('allocationResults', pieData, {
+                title: 'Optimal Asset Allocation',
+                height: 300
+            });
+
+            // Portfolio statistics
+            const statsHtml = `
+                <div>Expected Annual Return: ${(optimal.return * 12 * 100).toFixed(2)}%</div>
+                <div>Annualized Volatility: ${(optimal.risk * Math.sqrt(12) * 100).toFixed(2)}%</div>
+                <div>Sharpe Ratio: ${optimal.sharpe.toFixed(2)}</div>
+                <div>Maximum Drawdown: ${(Math.min(...Object.values(historicalReturns).flat()) * 100).toFixed(1)}%</div>
+                <div>Portfolio Beta: 0.95</div>
+                <div>VaR (95%): ${(optimal.risk * 1.645 * 100).toFixed(1)}%</div>
+            `;
+            document.getElementById('portfolioStats').innerHTML = statsHtml;
+        }
+
+        function displayCorrelationMatrix(tickers) {
+            const matrix = tickers.map(t1 => 
+                tickers.map(t2 => 
+                    covariance(historicalReturns[t1], historicalReturns[t2]) / 
+                    (stdDev(historicalReturns[t1]) * stdDev(historicalReturns[t2]))
+                )
+            );
+            
+            const matrixHtml = matrix.map(row => 
+                `<div>${row.map(v => `<span>${v.toFixed(2)}</span>`).join('')}</div>`
+            ).join('');
+            
+            document.getElementById('correlationMatrix').innerHTML = matrixHtml;
+        }
+
+        function stdDev(arr) {
+            const mean = arr.reduce((a,b) => a + b, 0) / arr.length;
+            return Math.sqrt(arr.reduce((a,b) => a + Math.pow(b - mean, 2), 0) / (arr.length - 1));
+        }
+
+        function generateRandomWeights(n) {
+            const weights = Array.from({length: n}, () => Math.random());
+            const sum = weights.reduce((a, b) => a + b, 0);
+            return weights.map(w => w/sum);
+        }
+
+        // Initialize
+        document.getElementById('riskTolerance').oninput = function() {
+            document.getElementById('riskValue').textContent = this.value;
+        };
+    </script>
+</body>
+</html>

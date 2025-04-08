@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSmart Pro - Personal Finance Manager</title>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --background: #1a1a1a;
+            --text: #ecf0f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: #2c2c2c;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #444;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .transaction-form input, .transaction-form select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #444;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .category-chip {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: #444;
+            margin: 3px;
+            font-size: 0.9em;
+        }
+
+        .financial-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            border-radius: 10px;
+        }
+
+        #transactions-list {
+            margin-top: 1rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #333;
+            margin: 5px 0;
+            border-radius: 8px;
+        }
+
+        .goal-item {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Main Content -->
+        <div>
+            <div class="card">
+                <h2>💰 Financial Overview</h2>
+                <div class="financial-summary">
+                    <div class="summary-item">
+                        <div>Total Balance</div>
+                        <div id="total-balance">$12,450.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div>Monthly Income</div>
+                        <div id="monthly-income">$6,200.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div>Monthly Expenses</div>
+                        <div id="monthly-expenses">$3,850.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div>Budget Remaining</div>
+                        <div id="budget-remaining">$2,150.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📝 Add Transaction</h2>
+                <form class="transaction-form" id="transactionForm">
+                    <select id="transactionType">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                    <input type="number" id="amount" placeholder="Amount" step="0.01" required>
+                    <input type="text" id="description" placeholder="Description" required>
+                    <select id="category">
+                        <option value="housing">Housing</option>
+                        <option value="food">Food</option>
+                        <option value="transport">Transport</option>
+                        <option value="utilities">Utilities</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="education">Education</option>
+                        <option value="investments">Investments</option>
+                    </select>
+                    <button type="submit">Add Transaction</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📜 Recent Transactions</h2>
+                <div id="transactions-list">
+                    <div class="transaction-item">
+                        <div>Salary Deposit</div>
+                        <div style="color: #2ecc71">$4500.00</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div>Grocery Shopping</div>
+                        <div style="color: red">$285.50</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div>Car Payment</div>
+                        <div style="color: red">$420.00</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div>Freelance Income</div>
+                        <div style="color: #2ecc71">$1200.00</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div>Online Course</div>
+                        <div style="color: red">$199.99</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div>
+            <div class="card">
+                <h2>🎯 Financial Goals</h2>
+                <div id="goals-list">
+                    <div class="goal-item">
+                        <div>Emergency Fund ($10k)</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <small>$6,500 / $10,000</small>
+                    </div>
+                    <div class="goal-item">
+                        <div>Europe Vacation</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <small>$2,250 / $5,000</small>
+                    </div>
+                    <div class="goal-item">
+                        <div>Retirement Fund</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 18%"></div>
+                        </div>
+                        <small>$9,000 / $50,000</small>
+                    </div>
+                </div>
+                <button onclick="addGoal()" style="margin-top: 1rem">+ Add Goal</button>
+            </div>
+
+            <div class="card">
+                <h2>📊 Spending Analysis</h2>
+                <div id="categories-list">
+                    <div class="category-chip">🏠 Housing: $1,800</div>
+                    <div class="category-chip">🍔 Food: $680</div>
+                    <div class="category-chip">🚗 Transport: $420</div>
+                    <div class="category-chip">💡 Utilities: $310</div>
+                    <div class="category-chip">🏥 Healthcare: $150</div>
+                    <div class="category-chip">🎬 Entertainment: $275</div>
+                    <div class="category-chip">🎓 Education: $200</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Sample Data
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [
+            { type: 'income', amount: 4500, description: 'Salary Deposit', category: 'income', date: '2024-03-01' },
+            { type: 'expense', amount: 1200, description: 'Rent Payment', category: 'housing', date: '2024-03-01' },
+            { type: 'expense', amount: 285.50, description: 'Grocery Shopping', category: 'food', date: '2024-03-02' },
+            { type: 'expense', amount: 85, description: 'Internet Bill', category: 'utilities', date: '2024-03-03' },
+            { type: 'income', amount: 1200, description: 'Freelance Income', category: 'income', date: '2024-03-05' },
+            { type: 'expense', amount: 199.99, description: 'Online Course', category: 'education', date: '2024-03-06' },
+            { type: 'expense', amount: 420, description: 'Car Payment', category: 'transport', date: '2024-03-07' },
+            { type: 'expense', amount: 75, description: 'Gym Membership', category: 'healthcare', date: '2024-03-08' },
+            { type: 'expense', amount: 150, description: 'Date Night', category: 'entertainment', date: '2024-03-09' },
+            { type: 'expense', amount: 45, description: 'Fuel', category: 'transport', date: '2024-03-10' }
+        ];
+
+        let goals = JSON.parse(localStorage.getItem('goals')) || [
+            { name: 'Emergency Fund', target: 10000, current: 6500 },
+            { name: 'Europe Vacation', target: 5000, current: 2250 },
+            { name: 'Retirement Fund', target: 50000, current: 9000 }
+        ];
+
+        // Transaction Form Handling
+        document.getElementById('transactionForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const transaction = {
+                type: document.getElementById('transactionType').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                description: document.getElementById('description').value,
+                category: document.getElementById('category').value,
+                date: new Date().toISOString()
+            };
+            
+            transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateUI();
+            e.target.reset();
+        });
+
+        // Goal Management
+        function addGoal() {
+            const name = prompt('Enter goal name:');
+            const target = parseFloat(prompt('Enter target amount:'));
+            if(name && target) {
+                goals.push({ name, target, current: 0 });
+                localStorage.setItem('goals', JSON.stringify(goals));
+                updateUI();
+            }
+        }
+
+        // Enhanced UI Updates
+        function updateUI() {
+            updateTransactions();
+            updateCategories();
+            updateGoals();
+            updateFinancialSummary();
+        }
+
+        function updateTransactions() {
+            const list = document.getElementById('transactions-list');
+            list.innerHTML = transactions.slice(-5).map(transaction => `
+                <div class="transaction-item">
+                    <div>${transaction.description}</div>
+                    <div>${new Date(transaction.date).toLocaleDateString()}</div>
+                    <div style="color: ${transaction.type === 'income' ? 'var(--primary)' : 'red'}">
+                        $${transaction.amount.toFixed(2)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCategories() {
+            const categories = transactions.reduce((acc, transaction) => {
+                if(transaction.type === 'expense') {
+                    acc[transaction.category] = (acc[transaction.category] || 0) + transaction.amount;
+                }
+                return acc;
+            }, {});
+
+            document.getElementById('categories-list').innerHTML = Object.entries(categories)
+                .map(([category, amount]) => `
+                    <div class="category-chip">${category}: $${amount.toFixed(2)}</div>
+                `).join('');
+        }
+
+        function updateGoals() {
+            document.getElementById('goals-list').innerHTML = goals.map(goal => `
+                <div class="goal-item">
+                    <div>${goal.name}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(goal.current / goal.target * 100)}%"></div>
+                    </div>
+                    <small>$${goal.current.toFixed(2)} / $${goal.target.toFixed(2)}</small>
+                </div>
+            `).join('');
+        }
+
+        function updateFinancialSummary() {
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const totalExpenses = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const monthlyBudget = 6000;
+            const currentMonthExpenses = transactions
+                .filter(t => new Date(t.date).getMonth() === new Date().getMonth())
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            document.getElementById('total-balance').textContent = `$${(totalIncome - totalExpenses).toFixed(2)}`;
+            document.getElementById('monthly-income').textContent = `$${totalIncome.toFixed(2)}`;
+            document.getElementById('monthly-expenses').textContent = `$${totalExpenses.toFixed(2)}`;
+            document.getElementById('budget-remaining').textContent = `$${(monthlyBudget - currentMonthExpenses).toFixed(2)}`;
+        }
+
+        // Initial UI Update
+        updateUI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Customer Onboarding Suite</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        .header {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .section {
+            background: white;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .email-sequence {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        }
+        .email-card {
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .email-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist-item {
+            padding: 1.25rem;
+            margin: 0.75rem 0;
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-radius: 6px;
+        }
+        .progress-container {
+            margin: 2rem 0;
+        }
+        .progress-bar {
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.4s ease;
+        }
+        .video-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+        .video-card {
+            aspect-ratio: 16/9;
+            background: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 60%, rgba(0,0,0,0.7));
+        }
+        .video-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        .phase-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .phase-tab {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            background: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .phase-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            background: var(--accent);
+            color: white;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Enterprise Customer Onboarding Platform</h1>
+        <p>360° Client Activation System with Drip Campaigns & Success Tracking</p>
+    </div>
+
+    <!-- Onboarding Phases Navigation -->
+    <div class="phase-tabs">
+        <div class="phase-tab active" onclick="showPhase('welcome')">Welcome Phase</div>
+        <div class="phase-tab" onclick="showPhase('training')">Training Phase</div>
+        <div class="phase-tab" onclick="showPhase('adoption')">Adoption Phase</div>
+    </div>
+
+    <!-- Welcome Phase Content -->
+    <div class="section phase-content" id="welcome">
+        <h2>📨 Automated Drip Campaign Sequence</h2>
+        <div class="email-sequence">
+            <div class="email-card">
+                <div class="badge">Day 0</div>
+                <h3>Welcome to [Product Name]!</h3>
+                <p><strong>Subject:</strong> Let's Get Started, [First Name]! ✅</p>
+                <ul>
+                    <li>🔑 Account activation link</li>
+                    <li>📋 Personalized setup checklist</li>
+                    <li>🎁 First-time user offer</li>
+                    <li>📅 Calendar integration prompt</li>
+                </ul>
+                <button class="cta">View Email Mockup</button>
+            </div>
+            
+            <div class="email-card">
+                <div class="badge">Day 2</div>
+                <h3>Your Success Toolkit</h3>
+                <p><strong>Subject:</strong> Accelerate Your Results 🚀</p>
+                <ul>
+                    <li>📹 Orientation video library access</li>
+                    <li>📑 PDF Quick Start Guide (download)</li>
+                    <li>👥 Schedule onboarding call</li>
+                    <li>📊 Initial setup analytics</li>
+                </ul>
+                <button class="cta">View Email Mockup</button>
+            </div>
+
+            <div class="email-card">
+                <div class="badge">Day 7</div>
+                <h3>Milestone Celebration</h3>
+                <p><strong>Subject:</strong> You're 25% Complete! 🎉</p>
+                <ul>
+                    <li>🏆 Progress dashboard snapshot</li>
+                    <li>📈 Personalized recommendations</li>
+                    <li>💡 Advanced feature spotlight</li>
+                    <li>👩💻 Customer success manager intro</li>
+                </ul>
+                <button class="cta">View Email Mockup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training Phase Content -->
+    <div class="section phase-content" id="training" style="display: none;">
+        <h2>🎓 Comprehensive Training Program</h2>
+        <div class="video-grid">
+            <div class="video-card" style="background-image: url('https://picsum.photos/400/225?1')">
+                <div class="video-content">
+                    <h3>Core Platform Walkthrough</h3>
+                    <p>22 min · Basic Features</p>
+                </div>
+            </div>
+            <div class="video-card" style="background-image: url('https://picsum.photos/400/225?2')">
+                <div class="video-content">
+                    <h3>Workflow Automation</h3>
+                    <p>35 min · Intermediate</p>
+                </div>
+            </div>
+            <div class="video-card" style="background-image: url('https://picsum.photos/400/225?3')">
+                <div class="video-content">
+                    <h3>Advanced Analytics</h3>
+                    <p>45 min · Expert Level</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adoption Phase Content -->
+    <div class="section phase-content" id="adoption" style="display: none;">
+        <h2>📊 Success Metrics Dashboard</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="checklist">
+                <li class="checklist-item">
+                    <input type="checkbox" class="check">
+                    <span>✅ Completed profile setup (20 points)</span>
+                </li>
+                <li class="checklist-item">
+                    <input type="checkbox" class="check">
+                    <span>📊 Connected first data source (30 points)</span>
+                </li>
+                <li class="checklist-item">
+                    <input type="checkbox" class="check">
+                    <span>🎯 Achieved first automation (50 points)</span>
+                </li>
+                <li class="checklist-item">
+                    <input type="checkbox" class="check">
+                    <span>🤝 Team training completed (40 points)</span>
+                </li>
+                <li class="checklist-item">
+                    <input type="checkbox" class="check">
+                    <span>📈 Generated first report (25 points)</span>
+                </li>
+            </div>
+            <div class="milestone">
+                <h3>Current Level: <span id="level">Rookie</span></h3>
+                <p>Points: <span id="points">0</span>/200 to Pro Level</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRM Configuration Section -->
+    <div class="section">
+        <h2>⚙️ CRM Automation Engine</h2>
+        <div class="crm-dashboard">
+            <div class="crm-card">
+                <h3>Automation Triggers</h3>
+                <ul>
+                    <li>User completes registration → Send welcome kit</li>
+                    <li>7-day inactivity → Send re-engagement sequence</li>
+                    <li>Feature unused for 14 days → Trigger tutorial</li>
+                    <li>NPS score ≤ 7 → Assign to success manager</li>
+                </ul>
+            </div>
+            
+            <div class="crm-card">
+                <h3>Data Tracking</h3>
+                <ul>
+                    <li>🕒 Time to first value (TTFV)</li>
+                    <li>📈 Feature adoption rates</li>
+                    <li>📊 Support ticket trends</li>
+                    <li>🎯 Milestone completion rate</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Phase Navigation
+        function showPhase(phaseId) {
+            document.querySelectorAll('.phase-content').forEach(el => el.style.display = 'none');
+            document.getElementById(phaseId).style.display = 'block';
+            document.querySelectorAll('.phase-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Advanced Progress Tracking
+        const checks = document.querySelectorAll('.check');
+        const progressFill = document.querySelector('.progress-fill');
+        const levelSpan = document.getElementById('level');
+        const pointsSpan = document.getElementById('points');
+        
+        const POINTS_MAP = [20, 30, 50, 40, 25];
+        const LEVELS = {
+            0: 'Rookie',
+            100: 'Intermediate',
+            200: 'Pro'
+        };
+
+        function updateProgress() {
+            let totalPoints = 0;
+            checks.forEach((check, index) => {
+                if(check.checked) totalPoints += POINTS_MAP[index];
+            });
+            
+            const progress = (totalPoints / 200) * 100;
+            progressFill.style.width = `${progress}%`;
+            
+            pointsSpan.textContent = totalPoints;
+            
+            // Determine level
+            if(totalPoints >= 200) levelSpan.textContent = LEVELS[200];
+            else if(totalPoints >= 100) levelSpan.textContent = LEVELS[100];
+            else levelSpan.textContent = LEVELS[0];
+        }
+
+        checks.forEach(check => {
+            check.addEventListener('change', updateProgress);
+        });
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

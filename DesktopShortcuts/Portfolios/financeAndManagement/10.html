@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG Portfolio Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0faf0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background-color: #2c5f2d;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .portfolio-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background-color: #f8fff8;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stock-item:hover {
+            transform: translateX(5px);
+            background-color: #e0ffe0;
+        }
+
+        button {
+            background-color: #2c5f2d;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+
+        button:hover {
+            background-color: #1e401f;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            height: 400px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric-box {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ESG Portfolio Analyzer</h1>
+        <p>Compare sustainable investments with traditional benchmarks</p>
+    </div>
+
+    <div class="container">
+        <div class="portfolio-section">
+            <h2>ESG Stock Selection</h2>
+            <div id="stock-list"></div>
+            <button onclick="buildPortfolio()">Build Portfolio</button>
+            <h3>Your ESG Portfolio</h3>
+            <div id="portfolio"></div>
+        </div>
+
+        <div class="portfolio-section">
+            <h2>Performance Comparison</h2>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+            <div class="metrics">
+                <div class="metric-box">
+                    <h4>ESG Return</h4>
+                    <p id="esgReturn">0%</p>
+                </div>
+                <div class="metric-box">
+                    <h4>S&P 500 Return</h4>
+                    <p id="sp500Return">0%</p>
+                </div>
+                <div class="metric-box">
+                    <h4>Outperformance</h4>
+                    <p id="outperformance">0%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample ESG-compliant stocks data
+        const esgStocks = [
+            { ticker: 'TSLA', name: 'Tesla', esgScore: 85, sector: 'Energy' },
+            { ticker: 'MSFT', name: 'Microsoft', esgScore: 89, sector: 'Tech' },
+            { ticker: 'NEE', name: 'NextEra Energy', esgScore: 92, sector: 'Utilities' },
+            { ticker: 'ORSTED', name: 'Ørsted', esgScore: 95, sector: 'Energy' },
+            { ticker: 'SBUX', name: 'Starbucks', esgScore: 83, sector: 'Consumer' }
+        ];
+
+        let selectedStocks = [];
+        let performanceChart = null;
+
+        // Initialize stock list
+        function initStockList() {
+            const stockList = document.getElementById('stock-list');
+            esgStocks.forEach(stock => {
+                const div = document.createElement('div');
+                div.className = 'stock-item';
+                div.innerHTML = `
+                    <span>${stock.ticker}</span>
+                    <span>ESG: ${stock.esgScore}</span>
+                `;
+                div.onclick = () => toggleStock(stock);
+                stockList.appendChild(div);
+            });
+        }
+
+        // Toggle stock selection
+        function toggleStock(stock) {
+            const index = selectedStocks.findIndex(s => s.ticker === stock.ticker);
+            if (index === -1) {
+                selectedStocks.push(stock);
+            } else {
+                selectedStocks.splice(index, 1);
+            }
+            updatePortfolioDisplay();
+        }
+
+        // Update portfolio display
+        function updatePortfolioDisplay() {
+            const portfolio = document.getElementById('portfolio');
+            portfolio.innerHTML = selectedStocks
+                .map(stock => `
+                    <div class="stock-item">
+                        <span>${stock.ticker}</span>
+                        <span>ESG ${stock.esgScore}</span>
+                    </div>
+                `).join('');
+        }
+
+        // Build portfolio and calculate performance
+        function buildPortfolio() {
+            // Simulated returns
+            const esgReturn = (Math.random() * 15 + 5).toFixed(1);
+            const sp500Return = (Math.random() * 10 + 3).toFixed(1);
+            const outperformance = (esgReturn - sp500Return).toFixed(1);
+
+            document.getElementById('esgReturn').textContent = `${esgReturn}%`;
+            document.getElementById('sp500Return').textContent = `${sp500Return}%`;
+            document.getElementById('outperformance').textContent = `${outperformance}%`;
+
+            updateChart([esgReturn, sp500Return]);
+        }
+
+        // Update performance chart
+        function updateChart(returns) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                    datasets: [{
+                        label: 'ESG Portfolio',
+                        data: returns.map(r => (parseFloat(r) * 1.2).toFixed(1)),
+                        borderColor: '#2c5f2d',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'S&P 500',
+                        data: returns.map(r => (parseFloat(r) * 0.8).toFixed(1)),
+                        borderColor: '#666',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Return (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize the application
+        initStockList();
+    </script>
+</body>
+</html>

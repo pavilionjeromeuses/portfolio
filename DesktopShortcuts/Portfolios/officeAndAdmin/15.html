@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeMaster Solutions - Calendar Integration</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --background: #f8fafc;
+            --text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .integration-table {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1.25rem 2rem;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+
+        .status.active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status.pending {
+            background: #fef9c3;
+            color: #ca8a04;
+        }
+
+        .status.completed {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            th, td {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>TimeMaster Solutions</h1>
+            <p>Calendar Integration Dashboard</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="integration-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Integration ID</th>
+                        <th>Platform</th>
+                        <th>Status</th>
+                        <th>Last Synced</th>
+                        <th>Sync Frequency</th>
+                    </tr>
+                </thead>
+                <tbody id="integrationData">
+                    <!-- Data will be inserted here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const platforms = ['Google Calendar', 'Microsoft Outlook', 'Slack', 'Zoom', 'Teams', 'Asana', 'Trello', 'Jira', 'HubSpot', 'Salesforce'];
+        const statuses = ['active', 'pending', 'completed'];
+        const frequencies = ['Real-time', 'Every 15min', 'Hourly', 'Daily', 'Weekly'];
+        
+        const generateData = () => {
+            const tbody = document.getElementById('integrationData');
+            let html = '';
+
+            for(let i = 1; i <= 100; i++) {
+                const platform = platforms[Math.floor(Math.random() * platforms.length)];
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const date = new Date(Date.now() - Math.random() * 31536000000).toLocaleDateString();
+                const frequency = frequencies[Math.floor(Math.random() * frequencies.length)];
+
+                html += `
+                    <tr>
+                        <td>TM-${i.toString().padStart(4, '0')}</td>
+                        <td>${platform}</td>
+                        <td><span class="status ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+                        <td>${date}</td>
+                        <td>${frequency}</td>
+                    </tr>
+                `;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        // Generate data when page loads
+        generateData();
+    </script>
+</body>
+</html>

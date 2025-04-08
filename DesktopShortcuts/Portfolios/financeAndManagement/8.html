@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Operational Efficiency Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+    <style>
+        /* Enhanced CSS with additional styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            background: #fafbff;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            padding: 20px;
+            border-left: 5px solid #007bff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .process-step {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+            text-align: center;
+        }
+
+        .process-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .analysis-form {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* New styling elements */
+        .data-table {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .trend-indicator {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .up {
+            color: #28a745;
+        }
+
+        .down {
+            color: #dc3545;
+        }
+
+        .chart-container {
+            position: relative;
+            margin: 20px 0;
+            min-height: 400px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted #666;
+            cursor: help;
+        }
+
+        .gauge {
+            width: 150px;
+            height: 150px;
+            margin: 10px auto;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 20px;
+            width: 70%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Operational Efficiency Dashboard</h1>
+        
+        <!-- Expanded Process Analysis Section -->
+        <div class="dashboard-section">
+            <h2>📈 End-to-End Process Analysis</h2>
+            <div class="process-flow">
+                <div class="process-step">
+                    <h3>Order Intake</h3>
+                    <div class="metric-box">Avg. Time: 2.4hrs</div>
+                    <div class="metric-box">Bottleneck: 18% delays</div>
+                </div>
+                <div class="process-step">
+                    <h3>Inventory Check</h3>
+                    <div class="metric-box">Stockouts: 12%</div>
+                    <div class="metric-box">Excess Inventory: $1.2M</div>
+                </div>
+                <div class="process-step">
+                    <h3>Production</h3>
+                    <div class="metric-box">OEE: 78%</div>
+                    <div class="metric-box">Defect Rate: 5.2%</div>
+                </div>
+                <div class="process-step">
+                    <h3>Shipping</h3>
+                    <div class="metric-box">On-Time: 83%</div>
+                    <div class="metric-box">Carrier Costs: $450K/mo</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Process Step</th>
+                            <th>Cycle Time</th>
+                            <th>Wait Time</th>
+                            <th>Cost/Unit</th>
+                            <th>Defects</th>
+                            <th>Capacity Utilization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Order Processing</td>
+                            <td>2.4 hrs <span class="trend-indicator down">▼12%</span></td>
+                            <td>1.8 hrs</td>
+                            <td>$4.20</td>
+                            <td>2.1%</td>
+                            <td>82%</td>
+                        </tr>
+                        <tr>
+                            <td>Inventory Management</td>
+                            <td>6.2 hrs <span class="trend-indicator up">▲8%</span></td>
+                            <td>4.5 hrs</td>
+                            <td>$8.50</td>
+                            <td>1.4%</td>
+                            <td>68%</td>
+                        </tr>
+                        <tr>
+                            <td>Production Line</td>
+                            <td>18.4 hrs <span class="trend-indicator down">▼3%</span></td>
+                            <td>3.2 hrs</td>
+                            <td>$22.80</td>
+                            <td>5.2%</td>
+                            <td>78%</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping & Logistics</td>
+                            <td>9.1 hrs <span class="trend-indicator up">▲15%</span></td>
+                            <td>2.4 hrs</td>
+                            <td>$14.20</td>
+                            <td>1.8%</td>
+                            <td>85%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Enhanced KPI Dashboard -->
+        <div class="dashboard-section">
+            <h2>📊 Comprehensive Performance Metrics</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h3>First Pass Yield <span class="tooltip">(?)</span></h3>
+                    <p>82.4% <span class="trend-indicator up">▲2.1%</span></p>
+                    <small>Industry Benchmark: 85%</small>
+                </div>
+                <div class="kpi-card">
+                    <h3>WIP Inventory Value <span class="tooltip">(?)</span></h3>
+                    <p>$2.4M <span class="trend-indicator down">▼8.3%</span></p>
+                    <small>Target: ≤$1.8M</small>
+                </div>
+                <div class="kpi-card">
+                    <h3>Lead Time Variability <span class="tooltip">(?)</span></h3>
+                    <p>σ=2.4 days <span class="trend-indicator up">▲14%</span></p>
+                    <small>Customer Tolerance: σ=1.5 days</small>
+                </div>
+                <div class="kpi-card">
+                    <h3>Energy Efficiency <span class="tooltip">(?)</span></h3>
+                    <p>4.2 kW/unit <span class="trend-indicator down">▼3.7%</span></p>
+                    <small>Best Practice: 3.8 kW/unit</small>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="performanceTrend"></canvas>
+            </div>
+        </div>
+
+        <!-- Expanded Cost Analysis Section -->
+        <div class="dashboard-section">
+            <h2>💰 Cost Optimization Center</h2>
+            <div class="analysis-form">
+                <div>
+                    <h3>Cost Structure Analysis</h3>
+                    <canvas id="costPareto"></canvas>
+                </div>
+                <div>
+                    <h3>Savings Potential Calculator</h3>
+                    <input type="number" id="matCost" placeholder="Material Costs ($)">
+                    <input type="number" id="laborCost" placeholder="Labor Costs ($)">
+                    <input type="number" id="energyCost" placeholder="Energy Costs ($)">
+                    <input type="number" id="logisticsCost" placeholder="Logistics Costs ($)">
+                    <button onclick="calculateAdvancedSavings()">Optimize Costs</button>
+                    <div id="savingsBreakdown"></div>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cost Category</th>
+                            <th>Monthly Spend</th>
+                            <th>Variance</th>
+                            <th>Benchmark</th>
+                            <th>Savings Potential</th>
+                            <th>Action Items</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Raw Materials</td>
+                            <td>$1,450,000</td>
+                            <td class="down">+14%</td>
+                            <td>$1,275,000</td>
+                            <td>$175,000</td>
+                            <td>Supplier negotiation, Waste reduction</td>
+                        </tr>
+                        <tr>
+                            <td>Labor</td>
+                            <td>$850,000</td>
+                            <td class="up">-6%</td>
+                            <td>$800,000</td>
+                            <td>$50,000</td>
+                            <td>Cross-training, Automation</td>
+                        </tr>
+                        <tr>
+                            <td>Logistics</td>
+                            <td>$320,000</td>
+                            <td class="down">+22%</td>
+                            <td>$260,000</td>
+                            <td>$60,000</td>
+                            <td>Route optimization, Carrier bids</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- New Section: Root Cause Analysis -->
+        <div class="dashboard-section">
+            <h2>🔍 Process Bottleneck Analyzer</h2>
+            <div class="analysis-form">
+                <div>
+                    <h3>Value Stream Map</h3>
+                    <canvas id="valueStreamChart"></canvas>
+                </div>
+                <div>
+                    <h3>Waste Identification</h3>
+                    <div id="wastePieChart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Extensive Data Configuration
+            const processData = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Cycle Time (hrs)',
+                    data: [52, 48, 45, 43, 41, 38],
+                    borderColor: '#4dc9f6',
+                    tension: 0.4
+                }, {
+                    label: 'Defect Rate (%)',
+                    data: [6.2, 5.8, 5.5, 5.1, 4.8, 4.5],
+                    borderColor: '#f67019',
+                    tension: 0.4
+                }]
+            };
+
+            const costData = {
+                labels: ['Materials', 'Labor', 'Overhead', 'Logistics', 'Quality', 'Energy'],
+                datasets: [{
+                    label: 'Cost Distribution',
+                    data: [42, 28, 12, 9, 6, 3],
+                    backgroundColor: [
+                        '#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40'
+                    ]
+                }]
+            };
+
+            // Advanced Chart Configurations
+            new Chart(document.getElementById('performanceTrend'), {
+                type: 'line',
+                data: processData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                targetLine: {
+                                    type: 'line',
+                                    yMin: 40,
+                                    yMax: 40,
+                                    borderColor: 'red',
+                                    borderWidth: 2,
+                                    borderDash: [5, 5]
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('costPareto'), {
+                type: 'bar',
+                data: {
+                    labels: costData.labels,
+                    datasets: [{
+                        data: costData.datasets[0].data,
+                        backgroundColor: costData.datasets[0].backgroundColor
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${(context.parsed.y * 10000).toLocaleString()}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Advanced Savings Calculator
+            function calculateAdvancedSavings() {
+                const costs = {
+                    material: parseFloat(document.getElementById('matCost').value) || 0,
+                    labor: parseFloat(document.getElementById('laborCost').value) || 0,
+                    energy: parseFloat(document.getElementById('energyCost').value) || 0,
+                    logistics: parseFloat(document.getElementById('logisticsCost').value) || 0
+                };
+
+                const total = Object.values(costs).reduce((a, b) => a + b, 0);
+                const savings = {
+                    material: costs.material * 0.12,
+                    labor: costs.labor * 0.08,
+                    energy: costs.energy * 0.15,
+                    logistics: costs.logistics * 0.18
+                };
+
+                const totalSavings = Object.values(savings).reduce((a, b) => a + b, 0);
+                
+                document.getElementById('savingsBreakdown').innerHTML = `
+                    <div class="metric-box">
+                        <h4>Total Operational Costs: $${total.toLocaleString()}</h4>
+                        <h4>Potential Monthly Savings: $${totalSavings.toLocaleString()}</h4>
+                        <p>Breakdown:</p>
+                        <ul>
+                            <li>Materials: $${savings.material.toLocaleString()}</li>
+                            <li>Labor: $${savings.labor.toLocaleString()}</li>
+                            <li>Energy: $${savings.energy.toLocaleString()}</li>
+                            <li>Logistics: $${savings.logistics.toLocaleString()}</li>
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Real-time Data Simulation
+            function simulateRealTimeData() {
+                const kpis = ['cycleTime', 'defectRate', 'oee', 'inventoryTurnover'];
+                kpis.forEach(kpi => {
+                    const element = document.getElementById(kpi);
+                    if(element) {
+                        const current = parseFloat(element.textContent);
+                        const variation = (Math.random() * 0.05) - 0.025;
+                        element.textContent = (current * (1 + variation)).toFixed(1);
+                    }
+                });
+            }
+            setInterval(simulateRealTimeData, 5000);
+
+            // Initialize Additional Charts
+            new Chart(document.getElementById('valueStreamChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Process 1', 'Process 2', 'Process 3', 'Process 4', 'Process 5'],
+                    datasets: [{
+                        label: 'Value Added Time',
+                        data: [15, 20, 25, 18, 22],
+                        borderColor: '#4CAF50'
+                    }, {
+                        label: 'Non-Value Added Time',
+                        data: [35, 30, 25, 32, 28],
+                        borderColor: '#F44336'
+                    }]
+                }
+            });
+        </script>
+</body>
+</html>

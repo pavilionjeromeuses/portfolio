@@ -1,0 +1,57 @@
+body {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header, .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+pre {
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    color: white;
+    font-size: 16px;
+}
+
+@keyframes revealFromLeft {
+    from {
+        clip-path: inset(0 100% 0 0); /* Hide the content initially */
+    }
+    to {
+        clip-path: inset(0 0 0 0); /* Reveal the content fully */
+    }
+}
+
+/* Apply the reveal animation */
+.main pre {
+    animation: revealFromLeft 5s ease-out forwards; /* Adjust duration to control speed */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.flicker {
+    animation-name: fadeIn;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+pre.flicker {
+    opacity: 0; /* Start initially invisible */
+}

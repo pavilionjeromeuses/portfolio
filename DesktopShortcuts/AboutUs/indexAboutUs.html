@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link rel="icon" type="image/x-icon" href="./skull.png">
+    <style>
+        :root {
+            --neon-cyan: #0ff;
+            --neon-pink: #f0f;
+            --matrix-green: #0f0;
+            --dark-bg: #000;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--dark-bg);
+            color: var(--neon-cyan);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.2) 0px,
+                rgba(0, 0, 0, 0.2) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .header-title {
+        text-align: center;
+        font-size: 3em;
+        text-shadow: 0 0 10px var(--neon-cyan);
+        margin-bottom: 2em;
+        animation: glitch 2s infinite;
+        background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+        /* Updated background-clip with vendor prefixes */
+        -webkit-background-clip: text;
+        -moz-background-clip: text;
+        background-clip: text;
+        /* Updated text-fill-color with fallback */
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2em;
+            margin-bottom: 3em;
+        }
+
+        .image-placeholder {
+            background: rgba(16, 16, 16, 0.8);
+            border: 2px solid var(--neon-pink);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .image-placeholder:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        .cyber-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2em 0;
+            border: 2px solid var(--neon-cyan);
+            overflow-x: auto;
+        }
+
+        .cyber-table th {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 15px;
+            text-align: left;
+            border-bottom: 3px solid var(--neon-cyan);
+        }
+
+        .cyber-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .cyber-table tr:hover {
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-title {
+                font-size: 2em;
+            }
+        }
+
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+    
+  <h1 class="header-title">JEROME S. PAVILION.exe</h1>
+
+  <div class="image-grid">
+      <div class="image-placeholder">
+          <img src="./unnamed.jpg" alt="Name" loading="lazy">
+      </div>
+      <div class="image-placeholder">
+          <img src="./Asset 1-100.jpg" alt="School1" loading="lazy">
+      </div>
+      <div class="image-placeholder">
+          <img src="./tesda-logo-1024x1024.jpg" alt="School2" loading="lazy">
+      </div>
+  </div>
+
+  <h1 class="header-title">WORK HISTORY</h1>
+
+    <table class="cyber-table">
+      <thead>
+          <tr>
+              <th>BUSINESS PROCESS OUTSOURCING</th>
+              <th>POSITION</th>
+              <th>STATUS</th>
+              <th>LATENCY</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr><td class="data-blue">GaaS</td><td class="data-blue">Digital Assets & Account Operations Manager</td><td class="data-blue">Freelance, Business</td><td class="data-blue">2010-P</td></tr>
+        <tr><td class="data-blue">J&J Residential Apartments Rentals</td><td class="data-blue">Assistant Manager</td><td class="data-blue">Full-Time, Business</td><td class="data-blue">2017-2025</td></tr>
+        <tr><td class="data-blue"></td><td class="data-blue">Owner</td><td class="data-blue">Full-Time, Business</td><td class="data-blue">2025-P</td></tr>
+        <tr><td class="data-blue">Instabuild PH</td><td class="data-blue">Affiliate Manager</td><td class="data-blue">Part-Time, WFH</td><td class="data-blue">2022</td></tr>
+        <tr><td class="data-blue">MKIT (HONG KONG) Holdings Limited</td><td class="data-blue">Digital Recruiter, Chat & Email Support, Copywriting</td><td class="data-blue">Full-Time, WFH</td><td class="data-blue">2022</td></tr>
+        <tr><td class="data-blue">Baner Valley Solutions PH</td><td class="data-blue">HR Office Staff, Marketing</td><td class="data-blue">Full-Time, WFH</td><td class="data-blue">2022</td></tr>
+        <tr><td class="data-blue">Beijing Dasheng Interactive Technology Co., Ltd.</td><td class="data-blue">HR Office Staff</td><td class="data-blue">Full-Time, WFH</td><td class="data-blue">2022</td></tr>
+        <tr><td class="data-blue">Global Teams Australia</td><td class="data-blue">Virtual Assistant</td><td class="data-blue">Full-Time, WFH</td><td class="data-blue">2022</td></tr>
+        <tr><td class="data-blue">Caren Seperidad</td><td class="data-blue">Digital Recruiter</td><td class="data-blue">Part-Time, WFH</td><td class="data-blue">2023</td></tr>
+        <tr><td class="data-blue">Viraffic Ltd.</td><td class="data-blue">Virtual Assistant</td><td class="data-blue">Part-Time, WFH</td><td class="data-blue">2023</td></tr>
+        <tr><td class="data-blue">Charlotte SEO</td><td class="data-blue">Virtual Assistant</td><td class="data-blue">Full-Time, WFH</td><td class="data-blue">2023</td></tr>
+      </tbody>
+    </table>
+    <table class="cyber-table">
+      <thead>
+          <tr>
+              <th>MULTIMEDIA MARKETING & DEVELOPMENT</th>
+              <th>POSITION</th>
+              <th>STATUS</th>
+              <th>LATENCY</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr><td class="data-purple">Art & Finance World Manila</td><td class="data-purple">Manga Assistant</td><td class="data-purple">On the Job Training</td><td class="data-purple">2019</td></tr>
+        <tr><td class="data-purple">DLS-CSB Stockpile</td><td class="data-purple">Graphic Artist</td><td class="data-purple">On the Job Training</td><td class="data-purple">2019</td></tr>
+        <tr><td class="data-purple">Taktyl Studios</td><td class="data-purple">2D Game Artist</td><td class="data-purple">Intern</td><td class="data-purple">2019</td></tr>
+        <tr><td class="data-purple">Antbox</td><td class="data-purple">Graphic Designer</td><td class="data-purple">Full-Time</td><td class="data-purple">2019</td></tr>
+        <tr><td class="data-purple">Skyytracker</td><td class="data-purple">Game Artist & Designer</td><td class="data-purple">Contracts, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">Degen Fighters</td><td class="data-purple">Game Artist & Designer</td><td class="data-purple">Contracts, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">Auto Fire</td><td class="data-purple">Game Artist & Designer</td><td class="data-purple">Contracts, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">Virtual Nerdz Agency</td><td class="data-purple">Graphic Artist</td><td class="data-purple">Full-Time, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">Mint Games</td><td class="data-purple">Digital Illustrator</td><td class="data-purple">Part-Time, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">NGNY</td><td class="data-purple">UI Designer</td><td class="data-purple">Full-Time, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">Andreas Lindinger</td><td class="data-purple">Concept Artist</td><td class="data-purple">Part-Time, WFH</td><td class="data-purple">2022</td></tr>
+        <tr><td class="data-purple">Mizrach Digital</td><td class="data-purple">Web & Mobile Developer, Digital Marketing</td><td class="data-purple">Contracts, WFH</td><td class="data-purple">2023</td></tr>
+        <tr><td class="data-purple">Chris Suffern</td><td class="data-purple">Game Videos Editor</td><td class="data-purple">Contracts, WFH</td><td class="data-purple">2023</td></tr>
+        <tr><td class="data-purple">Charlotte SEO</td><td class="data-purple">Graphic Designer</td><td class="data-purple">Full-Time, WFH</td><td class="data-purple">2023</td></tr>
+        <tr><td class="data-purple">Pool Skimmer Maintenance</td><td class="data-purple">Article Writer</td><td class="data-purple">Full-Time, WFH</td><td class="data-purple">2023</td></tr>
+        <tr><td class="data-purple">Water Filter Advisor</td><td class="data-purple">Article Writer</td><td class="data-purple">Full-Time, WFH</td><td class="data-purple">2023</td></tr>
+      </tbody>
+    </table>
+
+    <script>
+        // Add glitch effect on click
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.image-placeholder');
+            
+            elements.forEach(element => {
+                element.addEventListener('click', () => {
+                    element.style.animation = 'glitch 0.5s';
+                    setTimeout(() => {
+                        element.style.animation = '';
+                    }, 500);
+                });
+            });
+
+            // Randomize table row colors
+            const tableRows = document.querySelectorAll('.cyber-table tr');
+            tableRows.forEach(row => {
+                row.style.color = `hsl(${Math.random() * 360}, 80%, 70%)`;
+            });
+        });
+
+        // Add terminal-style cursor effect
+        const title = document.querySelector('.header-title');
+        let isCursorVisible = true;
+
+        setInterval(() => {
+            title.style.borderRight = isCursorVisible ? 
+                '2px solid var(--neon-pink)' : 
+                '2px solid transparent';
+            isCursorVisible = !isCursorVisible;
+        }, 500);
+
+        // Update table color assignment logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableRows = document.querySelectorAll('.cyber-table tr:not(:first-child)');
+            let isBlue = true;
+
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    cell.classList.add(isBlue ? 'data-blue' : 'data-purple');
+                });
+                isBlue = !isBlue;
+            });
+        });
+    </script>
+
+<h1 class="header-title">CERTIFICATES & AWARDS</h1>
+
+<div class="image-grid">
+    <div class="image-placeholder">
+        <img src="./Diploma.jpg" alt="Name" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./2D Artist Intern Certificate of Completion.jpg" alt="School1" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./Easy Webpage Design using Adobe Spark Certificate.jpg" alt="School2" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./Coke STAR Online Certificate.png" alt="School2" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./Responsive Web Design.png" alt="Name" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./JavaScript Algorithms and Data Structures.png" alt="Name" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./Front End Development Libraries.png" alt="Name" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./Data Visualization.png" alt="Name" loading="lazy">
+    </div>
+    <div class="image-placeholder">
+        <img src="./Scientific Computing with Python.png" alt="Name" loading="lazy">
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Collaboration Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2A5C83;
+            --secondary: #5BA4E6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: var(--secondary);
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .active-tab {
+            display: block;
+        }
+
+        .task-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .task-column {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .task-card {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: move;
+        }
+
+        #video-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #local-video {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            background: #444;
+            border-radius: 5px;
+        }
+
+        .file-dropzone {
+            border: 2px dashed var(--secondary);
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            cursor: pointer;
+        }
+
+        .analytics-chart {
+            height: 400px;
+            margin: 2rem 0;
+        }
+
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .task-priority {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .high-priority { background: #ffebee; color: #c62828; }
+        .medium-priority { background: #fff8e1; color: #f9a825; }
+        .low-priority { background: #e8f5e9; color: #2e7d32; }
+
+        .participant-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .file-type {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .recent-files {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Virtual Collaboration Suite</h1>
+            <p>Cut project delays by 35% through enhanced remote collaboration</p>
+            <div class="dashboard-metrics">
+                <div class="metric-card">
+                    <div class="metric-value">82%</div>
+                    <p>Projects On-Time</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">4.8h</div>
+                    <p>Daily Time Saved</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">95%</div>
+                    <p>Team Satisfaction</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Task Board -->
+        <div id="tasks" class="tab-content active-tab">
+            <div class="task-board" id="taskBoard">
+                <div class="task-column">
+                    <h3><i class="fas fa-tasks"></i> To Do (4)</h3>
+                    <div class="task-card" draggable="true">
+                        <strong>Market Research</strong>
+                        <div class="task-priority medium-priority">Medium Priority</div>
+                        <div class="task-meta">Due: 2024-03-25</div>
+                        <div class="task-assignee">👩💻 Sarah</div>
+                    </div>
+                    <div class="task-card" draggable="true">
+                        <strong>UI Prototyping</strong>
+                        <div class="task-priority high-priority">High Priority</div>
+                        <div class="task-meta">Due: 2024-03-20</div>
+                        <div class="task-assignee">👨💻 Mike</div>
+                    </div>
+                </div>
+                <div class="task-column">
+                    <h3><i class="fas fa-running"></i> In Progress (3)</h3>
+                    <div class="task-card" draggable="true">
+                        <strong>API Integration</strong>
+                        <div class="task-priority high-priority">High Priority</div>
+                        <div class="task-meta">Due: 2024-03-22</div>
+                        <div class="task-assignee">👩💻 Emma</div>
+                    </div>
+                </div>
+                <div class="task-column">
+                    <h3><i class="fas fa-check-circle"></i> Done (6)</h3>
+                    <div class="task-card" draggable="true">
+                        <strong>User Testing</strong>
+                        <div class="task-priority low-priority">Completed</div>
+                        <div class="task-meta">Closed: 2024-03-15</div>
+                        <div class="task-assignee">👨💻 David</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Video Conference -->
+        <div id="video" class="tab-content">
+            <div id="video-container">
+                <div id="remote-video"></div>
+                <div id="local-video"></div>
+            </div>
+            <div class="participant-list">
+                <div class="participant">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                    <div>
+                        <div>Sarah (Host)</div>
+                        <small>San Francisco, CA</small>
+                    </div>
+                </div>
+                <div class="participant">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                    <div>
+                        <div>Mike</div>
+                        <small>New York, NY</small>
+                    </div>
+                </div>
+            </div>
+            <div class="call-controls">
+                <button class="tab-btn"><i class="fas fa-microphone"></i></button>
+                <button class="tab-btn" onclick="toggleVideo()"><i class="fas fa-video"></i></button>
+                <button class="tab-btn red"><i class="fas fa-phone-slash"></i></button>
+            </div>
+        </div>
+
+        <!-- Enhanced File Sharing -->
+        <div id="files" class="tab-content">
+            <div class="file-dropzone" ondragover="event.preventDefault()" 
+                 ondrop="handleFileDrop(event)">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <h3>Drop files here or click to upload</h3>
+                <p>Max file size: 2GB</p>
+                <input type="file" hidden onchange="handleFileSelect(event)">
+            </div>
+            <div class="recent-files">
+                <h3><i class="fas fa-history"></i> Recently Uploaded</h3>
+                <div class="task-card">
+                    <div class="file-type"><i class="fas fa-file-pdf"></i></div>
+                    <div>
+                        <strong>Project-Specs.pdf</strong>
+                        <p>Uploaded: 2024-03-18 by Sarah</p>
+                    </div>
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="task-card">
+                    <div class="file-type"><i class="fas fa-file-image"></i></div>
+                    <div>
+                        <strong>Wireframes.zip</strong>
+                        <p>Uploaded: 2024-03-17 by Mike</p>
+                    </div>
+                    <i class="fas fa-download"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Analytics -->
+        <div id="analytics" class="tab-content">
+            <div class="dashboard-metrics">
+                <div class="metric-card">
+                    <div class="metric-value">35%</div>
+                    <p>Reduction in Delays</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">78%</div>
+                    <p>Tasks Completed</p>
+                </div>
+            </div>
+            <canvas class="analytics-chart" id="progressChart"></canvas>
+            <canvas class="analytics-chart" id="performanceChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            document.getElementById(tabId).classList.add('active-tab');
+        }
+
+        // Task Board Drag & Drop
+        let draggedItem = null;
+
+        document.addEventListener('dragstart', e => {
+            if(e.target.classList.contains('task-card')) {
+                draggedItem = e.target;
+            }
+        });
+
+        document.addEventListener('dragover', e => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('drop', e => {
+            e.preventDefault();
+            if(e.target.closest('.task-column')) {
+                e.target.closest('.task-column').appendChild(draggedItem);
+            }
+        });
+
+        // Video Controls
+        let videoActive = false;
+        async function toggleVideo() {
+            if(!videoActive) {
+                const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+                document.getElementById('local-video').srcObject = stream;
+                videoActive = true;
+            } else {
+                document.getElementById('local-video').srcObject.getTracks().forEach(track => track.stop());
+                videoActive = false;
+            }
+        }
+
+        // File Handling
+        function handleFileSelect(e) {
+            Array.from(e.target.files).forEach(file => {
+                displayFile(file);
+            });
+        }
+
+        function handleFileDrop(e) {
+            Array.from(e.dataTransfer.files).forEach(file => {
+                displayFile(file);
+            });
+        }
+
+        function displayFile(file) {
+            const fileEl = document.createElement('div');
+            fileEl.className = 'task-card';
+            fileEl.innerHTML = `
+                <strong>${file.name}</strong>
+                <p>${(file.size/1024).toFixed(2)}KB</p>
+            `;
+            document.getElementById('file-list').appendChild(fileEl);
+        }
+
+        // Analytics Chart
+        new Chart(document.getElementById('progressChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Project Progress',
+                    data: [20, 45, 70, 90],
+                    borderColor: '#2A5C83',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Add new chart
+        new Chart(document.getElementById('performanceChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Design', 'Development', 'Testing', 'Documentation'],
+                datasets: [{
+                    label: 'Team Performance',
+                    data: [85, 92, 78, 88],
+                    backgroundColor: '#5BA4E6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+            }
+        });
+    </script>
+</body>
+</html>

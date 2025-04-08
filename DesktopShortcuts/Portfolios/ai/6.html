@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neural Pong - RL Training Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --background: #1a1a2e;
+            --surface: #16213e;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--background);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 500px 1fr;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .game-panel {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,255,136,0.1);
+        }
+
+        .rl-info {
+            display: grid;
+            gap: 20px;
+        }
+
+        canvas {
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+        }
+
+        .controls {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .param-slider {
+            margin: 15px 0;
+        }
+
+        button {
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: rgba(0,255,136,0.1);
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .state-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .state-table td, .state-table th {
+            padding: 8px;
+            border: 1px solid var(--primary);
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Neural Pong - Reinforcement Learning Trainer</h1>
+    <div class="container">
+        <div class="game-panel">
+            <canvas id="gameCanvas" width="480" height="320"></canvas>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>Episodes</h3>
+                    <div id="episodeCount">0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Average Reward</h3>
+                    <div id="avgReward">0.00</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Success Rate</h3>
+                    <div id="successRate">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rl-info">
+            <div class="controls">
+                <h2>Training Controls</h2>
+                <button id="toggleTraining">▶ Start Training</button>
+                <button id="resetModel">🔄 Reset Model</button>
+                <button id="exportModel">💾 Export Model</button>
+
+                <div class="param-slider">
+                    <label>Learning Rate (<span id="lrValue">0.001</span>)</label>
+                    <input type="range" id="learningRate" min="0" max="0.01" step="0.0001" value="0.001">
+                </div>
+
+                <div class="param-slider">
+                    <label>Discount Factor (γ=<span id="gammaValue">0.95</span>)</label>
+                    <input type="range" id="gamma" min="0" max="1" step="0.01" value="0.95">
+                </div>
+
+                <div class="param-slider">
+                    <label>Exploration Rate (ε=<span id="epsilonValue">0.1</span>)</label>
+                    <input type="range" id="epsilon" min="0" max="1" step="0.01" value="0.1">
+                </div>
+            </div>
+
+            <div class="training-info">
+                <h2>RL Architecture Details</h2>
+                <table class="state-table">
+                    <tr><th>State Space (5 dimensions)</th><th>Normalized Range</th></tr>
+                    <tr><td>Ball X Position</td><td>[0, 1]</td></tr>
+                    <tr><td>Ball Y Position</td><td>[0, 1]</td></tr>
+                    <tr><td>Ball X Velocity</td><td>[-1, 1]</td></tr>
+                    <tr><td>Ball Y Velocity</td><td>[-1, 1]</td></tr>
+                    <tr><td>Paddle Y Position</td><td>[0, 1]</td></tr>
+                </table>
+
+                <table class="state-table">
+                    <tr><th>Action Space</th><th>Reward Structure</th></tr>
+                    <tr><td>0: Move Up</td><td>+1 for scoring</td></tr>
+                    <tr><td>1: Move Down</td><td>-1 for conceding</td></tr>
+                    <tr><td></td><td>+0.1 per frame alive</td></tr>
+                    <tr><td></td><td>+0.5 for ball proximity</td></tr>
+                </table>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="trainingChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PONG_CONFIG = {
+            paddleWidth: 15,
+            paddleHeight: 80,
+            ballSize: 10,
+            paddleSpeed: 8,
+            ballSpeed: 5,
+            maxEpisodeFrames: 3000
+        };
+
+        class PongEnvironment {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.reset();
+            }
+
+            reset() {
+                this.paddleY = this.canvas.height/2 - PONG_CONFIG.paddleHeight/2;
+                this.ballX = this.canvas.width * 0.2;
+                this.ballY = this.canvas.height/2;
+                this.ballDirX = Math.random() < 0.5 ? -1 : 1;
+                this.ballDirY = (Math.random() * 2 - 1) * 0.7;
+                this.frameCount = 0;
+                this.lastHitFrame = 0;
+                return this.getState();
+            }
+
+            getState() {
+                return [
+                    this.ballX / this.canvas.width,
+                    this.ballY / this.canvas.height,
+                    this.ballDirX,
+                    this.ballDirY,
+                    this.paddleY / this.canvas.height
+                ];
+            }
+
+            step(action) {
+                this.frameCount++;
+                let reward = 0;
+
+                // Execute action
+                if(action === 0 && this.paddleY > 0) this.paddleY -= PONG_CONFIG.paddleSpeed;
+                if(action === 1 && this.paddleY < this.canvas.height - PONG_CONFIG.paddleHeight) 
+                    this.paddleY += PONG_CONFIG.paddleSpeed;
+
+                // Update ball
+                this.ballX += this.ballDirX * PONG_CONFIG.ballSpeed;
+                this.ballY += this.ballDirY * PONG_CONFIG.ballSpeed;
+
+                // Collision detection
+                if(this.ballY <= 0 || this.ballY >= this.canvas.height) this.ballDirY *= -1;
+                
+                // Paddle collision
+                const paddleRight = this.canvas.width - PONG_CONFIG.paddleWidth;
+                const inPaddleY = this.ballY > this.paddleY && 
+                                this.ballY < this.paddleY + PONG_CONFIG.paddleHeight;
+
+                if(this.ballDirX > 0 && this.ballX >= paddleRight && inPaddleY) {
+                    const hitPos = (this.ballY - (this.paddleY + PONG_CONFIG.paddleHeight/2)) / 
+                                  (PONG_CONFIG.paddleHeight/2);
+                    this.ballDirX = -1;
+                    this.ballDirY = hitPos * 1.2;
+                    reward += 0.5 + (1 - Math.abs(hitPos));
+                    this.lastHitFrame = this.frameCount;
+                }
+
+                // Reward shaping
+                reward += 0.1; // Survival bonus
+                const ballProximity = 1 - Math.abs(this.ballX - paddleRight)/paddleRight;
+                reward += ballProximity * 0.2;
+
+                // Terminal states
+                if(this.ballX > this.canvas.width) {
+                    reward += 1;
+                    this.reset();
+                    return { state: this.getState(), reward, done: true };
+                }
+
+                if(this.ballX < 0 || this.frameCount > PONG_CONFIG.maxEpisodeFrames) {
+                    reward -= 1;
+                    this.reset();
+                    return { state: this.getState(), reward, done: true };
+                }
+
+                return { state: this.getState(), reward, done: false };
+            }
+
+            render() {
+                this.ctx.fillStyle = '#00ff88';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw paddles
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.fillRect(
+                    this.canvas.width - PONG_CONFIG.paddleWidth - 10,
+                    this.paddleY,
+                    PONG_CONFIG.paddleWidth,
+                    PONG_CONFIG.paddleHeight
+                );
+                
+                // Draw ball
+                this.ctx.beginPath();
+                this.ctx.arc(this.ballX, this.ballY, PONG_CONFIG.ballSize, 0, Math.PI*2);
+                this.ctx.fill();
+            }
+        }
+
+        class DQNAgent {
+            constructor(inputSize, outputSize) {
+                this.model = this.buildModel(inputSize, outputSize);
+                this.optimizer = tf.train.adam(0.001);
+                this.memory = [];
+                this.batchSize = 64;
+                this.gamma = 0.95;
+                this.epsilon = 0.1;
+            }
+
+            buildModel(inputSize, outputSize) {
+                const model = tf.sequential();
+                model.add(tf.layers.dense({
+                    units: 128,
+                    inputShape: [inputSize],
+                    activation: 'relu',
+                    kernelInitializer: 'heNormal'
+                }));
+                model.add(tf.layers.dense({
+                    units: 64,
+                    activation: 'relu',
+                    kernelInitializer: 'heNormal'
+                }));
+                model.add(tf.layers.dense({
+                    units: outputSize,
+                    activation: 'linear'
+                }));
+                return model;
+            }
+
+            async act(state) {
+                if(Math.random() < this.epsilon) {
+                    return Math.floor(Math.random() * 2);
+                }
+                return tf.tidy(() => {
+                    const tensorState = tf.tensor2d([state]);
+                    const prediction = this.model.predict(tensorState);
+                    return prediction.argMax(1).dataSync()[0];
+                });
+            }
+
+            async train() {
+                if(this.memory.length < this.batchSize) return;
+
+                const batch = this.memory.slice(-this.batchSize);
+                const states = batch.map(t => t.state);
+                const nextStates = batch.map(t => t.nextState);
+                
+                const currentQ = this.model.predict(tf.tensor2d(states)).arraySync();
+                const nextQ = this.model.predict(tf.tensor2d(nextStates)).arraySync();
+                
+                const x = [];
+                const y = [];
+                
+                batch.forEach((transition, idx) => {
+                    let target = currentQ[idx];
+                    target[transition.action] = transition.reward + 
+                        this.gamma * Math.max(...nextQ[idx]);
+                    x.push(transition.state);
+                    y.push(target);
+                });
+
+                await this.model.fit(tf.tensor2d(x), tf.tensor2d(y), {
+                    batchSize: this.batchSize,
+                    epochs: 1,
+                    verbose: 0
+                });
+            }
+
+            remember(state, action, reward, nextState, done) {
+                this.memory.push({ state, action, reward, nextState, done });
+            }
+        }
+
+        // Initialization
+        const env = new PongEnvironment(document.getElementById('gameCanvas'));
+        const agent = new DQNAgent(5, 2);
+        let isTraining = false;
+        let episode = 0;
+        const rewardHistory = [];
+        let totalReward = 0;
+        let successCount = 0;
+
+        // Chart setup
+        const chartCtx = document.getElementById('trainingChart').getContext('2d');
+        const trainingChart = new Chart(chartCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Episode Reward',
+                    data: [],
+                    borderColor: '#00ff88',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: 'Training Progress' }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Episode' } },
+                    y: { title: { display: true, text: 'Reward' } }
+                }
+            }
+        });
+
+        // Training loop
+        async function runEpisode() {
+            let state = env.reset();
+            let totalReward = 0;
+            let done = false;
+            
+            while(!done && isTraining) {
+                const action = await agent.act(state);
+                const { reward, state: nextState, done: episodeDone } = env.step(action);
+                
+                agent.remember(state, action, reward, nextState, episodeDone);
+                await agent.train();
+                
+                state = nextState;
+                totalReward += reward;
+                done = episodeDone;
+                
+                env.render();
+                await new Promise(r => setTimeout(r, 16));
+            }
+
+            if(totalReward > 0) successCount++;
+            return totalReward;
+        }
+
+        async function trainingLoop() {
+            while(isTraining) {
+                const reward = await runEpisode();
+                rewardHistory.push(reward);
+                episode++;
+                
+                // Update UI
+                document.getElementById('episodeCount').textContent = episode;
+                document.getElementById('avgReward').textContent = 
+                    (rewardHistory.slice(-100).reduce((a,b) => a+b, 0)/100).toFixed(2);
+                document.getElementById('successRate').textContent = 
+                    `${(successCount/episode * 100).toFixed(1)}%`;
+                
+                // Update chart
+                trainingChart.data.labels.push(episode);
+                trainingChart.data.datasets[0].data.push(reward);
+                trainingChart.update();
+            }
+        }
+
+        // Event handlers
+        document.getElementById('toggleTraining').addEventListener('click', () => {
+            isTraining = !isTraining;
+            document.getElementById('toggleTraining').textContent = 
+                isTraining ? '⏸ Pause Training' : '▶ Start Training';
+            if(isTraining) trainingLoop();
+        });
+
+        document.getElementById('learningRate').addEventListener('input', (e) => {
+            agent.optimizer.setLearningRate(parseFloat(e.target.value));
+            document.getElementById('lrValue').textContent = e.target.value;
+        });
+
+        document.getElementById('gamma').addEventListener('input', (e) => {
+            agent.gamma = parseFloat(e.target.value);
+            document.getElementById('gammaValue').textContent = e.target.value;
+        });
+
+        document.getElementById('epsilon').addEventListener('input', (e) => {
+            agent.epsilon = parseFloat(e.target.value);
+            document.getElementById('epsilonValue').textContent = e.target.value;
+        });
+
+        // Initial render
+        env.render();
+    </script>
+</body>
+</html>

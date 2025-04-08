@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Financial Dashboard - Comprehensive Analysis</title>
+    
+    <!-- Include required libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #4caf50;
+            --accent-color: #ff9800;
+        }
+        .dashboard-container {
+            padding: 30px;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 1.2em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2 class="mb-4 text-center">Tesla Inc. Comprehensive Financial Dashboard (2018-2023)</h2>
+        
+        <!-- Key Metrics Row -->
+        <div class="row g-4" id="metricsRow">
+            <!-- Metrics populated by JavaScript -->
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row mt-4">
+            <div class="col-xl-8">
+                <div class="chart-container">
+                    <div class="chart-title">Income Statement Trends ($ millions)</div>
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="chart-container">
+                    <div class="chart-title">Liquidity Position Analysis</div>
+                    <canvas id="liquidityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <div class="chart-title">Profitability Ratios</div>
+                    <canvas id="profitabilityChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <div class="chart-title">Leverage Ratios</div>
+                    <canvas id="leverageChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Financial Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="chart-container">
+                    <div class="chart-title">Comprehensive Financial Ratios</div>
+                    <div id="ratioTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Extensive Sample Financial Data (2018-2023)
+const financialData = {
+    years: ['2018', '2019', '2020', '2021', '2022', '2023'],
+    
+    incomeStatement: {
+        revenue: [21461, 24578, 31536, 53823, 81462, 96773],
+        grossProfit: [4425, 4133, 6630, 13606, 20853, 24730],
+        operatingExpenses: [4342, 4138, 5453, 6613, 7922, 8950],
+        netIncome: [-976, -862, 721, 5525, 12583, 15000],
+        eps: [-5.72, -4.92, 0.64, 4.90, 11.43, 13.27]
+    },
+    
+    balanceSheet: {
+        totalAssets: [29736, 34309, 52148, 62131, 82338, 106000],
+        totalLiabilities: [26334, 25714, 34164, 30545, 36440, 44000],
+        shareholdersEquity: [3402, 8595, 17984, 31586, 45898, 62000],
+        cash: [3672, 6268, 19384, 17576, 22185, 28000],
+        inventory: [3310, 3553, 4016, 5757, 12839, 14500]
+    },
+    
+    cashFlow: {
+        operating: [-207, 2409, 5943, 11512, 14758, 18000],
+        investing: [-4020, -1313, -3312, -5536, -7158, -8500],  // Corrected line
+        financing: [1826, 1484, 4969, 572, 1097, 1200]
+    },
+    
+    ratios: {
+        liquidity: {
+            current: [1.2, 1.3, 1.7, 1.9, 1.8, 2.1],
+            quick: [0.9, 1.0, 1.4, 1.6, 1.5, 1.8],
+            cash: [0.4, 0.5, 0.9, 1.1, 1.0, 1.2]
+        },
+        profitability: {
+            roe: ['-28.7%', '-10.0%', '9.8%', '20.1%', '27.5%', '31.2%'],
+            roa: ['-3.3%', '-2.5%', '1.4%', '8.9%', '15.3%', '14.2%'],
+            grossMargin: ['20.6%', '16.8%', '21.0%', '25.3%', '25.6%', '25.6%']
+        },
+        leverage: {
+            debtToEquity: ['7.7', '3.0', '0.8', '0.6', '0.5', '0.4'],
+            debtToAssets: ['0.89', '0.75', '0.66', '0.49', '0.44', '0.42']
+        },
+        efficiency: {
+            inventoryTurnover: ['6.5', '6.9', '7.8', '9.3', '6.3', '6.7'],
+            assetTurnover: ['0.72', '0.72', '0.60', '0.87', '0.99', '0.91']
+        }
+    },
+    
+    marketData: {
+        marketCap: [53400, 76300, 658000, 1096000, 389000, 800000], // $ millions
+        sharesOutstanding: [170, 173, 960, 1127, 1100, 1075] // millions
+    }
+};
+
+// Initialize metrics cards
+function initMetrics() {
+    const currentYear = financialData.years.length - 1;
+    const metrics = [
+        { title: "Market Cap", value: `$${financialData.marketData.marketCap[currentYear]}B`, delta: "↑ 105% YoY" },
+        { title: "Revenue", value: `$${financialData.incomeStatement.revenue[currentYear]}M`, delta: "↑ 18.8% YoY" },
+        { title: "Net Income", value: `$${financialData.incomeStatement.netIncome[currentYear]}M`, delta: "↑ 19.2% YoY" },
+        { title: "EPS", value: financialData.incomeStatement.eps[currentYear], delta: "↑ 16.1% YoY" },
+        { title: "ROE", value: financialData.ratios.profitability.roe[currentYear], delta: "↑ 370bps" },
+        { title: "Current Ratio", value: financialData.ratios.liquidity.current[currentYear], delta: "↑ 0.3 YoY" },
+        { title: "Operating Cash Flow", value: `$${financialData.cashFlow.operating[currentYear]}M`, delta: "↑ 22% YoY" },
+        { title: "Debt/Equity", value: financialData.ratios.leverage.debtToEquity[currentYear], delta: "↓ 0.1 YoY" }
+    ];
+
+    const metricsRow = document.getElementById('metricsRow');
+    metrics.forEach(metric => {
+        metricsRow.innerHTML += `
+            <div class="col-sm-6 col-xl-3">
+                <div class="metric-card">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="text-secondary">${metric.title}</h5>
+                            <h2 class="text-primary">${metric.value}</h2>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-success">${metric.delta}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// Initialize charts
+function initCharts() {
+    // Income Statement Chart
+    new Chart(document.getElementById('incomeChart'), {
+        type: 'bar',
+        data: {
+            labels: financialData.years,
+            datasets: [
+                {
+                    label: 'Revenue',
+                    data: financialData.incomeStatement.revenue,
+                    backgroundColor: '#3f51b5',
+                    stack: 'Stack 0'
+                },
+                {
+                    label: 'Gross Profit',
+                    data: financialData.incomeStatement.grossProfit,
+                    backgroundColor: '#4caf50',
+                    stack: 'Stack 0'
+                },
+                {
+                    label: 'Net Income',
+                    data: financialData.incomeStatement.netIncome,
+                    backgroundColor: '#ff9800',
+                    stack: 'Stack 0'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { stacked: true },
+                y: { 
+                    stacked: true,
+                    title: { display: true, text: 'USD Millions' }
+                }
+            }
+        }
+    });
+
+    // Liquidity Radar Chart
+    new Chart(document.getElementById('liquidityChart'), {
+        type: 'radar',
+        data: {
+            labels: ['Current Ratio', 'Quick Ratio', 'Cash Ratio'],
+            datasets: [{
+                label: '2023 Liquidity',
+                data: [
+                    financialData.ratios.liquidity.current[5],
+                    financialData.ratios.liquidity.quick[5],
+                    financialData.ratios.liquidity.cash[5]
+                ],
+                backgroundColor: 'rgba(63, 81, 181, 0.2)',
+                borderColor: '#3f51b5'
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 2.5
+                }
+            }
+        }
+    });
+
+    // Profitability Line Chart
+    new Chart(document.getElementById('profitabilityChart'), {
+        type: 'line',
+        data: {
+            labels: financialData.years,
+            datasets: [{
+                label: 'ROE (%)',
+                data: financialData.ratios.profitability.roe.map(r => parseFloat(r)),
+                borderColor: '#4caf50',
+                tension: 0.4
+            },
+            {
+                label: 'Gross Margin (%)',
+                data: financialData.ratios.profitability.grossMargin.map(r => parseFloat(r)),
+                borderColor: '#3f51b5',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { title: { display: true, text: 'Percentage' } }
+            }
+        }
+    });
+
+    // Leverage Bar Chart
+    new Chart(document.getElementById('leverageChart'), {
+        type: 'bar',
+        data: {
+            labels: financialData.years,
+            datasets: [
+                {
+                    label: 'Debt/Equity',
+                    data: financialData.ratios.leverage.debtToEquity,
+                    backgroundColor: '#ff9800'
+                },
+                {
+                    label: 'Debt/Assets',
+                    data: financialData.ratios.leverage.debtToAssets,
+                    backgroundColor: '#3f51b5'
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Detailed Ratio Table
+    google.charts.load('current', {'packages':['table']});
+    google.charts.setOnLoadCallback(() => {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Year');
+        data.addColumn('number', 'Revenue (M$)');
+        data.addColumn('number', 'Net Income (M$)');
+        data.addColumn('number', 'EPS');
+        data.addColumn('string', 'ROE');
+        data.addColumn('number', 'Current Ratio');
+        data.addColumn('number', 'Debt/Equity');
+        data.addColumn('number', 'Gross Margin');
+        
+        financialData.years.forEach((year, index) => {
+            data.addRow([
+                year,
+                financialData.incomeStatement.revenue[index],
+                financialData.incomeStatement.netIncome[index],
+                financialData.incomeStatement.eps[index],
+                financialData.ratios.profitability.roe[index],
+                parseFloat(financialData.ratios.liquidity.current[index]),
+                parseFloat(financialData.ratios.leverage.debtToEquity[index]),
+                parseFloat(financialData.ratios.profitability.grossMargin[index])
+            ]);
+        });
+
+        const table = new google.visualization.Table(document.getElementById('ratioTable'));
+        table.draw(data, {
+            showRowNumber: true,
+            width: '100%',
+            height: '100%',
+            alternatingRowStyle: true,
+            cssClassNames: {
+                headerRow: 'bg-primary text-white',
+                tableRow: '',
+                oddTableRow: 'bg-light'
+            }
+        });
+    });
+}
+
+// Initialize dashboard
+window.addEventListener('load', () => {
+    initMetrics();
+    initCharts();
+});
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

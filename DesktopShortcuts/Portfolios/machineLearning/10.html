@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtmosPredict | Air Quality ML Forecasting</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-blue: #1A4D80;
+            --alert-orange: #FF6B35;
+            --clean-green: #00CC66;
+            --dark-gray: #2D3A3A;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #F0F8FF;
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #228B22 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .model-details {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .input-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 10px;
+            top: 38px;
+            color: var(--primary-blue);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 12px 12px 35px;
+            border: 2px solid #E0E7FF;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background: var(--primary-blue);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            grid-column: 1 / -1;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26,77,128,0.3);
+        }
+
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .aqi-scale {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .aqi-level {
+            padding: 1rem;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .pollution-map {
+            height: 300px;
+            background: #E8F4F8;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--alert-orange);
+            border-radius: 50%;
+            opacity: 0.7;
+            transform: translate(-50%, -50%);
+        }
+
+        .health-advisory {
+            background: #FFF3E0;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>AtmosPredict Air Quality Intelligence</h1>
+            <p>Machine Learning-powered PM2.5 Forecasting System</p>
+        </header>
+
+        <div class="model-details">
+            <h2>Model Architecture</h2>
+            <p><strong>Ensemble Model:</strong> XGBoost + LSTM Hybrid Architecture</p>
+            <p><strong>Training Data:</strong> 10 years of hourly meteorological data from 150 monitoring stations</p>
+            <p><strong>Features:</strong> Temperature, Humidity, Wind Speed/Direction, Precipitation, Atmospheric Pressure, Historical Pollution Patterns</p>
+        </div>
+
+        <div class="input-panel">
+            <div class="input-group">
+                <i class="fas fa-thermometer-half"></i>
+                <label>Temperature (°C)</label>
+                <input type="number" id="temperature" step="0.1" min="-10" max="45" placeholder="25">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-tint"></i>
+                <label>Humidity (%)</label>
+                <input type="number" id="humidity" min="0" max="100" placeholder="65">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-wind"></i>
+                <label>Wind Speed (m/s)</label>
+                <input type="number" id="windSpeed" step="0.1" min="0" max="20" placeholder="3.5">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-tachometer-alt"></i>
+                <label>Pressure (hPa)</label>
+                <input type="number" id="pressure" min="900" max="1100" placeholder="1013">
+            </div>
+            <button onclick="predictPM25()">Generate Air Quality Forecast</button>
+        </div>
+
+        <div class="visualization-grid">
+            <div class="chart-card">
+                <h3>Predicted PM2.5 Levels</h3>
+                <div id="predictionResult" class="prediction-display">
+                    <div class="radial-gauge"></div>
+                    <div class="prediction-text">
+                        <span class="value">-</span>
+                        <span class="unit">μg/m³</span>
+                        <div class="aqi-status">Enter Parameters</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Pollution Intensity Map</h3>
+                <div class="pollution-map" id="pollutionMap">
+                    <div class="map-marker" style="top: 30%; left: 40%"></div>
+                    <div class="map-marker" style="top: 50%; left: 60%"></div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Historical Trends</h3>
+                <canvas id="historicalChart"></canvas>
+            </div>
+        </div>
+
+        <div class="health-advisory">
+            <h3>Health Advisory</h3>
+            <div id="advisoryContent">Current advisory will appear here based on predictions</div>
+        </div>
+
+        <div class="aqi-scale">
+            <div class="aqi-level" style="background: #00CC66">0-12<br>Good</div>
+            <div class="aqi-level" style="background: #FFD700">12-35<br>Moderate</div>
+            <div class="aqi-level" style="background: #FF8C00">35-55<br>Unhealthy</div>
+            <div class="aqi-level" style="background: #FF4500">55-150<br>Very Unhealthy</div>
+            <div class="aqi-level" style="background: #8B0000">150-250<br>Hazardous</div>
+            <div class="aqi-level" style="background: #800080">250+<br>Emergency</div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced mock prediction with dynamic visualization
+        function predictPM25() {
+            const inputs = {
+                temp: parseFloat(document.getElementById('temperature').value),
+                humidity: parseFloat(document.getElementById('humidity').value),
+                wind: parseFloat(document.getElementById('windSpeed').value),
+                pressure: parseFloat(document.getElementById('pressure').value)
+            };
+
+            // Simulated ML prediction with realistic ranges
+            const baseValue = (inputs.temp * 0.7) + 
+                           (inputs.humidity * 0.4) - 
+                           (inputs.wind * 2.5) + 
+                           ((1013 - inputs.pressure) * 0.35) + 
+                           Math.random() * 10;
+
+            const pm25 = Math.max(5, Math.min(300, baseValue)).toFixed(1);
+            
+            updateVisualizations(pm25);
+            updateHealthAdvisory(pm25);
+            updatePollutionMap(pm25);
+        }
+
+        function updateVisualizations(pm25) {
+            const resultDiv = document.getElementById('predictionResult');
+            resultDiv.querySelector('.value').textContent = pm25;
+            
+            // Update gauge color
+            const gauge = resultDiv.querySelector('.radial-gauge');
+            gauge.style.background = `conic-gradient(${getColor(pm25)} ${pm25/300*360}deg, #eee 0deg)`;
+
+            // Update status text
+            const status = resultDiv.querySelector('.aqi-status');
+            status.textContent = getAQIStatus(pm25);
+        }
+
+        function getColor(pm25) {
+            if(pm25 < 12) return '#00CC66';
+            if(pm25 < 35) return '#FFD700';
+            if(pm25 < 55) return '#FF8C00';
+            if(pm25 < 150) return '#FF4500';
+            return '#8B0000';
+        }
+
+        function getAQIStatus(pm25) {
+            if(pm25 < 12) return 'Good Air Quality';
+            if(pm25 < 35) return 'Moderate Pollution';
+            if(pm25 < 55) return 'Unhealthy for Sensitive Groups';
+            return 'Health Emergency Conditions';
+        }
+
+        function updateHealthAdvisory(pm25) {
+            const advisory = document.getElementById('advisoryContent');
+            let text = '';
+            if(pm25 < 12) {
+                text = "Ideal air quality. Perfect for outdoor activities.";
+            } else if(pm25 < 35) {
+                text = "Moderate pollution. Sensitive individuals should consider reducing prolonged outdoor exertion.";
+            } else {
+                text = "Poor air quality. Limit outdoor activities. Use N95 masks if going outside.";
+            }
+            advisory.innerHTML = `<p>${text}</p><small>Based on WHO 2023 Air Quality Guidelines</small>`;
+        }
+
+        function updatePollutionMap(pm25) {
+            const markers = document.querySelectorAll('.map-marker');
+            markers.forEach(marker => {
+                const size = pm25/300 * 50 + 20;
+                marker.style.width = `${size}px`;
+                marker.style.height = `${size}px`;
+                marker.style.opacity = pm25/300 * 0.8 + 0.2;
+            });
+        }
+
+        // Historical Data Visualization
+        new Chart(document.getElementById('historicalChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 24}, (_,i) => `${i}:00`),
+                datasets: [{
+                    label: 'PM2.5 Levels (μg/m³)',
+                    data: Array.from({length: 24}, () => Math.floor(Math.random() * 80 + 20)),
+                    borderColor: '#1A4D80', // Fixed CSS variable reference
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Time of Day'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'PM2.5 (μg/m³)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

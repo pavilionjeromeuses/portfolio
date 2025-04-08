@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Management Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f6f8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .guidelines-list {
+            line-height: 1.6;
+            margin-left: 20px;
+        }
+
+        .post-moderation {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        .resolve-btn {
+            background-color: #00C851;
+            color: white;
+        }
+
+        .warning-btn {
+            background-color: #ffbb33;
+            color: black;
+        }
+
+        .engagement-chart {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .member-activity {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .activity-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .status-tag {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        .unresolved { background: #fff3cd; color: #856404; }
+        .in-review { background: #cce5ff; color: #004085; }
+        .resolved { background: #d4edda; color: #155724; }
+
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .chart-bar {
+            width: 40px;
+            background: #4CAF50;
+            margin: 0 5px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CommunityHub Manager Pro</h1>
+            <p>15,432 Members | 234 Active Discussions | 89% Satisfaction Rate</p>
+        </div>
+
+        <!-- Community Guidelines Section -->
+        <div class="section">
+            <h2>Community Guidelines & Policies</h2>
+            <div class="guidelines-grid">
+                <div class="guideline-category">
+                    <h3>📜 Content Policies</h3>
+                    <ul>
+                        <li>No hate speech or discrimination</li>
+                        <li>Zero tolerance for harassment</li>
+                        <li>Authentic identity verification required</li>
+                        <li>No NSFW content</li>
+                    </ul>
+                </div>
+                <div class="guideline-category">
+                    <h3>🤝 Member Conduct</h3>
+                    <ul>
+                        <li>Respect differing opinions</li>
+                        <li>No spamming (1 warning then ban)</li>
+                        <li>Commercial posts only in #promotions</li>
+                        <li>Cite sources for factual claims</li>
+                    </ul>
+                </div>
+                <div class="guideline-category">
+                    <h3>⚖️ Conflict Resolution</h3>
+                    <ul>
+                        <li>Report button for disputes</li>
+                        <li>24hr mediation response time</li>
+                        <li>3-strike system for violations</li>
+                        <li>Appeal process available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Engagement Metrics -->
+        <div class="section">
+            <h2>📈 Engagement Analytics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>👥 Total Members</h3>
+                    <p>15,432 (+2.4% weekly)</p>
+                    <div class="chart-container" id="memberGrowth"></div>
+                </div>
+                <div class="metric-card">
+                    <h3>💬 Daily Interactions</h3>
+                    <p>1,234 posts<br>4,567 comments<br>892 reactions</p>
+                    <div class="chart-container" id="engagementChart"></div>
+                </div>
+                <div class="metric-card">
+                    <h3>🚩 Moderation Stats</h3>
+                    <p>12 Active Reports<br>89% Resolved in 24h<br>4.2 Avg. Resolution Time</p>
+                    <div class="chart-container" id="moderationChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Moderation Queue -->
+        <div class="section">
+            <h2>⚠️ Active Moderation Cases (12)</h2>
+            <div class="post-moderation unresolved">
+                <span class="status-tag unresolved">Unresolved</span>
+                <h4>User: TechSpammer2024 (3 warnings)</h4>
+                <p>"EARN $5000/WEEK WORKING FROM HOME! ➡️ bit.ly/scam-link"</p>
+                <p>🚨 8 user reports | Posted 2h ago</p>
+                <button class="button delete-btn" onclick="deletePost(this)">Delete Post</button>
+                <button class="button warning-btn" onclick="warnUser(this)">Issue Warning</button>
+                <button class="button resolve-btn" onclick="resolveReport(this)">Mark Resolved</button>
+            </div>
+
+            <div class="post-moderation in-review">
+                <span class="status-tag in-review">In Review</span>
+                <h4>User: CryptoExpert88 (Verified)</h4>
+                <p>"The government is hiding crypto secrets - this is financial suppression!"</p>
+                <p>🚨 5 reports | ⚠️ Potential misinformation</p>
+                <button class="button delete-btn" onclick="deletePost(this)">Delete Post</button>
+                <button class="button resolve-btn" onclick="resolveReport(this)">Mark Resolved</button>
+                <button class="button" onclick="requestFactCheck(this)">Request Fact-Check</button>
+            </div>
+
+            <div class="post-moderation unresolved">
+                <span class="status-tag unresolved">Unresolved</span>
+                <h4>User: AnonymousUser (Unverified)</h4>
+                <p>"@User123 You're literally too stupid to understand basic politics"</p>
+                <p>🚨 Personal attack | 3 previous violations</p>
+                <button class="button delete-btn" onclick="deletePost(this)">Delete Post</button>
+                <button class="button warning-btn" onclick="warnUser(this)">Temp Ban (7d)</button>
+                <button class="button resolve-btn" onclick="resolveReport(this)">Mediate Conflict</button>
+            </div>
+        </div>
+
+        <!-- Member Activity Feed -->
+        <div class="section">
+            <h2>📢 Recent Community Activity</h2>
+            <div class="member-activity">
+                <div class="activity-item">
+                    🎉 New member: TravelLover99 joined 15m ago
+                </div>
+                <div class="activity-item">
+                    💬 User TechGuru42 posted in "AI Developments"
+                </div>
+                <div class="activity-item">
+                    👍 45 reactions on "Weekly Tech Discussion" post
+                </div>
+                <div class="activity-item">
+                    🏆 Member DesignPro reached Level 5 status
+                </div>
+                <div class="activity-item">
+                    📅 Event "Community AMA" scheduled for Friday
+                </div>
+                <div class="activity-item">
+                    🔄 User CryptoExpert88 shared market analysis
+                </div>
+            </div>
+        </div>
+
+        <!-- Resolved Cases Archive -->
+        <div class="section">
+            <h2>✅ Recently Resolved Cases</h2>
+            <div class="post-moderation resolved">
+                <span class="status-tag resolved">Resolved</span>
+                <h4>[Closed] User: FashionInfluencer2023</h4>
+                <p>Excessive promotional posts - 7d ban issued</p>
+                <p>📝 Resolution: Posts removed, warning issued</p>
+            </div>
+            <div class="post-moderation resolved">
+                <span class="status-tag resolved">Resolved</span>
+                <h4>[Closed] False Information Report</h4>
+                <p>Health misinformation post removed</p>
+                <p>📝 Resolution: Fact-check added, post archived</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Moderation Actions
+        function deletePost(element) {
+            const post = element.parentElement;
+            post.style.display = 'none';
+            alert('Post deleted. User notified and logged in moderation history.');
+        }
+
+        function resolveReport(element) {
+            const post = element.parentElement;
+            post.querySelector('.status-tag').className = 'status-tag resolved';
+            post.querySelector('.status-tag').textContent = 'Resolved';
+            post.style.backgroundColor = '#f0fff0';
+            element.disabled = true;
+            updateMetric('resolvedCases', 1);
+        }
+
+        function warnUser(element) {
+            const username = element.parentElement.querySelector('h4').textContent;
+            alert(`Warning sent to ${username}. Strike added to account.`);
+            updateMetric('warningsIssued', 1);
+        }
+
+        function requestFactCheck(element) {
+            alert('Fact-check request sent to verification team');
+            element.textContent = '✅ Fact-Check Requested';
+            element.disabled = true;
+        }
+
+        // Metrics Simulation
+        let metrics = {
+            totalMembers: 15432,
+            resolvedCases: 89,
+            warningsIssued: 12
+        };
+
+        function updateMetric(metric, value) {
+            metrics[metric] += value;
+            document.querySelector(`[data-metric="${metric}"]`).textContent = metrics[metric];
+        }
+
+        // Chart Initialization
+        function createBarChart(containerId, values) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            values.forEach(value => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${value}%`;
+                container.appendChild(bar);
+            });
+        }
+
+        // Simulated Data Updates
+        setInterval(() => {
+            // Update member count
+            metrics.totalMembers += Math.floor(Math.random() * 5);
+            document.querySelector('[data-metric="totalMembers"]').textContent = metrics.totalMembers;
+            
+            // Update charts
+            createBarChart('memberGrowth', [60, 75, 85, 70, 90, 95]);
+            createBarChart('engagementChart', [40, 75, 60, 85, 70, 65]);
+            createBarChart('moderationChart', [80, 90, 75, 85, 95, 88]);
+        }, 3000);
+
+        // Initial Chart Setup
+        window.onload = () => {
+            createBarChart('memberGrowth', [60, 75, 85, 70, 90, 95]);
+            createBarChart('engagementChart', [40, 75, 60, 85, 70, 65]);
+            createBarChart('moderationChart', [80, 90, 75, 85, 95, 88]);
+        }
+    </script>
+</body>
+</html>

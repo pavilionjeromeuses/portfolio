@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jerome S. Pavilion</title>
+    <link rel="icon" type="image/x-icon" href="icons8-anime-64.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="gradientBG.css">
+    <link rel="stylesheet" href="newsTicker.css">
+</head>
+<body>
+<script src="newsTicker.js"></script>
+
+
+<!-- Desktop Shortcuts -->
+<div class="d-flex flex-wrap position-absolute m-2">
+    <!--#1 About Us-->
+    <a href="DesktopShortcuts\AboutUs\indexAboutUs.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts/dsAboutUsPNG.png" class="icon-img">
+        <div>About Us</div>
+    </a>    
+    <!--#2 The Team-->
+    <a href="/DesktopShortcuts/TheTeam/indexTheTeam.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsTheTeamPNG.png" class="icon-img">
+        <div>The Team</div>
+    </a>
+    <!--#3 Certificates and Awards-->
+    <a href="/DesktopShortcuts/Awards/indexAwards.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsAwardsPNG.png" class="icon-img">
+        <div>Awards</div>
+    </a>
+    <!--#4 Portfolios-->
+    <a href="/DesktopShortcuts/Portfolios/indexPortfolios.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsPortfoliosPNG.png" class="icon-img">
+        <div>Portfolios</div>
+    </a>
+    <!--#5 Services-->
+    <a href="/DesktopShortcuts/Services/indexServices.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsServicesPNG.png" class="icon-img">
+        <div>Services</div>
+    </a>
+    <!--#6 Clients Feedback-->
+    <a href="/DesktopShortcuts/ClientsFeedbacks/indexTestimonials.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsClientsFeedbackPNG.png" class="icon-img">
+        <div>Clients Feedback</div>
+    </a>
+    <!--#7 Contacts-->
+    <a href="/DesktopShortcuts/Contacts/indexContacts.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsContactsPNG.png" class="icon-img">
+        <div>Contacts</div>
+    </a>
+    <!--#8 Fun-->
+    <a href="/DesktopShortcuts/Fun/indexFun.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\dsFunPNG.png" class="icon-img">
+        <div>Fun</div>
+    </a>
+    <!--#9 100-->
+    <a href="/DesktopShortcuts/100/index100.html" target="_blank" class="desktop-icon">
+        <img src="DesktopShortcuts\ds100PNG.png" class="icon-img">
+        <div>100</div>
+    </a>
+</div>
+
+<!-- Taskbar -->
+<div class="taskbar">
+    <button class="start-button" onclick="toggleStartMenu()">▶️ Start</button>
+    <div class="d-flex align-items-center">
+        <img src="https://win98icons.alexmeub.com/icons/png/clock-1.png" style="height: 24px" class="me-2">
+        <span id="clock">12:00 PM</span>
+    </div>
+</div>
+
+<!-- Start Menu -->
+<div class="start-menu">
+    <div class="p-2 border-bottom menu-header">                 System Utilities</div>
+    <div class="p-2" onclick="openTaskManager()">               📊 Task Manager</div>
+    <div class="p-2" onclick="openFileExplorer()">              📂 File Explorer</div>
+    <div class="p-2" onclick="openSettingsControlPanel()">      ⚙️ Settings & Control Panel</div>
+    <div class="p-2" onclick="openCommandPrompt()">             💻 Command Prompt (cmd.exe)</div>
+    <div class="p-2" onclick="openPowerShell()">                🔵 PowerShell</div>
+    <div class="p-2" onclick="openRegistryEditor()">            🛑 Registry Editor (regedit.exe)</div>
+    <div class="p-2" onclick="openDiskCleanup()">               🧹 Disk Cleanup</div>
+    <div class="p-2" onclick="openDiskManagement()">            💾 Disk Management(diskmgmt.msc)</div>
+    <div class="p-2" onclick="openResourceMonitor()">           📈 Resource Monitor</div>
+    <div class="p-2" onclick="openWindowsDefender()">           🛡️ Windows Defender (Microsoft Defender Antivirus)</div>
+    <div class="p-2" onclick="openEventViewer()">               📅 Event Viewer</div>
+    <div class="p-2" onclick="openSnippingTool()">              ✂️ Snipping Tool / Snip & Sketch</div>
+    <div class="p-2" onclick="openClipboardHistory()">          📋 Clipboard History</div>
+    <div class="p-2" onclick="openCharacterMap()">              🔠 Character Map</div>
+    <div class="p-2" onclick="openRemoteDesktop()">             🖥️ Remote Desktop</div>
+    <div class="p-2 border-bottom menu-header">                 Networking & Connectivity</div>
+    <div class="p-2" onclick="openNetworkSharingCenter()">      📡 Network & Sharing Center</div>
+    <div class="p-2" onclick="openWindowsFirewall()">           🚧 Windows Firewall</div>
+    <div class="p-2" onclick="openWiFiAnalyzer()">              📶 Wi-Fi Analyzer (via Windows Settings)</div>
+    <div class="p-2" onclick="openMobileHotspot()">             📲 Mobile Hotspot</div>
+    <div class="p-2" onclick="openBluetoothManager()">          🔵 Bluetooth & Devices Manager</div>
+    <div class="p-2" onclick="openVPNClient()">                 🔑 VPN Client</div>
+    <div class="p-2 border-bottom menu-header">                 Productivity & Office</div>
+    <div class="p-2" onclick="openWordPad()">                   📝 WordPad</div>
+    <div class="p-2" onclick="openStickyNotes()">               🗒️ Sticky Notes</div>
+    <div class="p-2" onclick="openCalculator()">                🧮 Calculator</div>
+    <div class="p-2" onclick="openVoiceRecorder()">             🎤 Voice Recorder</div>
+    <div class="p-2" onclick="openPaintOr3D()">                 🎨 Paint/Paint 3D</div>
+    <div class="p-2" onclick="openMagnifier()">                 🔍 Magnifier</div>
+    <div class="p-2" onclick="openNarrator()">                  🗣️ Narrator</div>
+    <div class="p-2" onclick="openStepsRecorder()">             📋 Steps Recorder</div>
+    <div class="p-2 border-bottom menu-header">                 Multimedia & Entertainment</div>
+    <div class="p-2" onclick="openWindowsMediaPlayer()">        🎵 Windows Media Player</div>
+    <div class="p-2" onclick="openGrooveMusicLegacy()">         🎶 Groove Music (legacy)</div>
+    <div class="p-2" onclick="openMoviesTV()">                  🎬 Movies & TV</div>
+    <div class="p-2" onclick="openPhotosApp()">                 🖼️ Photos App</div>
+    <div class="p-2" onclick="openSoundRecorder()">             🔊 Sound Recorder</div>
+    <div class="p-2 border-bottom menu-header">                 Development & Advanced Tools</div>
+    <div class="p-2" onclick="openWindowsSandbox()">            🛡️ Windows Sandbox</div>
+    <div class="p-2" onclick="openHyperV()">                    🚀 Hyper-V</div>
+    <div class="p-2" onclick="openWindowsSubsystemLinuxWSL()">  🐧 Windows Subsystem for Linux (WSL)</div>
+    <div class="p-2" onclick="openPerformanceEditor()">         📊 Performance Monitor</div>
+    <div class="p-2" onclick="openDirectXDiagnosticTool()">     🎮 DirectX Diagnostic Tool (dxdiag.exe)</div>
+    <div class="p-2" onclick="openDeveloperMode()">             👨‍💻 Developer Mode</div>
+    <div class="p-2" onclick="openGodMode()">                   🕵️‍♂️ God Mode</div>
+    <div class="p-2 border-bottom menu-header">                 File & Backup Management</div>
+    <div class="p-2" onclick="openFileHistory()">               📁 File History</div>
+    <div class="p-2" onclick="openBackupRestore()">             💽 Backup & Restore</div>
+    <div class="p-2" onclick="openWindowsRecoveryEnvironment()">🔄 Windows Recovery Environment (WinRE)</div>
+    <div class="p-2" onclick="openSystemRestore()">             ⏳ System Restore</div>
+    <div class="p-2" onclick="openBitLocker()">                 🔐 BitLocker (Pro & Enterprise)</div>
+    <div class="p-2 border-bottom menu-header">                 Accessibility Tools</div>
+    <div class="p-2" onclick="openEaseOfAccessCenter()">        ♿ Ease of Access Center</div>
+    <div class="p-2" onclick="openOnScreenKeyboard()">          ⌨️ On-Screen Keyboard</div>
+    <div class="p-2" onclick="openSpeechRecognition()">         🎙️ Speech Recognition</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- For Draggable Windows -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+
+<!-- Main JS Script -->
+<script src="script.js"></script>
+
+<!-- Window Creation -->
+<script src="windowCreation.js"></script>
+
+<!-- Change Language -->
+ <script src="changeLanguage.js"></script>
+
+<!-- Individual Start Menu Window Functions-->
+<script src="StartMenuJSes\TaskManager.js"></script>
+<script src="StartMenuJSes\FileExplorer.js"></script>
+<script src="StartMenuJSes\SettingsControlPanel.js"></script>
+<script src="StartMenuJSes\CommandPrompt.js"></script>
+<script src="StartMenuJSes\PowerShell.js"></script>
+<script src="StartMenuJSes\RegistryEditor.js"></script>
+<script src="StartMenuJSes\DiskCleanup.js"></script>
+<script src="StartMenuJSes\DiskManagement.js"></script>
+<script src="StartMenuJSes\ResourceMonitor.js"></script>
+<script src="StartMenuJSes\WindowsDefender.js"></script>
+<script src="StartMenuJSes\EventViewer.js"></script>
+<script src="StartMenuJSes\SnippingToolSnipSketch.js"></script>
+<script src="StartMenuJSes\ClipboardHistory.js"></script>
+<script src="StartMenuJSes\CharacterMap.js"></script>
+<script src="StartMenuJSes\RemoteDesktop.js"></script>
+<script src="StartMenuJSes\NetworkSharingCenter.js"></script>
+<script src="StartMenuJSes\WindowsFirewall.js"></script>
+<script src="StartMenuJSes\WiFiAnalyzer.js"></script>
+<script src="StartMenuJSes\MobileHotspot.js"></script>
+<script src="StartMenuJSes\BluetoothDevicesManager.js"></script>
+<script src="StartMenuJSes\VPNClient.js"></script>
+<script src="StartMenuJSes\WordPad.js"></script>
+<script src="StartMenuJSes\StickyNotes.js"></script>
+<script src="StartMenuJSes\Calculator.js"></script>
+<script src="StartMenuJSes\VoiceRecorder.js"></script>
+<script src="StartMenuJSes\PaintOr3D.js"></script>
+<script src="StartMenuJSes\Magnifier.js"></script>
+<script src="StartMenuJSes\Narrator.js"></script>
+<script src="StartMenuJSes\StepsRecorder.js"></script>
+<script src="StartMenuJSes\WindowsMediaPlayer.js"></script>
+<script src="StartMenuJSes\GrooveMusicLegacy.js"></script>
+<script src="StartMenuJSes\MoviesTV.js"></script>
+<script src="StartMenuJSes\PhotosApp.js"></script>
+<script src="StartMenuJSes\SoundRecorder.js"></script>
+<script src="StartMenuJSes\WindowsSandbox.js"></script>
+<script src="StartMenuJSes\HyperV.js"></script>
+<script src="StartMenuJSes\WindowsSubsystemLinuxWSL.js"></script>
+<script src="StartMenuJSes\PerformanceEditor.js"></script>
+<script src="StartMenuJSes\DirectXDiagnosticTool.js"></script>
+<script src="StartMenuJSes\DeveloperMode.js"></script>
+<script src="StartMenuJSes\GodMode.js"></script>
+<script src="StartMenuJSes\FileHistory.js"></script>
+<script src="StartMenuJSes\BackupRestore.js"></script>
+<script src="StartMenuJSes\WindowsRecoveryEnvironment.js"></script>
+<script src="StartMenuJSes\SystemRestore.js"></script>
+<script src="StartMenuJSes\BitLocker.js"></script>
+<script src="StartMenuJSes\EaseOfAccessCenter.js"></script>
+<script src="StartMenuJSes\OnScreenKeyboard.js"></script>
+<script src="StartMenuJSes\SpeechRecognition.js"></script>
+
+<script src="ClickDelaySelectionAnimation.js"></script>
+
+<!-- News Ticker -->
+<link rel="stylesheet" href="newsTicker.css">
+
+<div class="character-container">
+    <img src="unnamed.jpg" class="mascot-character">
+    <div class="comic-bubble">
+        Hi there! My name is Jerome, a digital freelancer who have worked in many types of industries. Go to the first shortcut to know more about me and for my portfolios:<br>
+        <br>
+        Fun -> Professional & Personal Projects<br>
+        Portfolio -> AI Generated<br>
+        100 -> Huge Compilations<br>
+        <br>
+        Send me a message through my email pavilionjerome@gmail.com<br>
+        <br>
+        Thanks! 🎉<br>
+        <span class="arrow">▼</span>
+    </div>
+</div>
+
+</body>
+</html>

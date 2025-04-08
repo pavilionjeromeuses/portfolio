@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Fraud Detection System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <style>
+        /* Enhanced CSS with more sections and visual hierarchy */
+        :root {
+            --primary-color: #2c3e50;
+            --danger-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --safe-color: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .sample-data-buttons {
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .sample-btn {
+            background: #ecf0f1;
+            color: var(--primary-color);
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sample-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        button.predict-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .results-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .risk-indicator {
+            text-align: center;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .feature-impact-chart {
+            height: 400px;
+            margin: 30px 0;
+        }
+
+        .data-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .factor-list {
+            columns: 2;
+            margin: 20px 0;
+        }
+
+        /* Color coding for risk levels */
+        .risk-low { background: var(--safe-color); color: white; }
+        .risk-medium { background: var(--warning-color); color: black; }
+        .risk-high { background: var(--danger-color); color: white; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Financial Fraud Detection System</h1>
+        <p>Advanced ML-powered transaction analysis using IEEE-CIS patterns</p>
+    </div>
+
+    <div class="grid-container">
+        <div class="form-section">
+            <h2>Transaction Details</h2>
+            
+            <div class="input-group">
+                <label>Transaction Amount (USD):</label>
+                <input type="number" id="amount" step="0.01" required>
+            </div>
+
+            <div class="input-group">
+                <label>Transaction Time (UTC seconds):</label>
+                <input type="number" id="time" required>
+            </div>
+
+            <div class="input-group">
+                <label>Product Category:</label>
+                <select id="category">
+                    <option value="1">Digital Goods</option>
+                    <option value="2">Physical Goods</option>
+                    <option value="3">Financial Services</option>
+                    <option value="4">Cash Withdrawal</option>
+                    <option value="5">Gift Cards</option>
+                </select>
+            </div>
+
+            <h3>User Behavior</h3>
+            <div class="input-group">
+                <label>Previous Transactions (24h):</label>
+                <input type="number" id="prevTransactions" required>
+            </div>
+
+            <div class="input-group">
+                <label>Failed Login Attempts:</label>
+                <input type="number" id="failedLogins" value="0" required>
+            </div>
+
+            <h3>Contextual Information</h3>
+            <div class="input-group">
+                <label>Device Type:</label>
+                <select id="deviceType">
+                    <option value="1">Desktop</option>
+                    <option value="2">Mobile</option>
+                    <option value="3">Tablet</option>
+                    <option value="4">Unknown</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>User Age (years):</label>
+                <input type="number" id="userAge" required>
+            </div>
+
+            <div class="input-group">
+                <label>Country Mismatch:</label>
+                <select id="countryMismatch">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+
+            <div class="sample-data-buttons">
+                <button class="sample-btn" onclick="loadSample('legitimate')">Legitimate Example</button>
+                <button class="sample-btn" onclick="loadSample('fraudulent')">Fraudulent Example</button>
+                <button class="sample-btn" onclick="loadSample('suspicious')">Suspicious Pattern</button>
+            </div>
+
+            <button class="predict-btn" onclick="analyzeTransaction()">Analyze Transaction</button>
+        </div>
+
+        <div class="results-panel" id="results">
+            <div class="risk-indicator" id="riskIndicator">
+                <h2 id="riskLabel">Risk Level</h2>
+                <div class="confidence-meter">
+                    <div class="confidence-bar" id="confidenceBar"></div>
+                </div>
+                <h1 id="riskPercentage">0%</h1>
+            </div>
+
+            <div class="data-summary">
+                <h3>Transaction Summary</h3>
+                <div id="transactionSummary"></div>
+            </div>
+
+            <div class="interpretation">
+                <h3>Fraud Analysis</h3>
+                <p id="explanationText"></p>
+                <h4>Key Risk Factors:</h4>
+                <div class="factor-list" id="factorsList"></div>
+            </div>
+
+            <div class="feature-impact-chart" id="featureChart"></div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive sample datasets
+        const sampleData = {
+            legitimate: {
+                amount: 149.99,
+                time: 54320,  // 3:05 PM UTC
+                category: 2,
+                prevTransactions: 3,
+                failedLogins: 0,
+                deviceType: 1,
+                userAge: 35,
+                countryMismatch: 0
+            },
+            fraudulent: {
+                amount: 2499.99,
+                time: 28700,  // 3:58 AM UTC
+                category: 4,
+                prevTransactions: 9,
+                failedLogins: 3,
+                deviceType: 4,
+                userAge: 142,  // Invalid age
+                countryMismatch: 1
+            },
+            suspicious: {
+                amount: 799.50,
+                time: 73200,  // 11:20 PM UTC
+                category: 5,
+                prevTransactions: 6,
+                failedLogins: 2,
+                deviceType: 2,
+                userAge: 68,
+                countryMismatch: 1
+            }
+        };
+
+        // Feature weights for risk calculation (simulated model)
+        const featureWeights = {
+            amount: 0.0003,
+            timeRisk: 0.4,
+            categoryWeights: [0.1, 0.05, 0.15, 0.3, 0.4],
+            prevTransactions: 0.02,
+            failedLogins: 0.1,
+            deviceRisk: [0.05, 0.1, 0.15, 0.3],
+            ageAnomaly: 0.2,
+            countryMismatch: 0.25
+        };
+
+        // Initialize simulated model
+        let model;
+
+        async function loadModel() {
+            model = {
+                predict: (inputs) => {
+                    // Advanced simulated detection logic
+                    const riskFactors = [];
+                    let baseRisk = 0;
+
+                    // Amount-based risk
+                    const amountRisk = Math.min(inputs.amount * featureWeights.amount, 0.4);
+                    if (amountRisk > 0.1) riskFactors.push({ 
+                        feature: 'Amount', 
+                        value: `$${inputs.amount}`, 
+                        impact: amountRisk 
+                    });
+
+                    // Time-based risk (late night/early morning)
+                    const isUnusualTime = inputs.time < 21600 || inputs.time > 79200;
+                    const timeRisk = isUnusualTime ? featureWeights.timeRisk : 0;
+                    if (isUnusualTime) riskFactors.push({
+                        feature: 'Transaction Time',
+                        value: new Date(inputs.time * 1000).toISOString().substr(11, 5),
+                        impact: timeRisk
+                    });
+
+                    // Category risk
+                    const categoryRisk = featureWeights.categoryWeights[inputs.category - 1];
+                    riskFactors.push({
+                        feature: 'Product Category',
+                        value: document.getElementById('category').options[inputs.category - 1].text,
+                        impact: categoryRisk
+                    });
+
+                    // Historical activity
+                    const prevTxRisk = Math.min(inputs.prevTransactions * featureWeights.prevTransactions, 0.3);
+                    if (prevTxRisk > 0.1) riskFactors.push({
+                        feature: 'Recent Transactions',
+                        value: inputs.prevTransactions,
+                        impact: prevTxRisk
+                    });
+
+                    // Security signals
+                    const loginRisk = inputs.failedLogins * featureWeights.failedLogins;
+                    if (loginRisk > 0) riskFactors.push({
+                        feature: 'Failed Logins',
+                        value: inputs.failedLogins,
+                        impact: loginRisk
+                    });
+
+                    // Device risk
+                    const deviceRisk = featureWeights.deviceRisk[inputs.deviceType - 1];
+                    riskFactors.push({
+                        feature: 'Device Type',
+                        value: document.getElementById('deviceType').options[inputs.deviceType - 1].text,
+                        impact: deviceRisk
+                    });
+
+                    // User profile anomalies
+                    const ageRisk = (inputs.userAge < 18 || inputs.userAge > 100) ? featureWeights.ageAnomaly : 0;
+                    if (ageRisk > 0) riskFactors.push({
+                        feature: 'User Age',
+                        value: inputs.userAge,
+                        impact: ageRisk
+                    });
+
+                    // Geographical risk
+                    const countryRisk = inputs.countryMismatch ? featureWeights.countryMismatch : 0;
+                    if (countryRisk > 0) riskFactors.push({
+                        feature: 'Country Mismatch',
+                        value: 'Yes',
+                        impact: countryRisk
+                    });
+
+                    // Calculate total risk
+                    const totalRisk = Math.min(
+                        amountRisk +
+                        timeRisk +
+                        categoryRisk +
+                        prevTxRisk +
+                        loginRisk +
+                        deviceRisk +
+                        ageRisk +
+                        countryRisk,
+                        0.95
+                    );
+
+                    return { risk: totalRisk, factors: riskFactors };
+                }
+            };
+        }
+
+        function loadSample(type) {
+            const sample = sampleData[type];
+            document.getElementById('amount').value = sample.amount;
+            document.getElementById('time').value = sample.time;
+            document.getElementById('category').value = sample.category;
+            document.getElementById('prevTransactions').value = sample.prevTransactions;
+            document.getElementById('failedLogins').value = sample.failedLogins;
+            document.getElementById('deviceType').value = sample.deviceType;
+            document.getElementById('userAge').value = sample.userAge;
+            document.getElementById('countryMismatch').value = sample.countryMismatch;
+        }
+
+        async function analyzeTransaction() {
+            // Gather inputs
+            const inputs = {
+                amount: parseFloat(document.getElementById('amount').value),
+                time: parseInt(document.getElementById('time').value),
+                category: parseInt(document.getElementById('category').value),
+                prevTransactions: parseInt(document.getElementById('prevTransactions').value),
+                failedLogins: parseInt(document.getElementById('failedLogins').value),
+                deviceType: parseInt(document.getElementById('deviceType').value),
+                userAge: parseInt(document.getElementById('userAge').value),
+                countryMismatch: parseInt(document.getElementById('countryMismatch').value)
+            };
+
+            // Input validation
+            if (Object.values(inputs).some(v => isNaN(v))) {
+                alert('Please fill all fields with valid numbers');
+                return;
+            }
+
+            // Make prediction
+            const { risk, factors } = model.predict(inputs);
+            const riskPercentage = (risk * 100).toFixed(1);
+
+            // Update UI
+            updateRiskDisplay(risk, riskPercentage);
+            updateTransactionSummary(inputs);
+            updateExplanation(risk, factors);
+            updateFeatureChart(factors);
+        }
+
+        function updateRiskDisplay(risk, percentage) {
+            const indicator = document.getElementById('riskIndicator');
+            indicator.className = `risk-indicator ${
+                risk > 0.7 ? 'risk-high' :
+                risk > 0.4 ? 'risk-medium' : 'risk-low'
+            }`;
+
+            document.getElementById('riskPercentage').textContent = `${percentage}%`;
+            document.getElementById('confidenceBar').style.width = `${percentage}%`;
+        }
+
+        function updateTransactionSummary(inputs) {
+            const summary = `
+                <p>Amount: $${inputs.amount.toFixed(2)}</p>
+                <p>Time: ${new Date(inputs.time * 1000).toISOString().substr(11, 8)} UTC</p>
+                <p>Category: ${document.getElementById('category').options[inputs.category - 1].text}</p>
+                <p>Device: ${document.getElementById('deviceType').options[inputs.deviceType - 1].text}</p>
+            `;
+            document.getElementById('transactionSummary').innerHTML = summary;
+        }
+
+        function updateExplanation(risk, factors) {
+            const explanations = {
+                high: "This transaction exhibits multiple high-risk characteristics consistent with known fraud patterns.",
+                medium: "This transaction shows several suspicious indicators requiring further verification.",
+                low: "This transaction appears normal based on current behavioral patterns."
+            };
+
+            const explanationText = risk > 0.7 ? explanations.high :
+                                 risk > 0.4 ? explanations.medium : explanations.low;
+            
+            document.getElementById('explanationText').textContent = explanationText;
+            
+            const factorsList = document.getElementById('factorsList');
+            factorsList.innerHTML = factors
+                .sort((a, b) => b.impact - a.impact)
+                .map(factor => `
+                    <li>
+                        <strong>${factor.feature}:</strong> ${factor.value}
+                        <em>(${(factor.impact * 100).toFixed(1)}% impact)</em>
+                    </li>
+                `).join('');
+        }
+
+        function updateFeatureChart(factors) {
+            const sortedFactors = factors.sort((a, b) => b.impact - a.impact);
+            
+            const data = [{
+                x: sortedFactors.map(f => f.feature),
+                y: sortedFactors.map(f => f.impact * 100),
+                type: 'bar',
+                marker: { color: '#3498db' }
+            }];
+
+            const layout = {
+                title: 'Feature Impact Analysis',
+                xaxis: { title: 'Features' },
+                yaxis: { title: 'Impact Percentage' },
+                height: 400
+            };
+
+            Plotly.newPlot('featureChart', data, layout);
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            loadModel();
+            loadSample('legitimate');
+        };
+    </script>
+</body>
+</html>

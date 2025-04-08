@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraVoice - AI Voice Synthesis Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --deep-space: #0a0e17;
+            --cyber-purple: #6c00ff;
+            --matrix-green: #00ff9d;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--deep-space);
+            color: #fff;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 2px solid var(--neon-blue);
+            border-radius: 12px;
+            padding: 2rem;
+            background: linear-gradient(45deg, #0a0e17ee, #1a1f2bee);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+
+        h1, h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            margin: 0 0 2rem 0;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .panel {
+            background: #0d1117;
+            border: 1px solid var(--cyber-purple);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, var(--matrix-green), transparent);
+            animation: scan 6s infinite linear;
+            opacity: 0.1;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            background: #1a1f2b;
+            border: 1px solid var(--neon-blue);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        button {
+            background: var(--cyber-purple);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            border: 1px solid var(--neon-blue);
+        }
+
+        button:hover {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .voice-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .voice-card {
+            background: #141922;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #2d3544;
+            transition: transform 0.3s ease;
+        }
+
+        .voice-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+        }
+
+        .processing-animation {
+            display: none;
+            margin: 2rem 0;
+            text-align: center;
+            color: var(--matrix-green);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background: #1a1f2b;
+            padding: 1.5rem;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--cyber-purple);
+        }
+
+        @keyframes scan {
+            0% { transform: rotate(0deg) translate(-50%, -50%); }
+            100% { transform: rotate(360deg) translate(-50%, -50%); }
+        }
+
+        #audioPreview {
+            margin: 1rem 0;
+        }
+
+        .sample-texts {
+            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .sample-text {
+            padding: 1rem;
+            background: #1a1f2b;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #2d3544;
+        }
+
+        .sample-text:hover {
+            border-color: var(--neon-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛸 NEURAVOICE AI STUDIO</h1>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <h3>🕒 2,340 Hours</h3>
+                <p>Processing Time Saved</p>
+            </div>
+            <div class="stat-box">
+                <h3>🎙️ 15,902 Voices</h3>
+                <p>In Our Digital Library</p>
+            </div>
+            <div class="stat-box">
+                <h3>📖 4.8M Characters</h3>
+                <p>Synthesized Today</p>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <!-- Text-to-Speech Panel -->
+            <div class="panel">
+                <h2>⚡ Real-time TTS Engine</h2>
+                <div class="sample-texts">
+                    <div class="sample-text" onclick="loadSample('narration')">
+                        <h4>📖 Narration Sample</h4>
+                        <small>"The starship entered orbit around the mysterious planet..."</small>
+                    </div>
+                    <div class="sample-text" onclick="loadSample('dialogue')">
+                        <h4>💬 Dialogue Sample</h4>
+                        <small>"I never asked for this mission, but the fate of the colony depends on it!"</small>
+                    </div>
+                </div>
+                <textarea id="ttsText" placeholder="Enter text for synthesis..."></textarea>
+                <div class="voice-gallery">
+                    <div class="voice-card" onclick="selectVoice('nova')">
+                        <h4>🌌 Nova (Futuristic)</h4>
+                        <p>Warm, authoritative AI voice</p>
+                        <small>Response Time: 240ms</small>
+                    </div>
+                    <div class="voice-card" onclick="selectVoice('orion')">
+                        <h4>🛸 Orion (Documentary)</h4>
+                        <p>Deep, cinematic narration tone</p>
+                        <small>Response Time: 190ms</small>
+                    </div>
+                    <div class="voice-card" onclick="selectVoice('lyra')">
+                        <h4>✨ Lyra (Conversational)</h4>
+                        <p>Friendly, approachable AI assistant</p>
+                        <small>Response Time: 210ms</small>
+                    </div>
+                </div>
+                <button onclick="speak()">🚀 Generate Speech</button>
+                <button onclick="stop()">⏹️ Stop Playback</button>
+            </div>
+
+            <!-- Voice Cloning Panel -->
+            <div class="panel">
+                <h2>🔮 Neural Voice Forge</h2>
+                <div class="voice-cloning-steps">
+                    <p>🎤 Step 1: Capture Voice Sample</p>
+                    <button id="recordButton" onclick="toggleRecording()">⏺️ Start Capture</button>
+                    <div id="audioPreview"></div>
+                    
+                    <p>🔧 Step 2: Process Parameters</p>
+                    <div class="processing-animation" id="processing">
+                        ⚙️ Neural Analysis: <span id="progress">0%</span>
+                    </div>
+
+                    <p>📝 Step 3: Synthesis Input</p>
+                    <textarea id="cloneText" placeholder="Enter text for cloned voice synthesis..."></textarea>
+                    <button onclick="simulateClone()">🌀 Synthesize Speech</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced TTS Engine
+        let synth = window.speechSynthesis;
+        let currentUtterance = null;
+        let voices = [];
+        let processingInterval;
+
+        const sampleTexts = {
+            narration: "The starship entered orbit around the mysterious planet designated XK-991. Sensors detected anomalous energy readings emanating from the northern hemisphere, unlike anything in the Federation database. Captain Veyra adjusted her neural interface, preparing the away team for what might be humanity's first contact with truly alien technology...",
+            dialogue: `[CHARACTER 1] "You're telling me this station has been abandoned for 200 cycles?" 
+[CHARACTER 2] "Not abandoned, Lieutenant. The logs show they were working on something... something that required complete isolation. Last entry says 'The void answers back.'"`
+        };
+
+        function loadSample(type) {
+            document.getElementById('ttsText').value = sampleTexts[type];
+        }
+
+        function selectVoice(voiceId) {
+            const voiceMap = {
+                nova: {pitch: 1.1, rate: 1, voice: 'Microsoft David'},
+                orion: {pitch: 0.9, rate: 0.9, voice: 'Microsoft Zira'},
+                lyra: {pitch: 1, rate: 1.1, voice: 'Google UK English Female'}
+            };
+            // Actual voice selection would need browser implementation
+            alert(`Selected ${voiceId} profile - using browser's default voice`);
+        }
+
+        function speak() {
+            const text = document.getElementById('ttsText').value;
+            if (!text) return alert('Please enter synthesis text');
+            
+            if (currentUtterance) synth.cancel();
+            
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.pitch = 1;
+            currentUtterance.rate = 1;
+            synth.speak(currentUtterance);
+        }
+
+        function stop() {
+            synth.cancel();
+        }
+
+        // Advanced Voice Forge Simulation
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks);
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        document.getElementById('audioPreview').innerHTML = `
+                            <audio controls src="${audioUrl}" style="width: 100%"></audio>
+                        `;
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    document.getElementById('recordButton').textContent = '⏹️ Stop Capture';
+                    document.getElementById('recordButton').style.backgroundColor = '#ff0000';
+                } catch (err) {
+                    alert('Microphone access error: ' + err.message);
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('recordButton').textContent = '⏺️ Start Capture';
+                document.getElementById('recordButton').style.backgroundColor = '';
+            }
+        }
+
+        function simulateClone() {
+            const text = document.getElementById('cloneText').value;
+            if (!text) return alert('Enter synthesis text');
+            if (!document.querySelector('#audioPreview audio')) return alert('Capture voice sample first');
+
+            const processing = document.getElementById('processing');
+            processing.style.display = 'block';
+            let progress = 0;
+            
+            processingInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    clearInterval(processingInterval);
+                    processing.innerHTML = '✅ Synthesis Complete!';
+                    setTimeout(() => {
+                        processing.style.display = 'none';
+                        document.querySelector('#audioPreview audio').play();
+                    }, 1000);
+                } else {
+                    document.getElementById('progress').textContent = Math.min(progress, 99).toFixed(0) + '%';
+                }
+            }, 200);
+        }
+    </script>
+</body>
+</html>

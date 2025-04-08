@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Behavioral Finance Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .question-group {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 3px solid #007bff;
+        }
+        .result-box {
+            padding: 20px;
+            margin: 15px 0;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        button {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .bias-card {
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            width: 0;
+            transition: width 0.5s;
+        }
+        .theory-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h1>📈 Comprehensive Investor Behavior Analysis</h1>
+        <p>Explore 10 cognitive biases affecting financial decisions (Based on Kahneman & Tversky's Prospect Theory)</p>
+        
+        <div id="survey">
+            <!-- Cognitive Biases Section -->
+            <div class="question-group">
+                <h2>🧠 Cognitive Biases</h2>
+                
+                <div class="question">
+                    <h3>1. Loss Aversion (70% prevalence):</h3>
+                    <p><em>"Do you hold losing investments twice as long as winners?"</em></p>
+                    <label><input type="radio" name="q1" value="strong"> Strongly agree</label><br>
+                    <label><input type="radio" name="q1" value="moderate"> Sometimes</label><br>
+                    <label><input type="radio" name="q1" value="never"> Never</label>
+                </div>
+
+                <div class="question">
+                    <h3>2. Herd Mentality (65% prevalence):</h3>
+                    <p><em>"Do you follow market trends without personal analysis?"</em></p>
+                    <label><input type="radio" name="q2" value="often"> Frequently follow the crowd</label><br>
+                    <label><input type="radio" name="q2" value="occasional"> Occasionally follow</label><br>
+                    <label><input type="radio" name="q2" value="never"> Never follow</label>
+                </div>
+
+                <!-- Added 3 new cognitive bias questions -->
+                <div class="question">
+                    <h3>3. Anchoring Effect (60% prevalence):</h3>
+                    <p><em>"Do you rely heavily on initial price information?"</em></p>
+                    <label><input type="radio" name="q3" value="strong"> Strongly rely</label><br>
+                    <label><input type="radio" name="q3" value="moderate"> Sometimes</label><br>
+                    <label><input type="radio" name="q3" value="never"> Never</label>
+                </div>
+
+                <div class="question">
+                    <h3>4. Recency Bias (55% prevalence):</h3>
+                    <p><em>"Do recent events disproportionately influence decisions?"</em></p>
+                    <label><input type="radio" name="q4" value="strong"> Strong influence</label><br>
+                    <label><input type="radio" name="q4" value="moderate"> Moderate</label><br>
+                    <label><input type="radio" name="q4" value="never"> No influence</label>
+                </div>
+
+                <div class="question">
+                    <h3>5. Confirmation Bias (68% prevalence):</h3>
+                    <p><em>"Do you seek information confirming existing beliefs?"</em></p>
+                    <label><input type="radio" name="q5" value="often"> Regularly</label><br>
+                    <label><input type="radio" name="q5" value="sometimes"> Occasionally</label><br>
+                    <label><input type="radio" name="q5" value="never"> Never</label>
+                </div>
+            </div>
+
+            <!-- Emotional Biases Section -->
+            <div class="question-group">
+                <h2>😰 Emotional Biases</h2>
+                
+                <div class="question">
+                    <h3>6. Overconfidence (72% prevalence):</h3>
+                    <p><em>"Rate your investment skill vs market average:"</em></p>
+                    <label><input type="radio" name="q6" value="top10"> Top 10%</label><br>
+                    <label><input type="radio" name="q6" value="above"> Above average</label><br>
+                    <label><input type="radio" name="q6" value="average"> Average or below</label>
+                </div>
+
+                <!-- Added 2 new emotional bias questions -->
+                <div class="question">
+                    <h3>7. Regret Aversion (63% prevalence):</h3>
+                    <p><em>"Avoid decisions to prevent potential regret?"</em></p>
+                    <label><input type="radio" name="q7" value="often"> Frequently avoid</label><br>
+                    <label><input type="radio" name="q7" value="sometimes"> Sometimes avoid</label><br>
+                    <label><input type="radio" name="q7" value="never"> Never avoid</label>
+                </div>
+
+                <div class="question">
+                    <h3>8. Endowment Effect (58% prevalence):</h3>
+                    <p><em>"Value owned assets higher than market price?"</em></p>
+                    <label><input type="radio" name="q8" value="strong"> 20%+ higher valuation</label><br>
+                    <label><input type="radio" name="q8" value="moderate"> 10% higher</label><br>
+                    <label><input type="radio" name="q8" value="market"> Market value</label>
+                </div>
+            </div>
+
+            <button onclick="analyzeResponses()">📊 Analyze My Biases</button>
+        </div>
+
+        <div id="analysis" class="hidden">
+            <h2>🔍 Behavioral Analysis Report</h2>
+            <div class="result-box">
+                <div id="biasResults"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="biasProgress"></div>
+                </div>
+            </div>
+
+            <div class="theory-box">
+                <h3>📚 Behavioral Finance Theories Detected</h3>
+                <div id="hypothesisTest"></div>
+            </div>
+
+            <div class="bias-card" id="mitigationStrategies"></div>
+            <div class="bias-card" id="statisticalData"></div>
+            
+            <button onclick="location.reload()">🔄 Retake Survey</button>
+        </div>
+    </div>
+
+    <script>
+        const biasData = {
+            lossAversion: {
+                threshold: 1,
+                theory: "Prospect Theory (Kahneman & Tversky 1979)",
+                mitigation: "Implement stop-loss orders, regular portfolio rebalancing",
+                stats: "70% of investors hold losers 2x longer than winners"
+            },
+            herdMentality: {
+                threshold: 1,
+                theory: "Information Cascade Theory (Bikhchandani 1992)",
+                mitigation: "Develop investment checklist, contrarian analysis",
+                stats: "65% follow trends without fundamental analysis"
+            },
+            overconfidence: {
+                threshold: 2,
+                theory: "Overconfidence Bias (Barber & Odean 2001)",
+                mitigation: "Maintain trade journal, quantitative benchmarking",
+                stats: "Overconfident traders underperform by 3.5% annually"
+            },
+            anchoring: {
+                threshold: 1,
+                theory: "Anchoring Heuristic (Tversky & Kahneman 1974)",
+                mitigation: "Use multiple valuation methods, reset anchors quarterly",
+                stats: "60% fixate on IPO prices or 52-week highs"
+            },
+            recency: {
+                threshold: 1,
+                theory: "Recency Bias (De Bondt 1993)",
+                mitigation: "Long-term trend analysis, avoid news overconsumption",
+                stats: "55% overweight recent events by 40-60%"
+            },
+            confirmation: {
+                threshold: 1,
+                theory: "Confirmation Bias (Wason 1960)",
+                mitigation: "Seek disconfirming evidence, devil's advocate approach",
+                stats: "68% spend 3x more time on confirming research"
+            },
+            regret: {
+                threshold: 1,
+                theory: "Regret Theory (Loomes & Sugden 1982)",
+                mitigation: "Scenario analysis, predefined decision rules",
+                stats: "63% avoid decisions due to anticipated regret"
+            },
+            endowment: {
+                threshold: 1,
+                theory: "Endowment Effect (Thaler 1980)",
+                mitigation: "Third-party valuations, blind portfolio review",
+                stats: "58% overvalue owned assets by 15-25%"
+            }
+        };
+
+        function analyzeResponses() {
+            const responses = {
+                q1: document.querySelector('input[name="q1"]:checked')?.value,
+                q2: document.querySelector('input[name="q2"]:checked')?.value,
+                q3: document.querySelector('input[name="q3"]:checked')?.value,
+                q4: document.querySelector('input[name="q4"]:checked')?.value,
+                q5: document.querySelector('input[name="q5"]:checked')?.value,
+                q6: document.querySelector('input[name="q6"]:checked')?.value,
+                q7: document.querySelector('input[name="q7"]:checked')?.value,
+                q8: document.querySelector('input[name="q8"]:checked')?.value
+            };
+
+            // Bias detection logic
+            const detectedBiases = [];
+            if(['strong', 'moderate'].includes(responses.q1)) detectedBiases.push('lossAversion');
+            if(['often', 'occasional'].includes(responses.q2)) detectedBiases.push('herdMentality');
+            if(responses.q6 === 'top10') detectedBiases.push('overconfidence');
+            if(['strong', 'moderate'].includes(responses.q3)) detectedBiases.push('anchoring');
+            if(['strong', 'moderate'].includes(responses.q4)) detectedBiases.push('recency');
+            if(['often', 'sometimes'].includes(responses.q5)) detectedBiases.push('confirmation');
+            if(['often', 'sometimes'].includes(responses.q7)) detectedBiases.push('regret');
+            if(['strong', 'moderate'].includes(responses.q8)) detectedBiases.push('endowment');
+
+            // Calculate prevalence
+            const biasPercentage = (detectedBiases.length / 8 * 100).toFixed(1);
+            document.getElementById('biasProgress').style.width = `${biasPercentage}%`;
+
+            // Generate results
+            document.getElementById('survey').classList.add('hidden');
+            document.getElementById('analysis').classList.remove('hidden');
+
+            let resultsHTML = `<h3>Detected ${detectedBiases.length} Biases (${biasPercentage}%):</h3>`;
+            detectedBiases.forEach(bias => {
+                resultsHTML += `
+                    <div class="bias-card">
+                        <h4>${bias.replace(/([A-Z])/g, ' $1')}</h4>
+                        <p>📖 Theory: ${biasData[bias].theory}</p>
+                        <p>🛠️ Mitigation: ${biasData[bias].mitigation}</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('biasResults').innerHTML = resultsHTML;
+
+            // Hypothesis testing
+            let hypothesisHTML = detectedBiases.map(bias => 
+                `✓ Supports ${biasData[bias].theory}: ${biasData[bias].stats}`
+            ).join('<br>');
+            
+            document.getElementById('hypothesisTest').innerHTML += hypothesisHTML;
+
+            // Statistical comparison
+            const statsHTML = `
+                <h4>📈 Industry Comparison</h4>
+                <p>Average investor exhibits 3.2 biases (You: ${detectedBiases.length})</p>
+                <p>Most common combination: Loss Aversion + Herd Mentality (42% of cases)</p>
+                <p>Portfolio impact: +${(5 - detectedBiases.length).toFixed(1)}% potential alpha preservation</p>
+            `;
+            document.getElementById('statisticalData').innerHTML = statsHTML;
+
+            // Mitigation strategies
+            const uniqueMitigations = [...new Set(detectedBiases.map(bias => biasData[bias].mitigation))];
+            document.getElementById('mitigationStrategies').innerHTML = `
+                <h4>🛡️ Recommended Strategies</h4>
+                <ul>
+                    ${uniqueMitigations.map(m => `<li>${m}</li>`).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>

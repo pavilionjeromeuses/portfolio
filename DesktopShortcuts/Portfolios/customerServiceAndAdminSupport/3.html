@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Live Chat Support Simulation</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --urgent-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+        }
+
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+        .chat-container { max-width: 1000px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .chat-header { background: var(--primary-color); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+        .chat-window { height: 600px; overflow-y: auto; background: white; padding: 20px; border: 1px solid #dee2e6; display: flex; flex-direction: column; gap: 15px; }
+        .message { margin: 5px 0; padding: 12px 18px; border-radius: 20px; max-width: 75%; position: relative; }
+        .user-message { background: #e9ecef; margin-left: auto; border-radius: 20px 20px 0 20px; }
+        .agent-message { background: var(--primary-color); color: white; border-radius: 20px 20px 20px 0; }
+        .urgent { border: 2px solid var(--urgent-color); animation: pulse 1.5s infinite; }
+        .warning { border: 2px solid var(--warning-color); }
+        .input-area { display: flex; margin-top: 15px; background: white; padding: 15px; border-radius: 0 0 8px 8px; }
+        input { flex: 1; padding: 12px; border: 1px solid #dee2e6; border-radius: 25px; margin-right: 10px; }
+        button { background: var(--primary-color); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; transition: 0.3s; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .summary { background: white; padding: 25px; margin-top: 25px; border-radius: 8px; }
+        .timestamp { font-size: 0.75em; color: #6c757d; margin: 3px 0; }
+        .user-icon { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; }
+        .typing-indicator { padding: 10px; font-style: italic; color: #6c757d; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .priority-tags {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        .urgent-tag { background: var(--urgent-color); color: white; }
+        .high-tag { background: var(--warning-color); color: black; }
+        .normal-tag { background: var(--success-color); color: white; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>🚀 Premium Support Center</h2>
+            <div class="status-indicator">🟢 Online - 12 agents available</div>
+        </div>
+        
+        <div class="chat-window" id="chatWindow">
+            <div class="message agent-message">
+                <div class="timestamp">[10:00 AM] Agent Jordan:</div>
+                Welcome to Premium Support! I'm here to help with any questions or issues you may have.
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your message... (Press Enter to send)">
+            <button onclick="sendMessage()">Send ➤</button>
+        </div>
+        
+        <div class="summary" id="summarySection">
+            <h3>📝 Support Protocol & Prioritization Strategy</h3>
+            <div class="priority-examples">
+                <h4>🚨 Urgent Priority (Immediate Response):</h4>
+                <p>- Payment failures • Security alerts • Service outages • Data loss</p>
+                
+                <h4>⚠️ High Priority (Under 5 minutes):</h4>
+                <p>- Feature not working • Account access issues • Billing discrepancies</p>
+                
+                <h4>✅ Normal Priority (Under 15 minutes):</h4>
+                <p>- General inquiries • Feature requests • Documentation questions</p>
+            </div>
+            
+            <h4>📊 Support Statistics</h4>
+            <div id="stats">
+                Active Chats: <span id="activeChatCount">0</span> | 
+                Resolved Today: <span id="resolvedCount">0</span> | 
+                Avg. Response Time: <span id="responseTime">0</span>s
+            </div>
+            
+            <button onclick="toggleSummary()">📄 Toggle Summary</button>
+        </div>
+    </div>
+
+    <script>
+        const predefinedResponses = {
+            'payment': [
+                'For payment issues, please visit our secure portal: secure.example.com/payments',
+                'To resolve payment failures: 1) Refresh page 2) Clear cache 3) Try different card',
+                'Payment verification typically takes 2-4 business days to process'
+            ],
+            'error': [
+                'Could you share a screenshot of the error message?',
+                'Please try these troubleshooting steps: 1) Refresh 2) Clear cache 3) Restart device',
+                'We\'re aware of this issue and working on a fix. Expected resolution time: 2 hours'
+            ],
+            'login': [
+                'Password reset initiated - check your email for verification link',
+                'Two-factor authentication required for account security',
+                'Account locked due to suspicious activity - please verify identity'
+            ],
+            'refund': [
+                'Refund requests processed within 5-7 business days',
+                'Please provide order number and reason for refund',
+                'Our refund policy: 30-day money-back guarantee'
+            ],
+            'shipping': [
+                'Standard shipping: 3-5 days • Express: 24 hours ($15 fee)',
+                'Tracking number: EXAMPLE123 - view at track.example.com',
+                'Delivery delayed due to weather conditions - we apologize'
+            ],
+            'account': [
+                'Account upgrades available at account.example.com/plans',
+                'Profile settings can be updated in your dashboard',
+                'We\'ve applied your requested account changes'
+            ],
+            'default': [
+                'Thank you for your message. I\'m researching this now...',
+                'Let me check with our technical team for details',
+                'Could you provide more details about your issue?'
+            ]
+        };
+
+        let chatStats = {
+            activeChats: 0,
+            resolved: 0,
+            totalResponseTime: 0,
+            responseCount: 0
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatWindow = document.getElementById('chatWindow');
+            if (!input.value.trim()) return;
+
+            // Add user message
+            addMessage(input.value, 'user');
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Generate agent response
+            setTimeout(() => {
+                removeTypingIndicator();
+                const response = getResponse(input.value.toLowerCase());
+                addMessage(response, 'agent', checkUrgency(input.value));
+                updateChatStats();
+                input.value = '';
+            }, 1500);
+        }
+
+        function addMessage(text, sender, priority = 'normal') {
+            const chatWindow = document.getElementById('chatWindow');
+            const message = document.createElement('div');
+            message.className = `message ${sender}-message`;
+            
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            message.innerHTML = `
+                <div class="timestamp">[${timestamp}] ${sender === 'agent' ? 'Agent Taylor:' : 'Customer:'}</div>
+                ${text}
+                ${priority !== 'normal' ? `<span class="priority-tags ${priority}-tag">${priority.toUpperCase()}</span>` : ''}
+            `;
+
+            if (priority === 'urgent') message.classList.add('urgent');
+            if (priority === 'high') message.classList.add('warning');
+            
+            chatWindow.appendChild(message);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function getResponse(message) {
+            const responseCategories = {
+                'payment': ['payment', 'charge', 'refund', 'billing'],
+                'error': ['error', 'bug', 'crash', 'not working'],
+                'login': ['login', 'password', 'authenticate', '2fa'],
+                'shipping': ['shipping', 'delivery', 'track', 'package'],
+                'account': ['account', 'profile', 'settings', 'upgrade']
+            };
+
+            for (const [category, keywords] of Object.entries(responseCategories)) {
+                if (keywords.some(keyword => message.includes(keyword))) {
+                    const responses = predefinedResponses[category];
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+            }
+            return predefinedResponses.default[Math.floor(Math.random() * predefinedResponses.default.length)];
+        }
+
+        function checkUrgency(message) {
+            const urgentKeywords = ['urgent', 'emergency', 'outage', 'security', 'hacked'];
+            const highPriorityKeywords = ['not working', 'broken', 'failed', 'critical'];
+            
+            if (urgentKeywords.some(keyword => message.includes(keyword))) return 'urgent';
+            if (highPriorityKeywords.some(keyword => message.includes(keyword))) return 'high';
+            return 'normal';
+        }
+
+        function showTypingIndicator() {
+            const chatWindow = document.getElementById('chatWindow');
+            const typing = document.createElement('div');
+            typing.className = 'typing-indicator';
+            typing.id = 'typing';
+            typing.textContent = 'Agent is typing...';
+            chatWindow.appendChild(typing);
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        function updateChatStats() {
+            chatStats.activeChats = document.querySelectorAll('.user-message').length;
+            chatStats.responseCount++;
+            document.getElementById('activeChatCount').textContent = chatStats.activeChats;
+            document.getElementById('resolvedCount').textContent = chatStats.resolved;
+            document.getElementById('responseTime').textContent = 
+                (chatStats.totalResponseTime / chatStats.responseCount).toFixed(1);
+        }
+
+        function toggleSummary() {
+            const summary = document.getElementById('summarySection');
+            summary.style.display = summary.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Simulated incoming messages
+        const simulatedQueries = [
+            "URGENT: Payment failed but money was deducted!",
+            "Getting 404 error when trying to access dashboard",
+            "How do I upgrade my account?",
+            "Package hasn't arrived 5 days after shipping",
+            "Security alert: Unrecognized login from China",
+            "Feature XYZ stopped working after update",
+            "Need refund for accidental purchase",
+            "Two-factor authentication not sending codes",
+            "Website down completely - getting 500 error",
+            "How long does standard shipping take?",
+            "Can't reset password - email not arriving",
+            "Billing address update not saving",
+            "Unauthorized charge on my credit card",
+            "Order #12345 missing items from shipment",
+            "Account locked out after multiple attempts"
+        ];
+
+        setInterval(() => {
+            addMessage(
+                simulatedQueries[Math.floor(Math.random() * simulatedQueries.length)], 
+                'user', 
+                ['urgent', 'high', 'normal'][Math.floor(Math.random() * 3)]
+            );
+            updateChatStats();
+        }, 7000);
+
+        // Initial demo messages
+        setTimeout(() => {
+            addMessage("EMERGENCY: Our checkout system is down!", 'user', 'urgent');
+            addMessage("Critical security alert detected on account", 'user', 'high');
+            addMessage("Just wanted to say your service is great!", 'user', 'normal');
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Content Strategy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --dark: #0f172a;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #0f172a, #1e293b);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #818cf8, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-calendar {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .calendar-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: grid;
+            grid-template-columns: 100px 1fr 120px 100px;
+            align-items: center;
+        }
+
+        .lead-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+        }
+
+        button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Content Marketing Dashboard</h1>
+            <p>SEO Performance & Content Strategy Analytics</p>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Organic Traffic</h3>
+                <p class="metric-value">45,230</p>
+                <span class="metric-trend">↑ 24%</span>
+            </div>
+            <div class="metric-card">
+                <h3>Backlinks Gained</h3>
+                <p class="metric-value">1,234</p>
+                <span class="metric-trend">↑ 18%</span>
+            </div>
+            <div class="metric-card">
+                <h3>Lead Conversions</h3>
+                <p class="metric-value">892</p>
+                <span class="metric-trend">↑ 32%</span>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="trafficChart"></canvas>
+        </div>
+
+        <section class="content-calendar">
+            <h2>Content Calendar</h2>
+            <div class="calendar-item">
+                <span>2023-10-05</span>
+                <strong>AI in Marketing Trends</strong>
+                <span>SEO Value: High</span>
+                <span class="status">Published</span>
+            </div>
+            <div class="calendar-item">
+                <span>2023-10-12</span>
+                <strong>Voice Search Optimization</strong>
+                <span>SEO Value: Medium</span>
+                <span class="status">Draft</span>
+            </div>
+        </section>
+
+        <section class="lead-form">
+            <h2>Get Content Strategy Insights</h2>
+            <input type="text" placeholder="Name">
+            <input type="email" placeholder="Email">
+            <input type="text" placeholder="Company">
+            <button>Download Report</button>
+        </section>
+    </div>
+
+    <script>
+        // Traffic Growth Chart
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Organic Traffic',
+                    data: [12000, 19000, 3000, 25000, 22000, 45000],
+                    borderColor: '#818cf8',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(129, 140, 248, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Sample Data
+        const keywordsData = [
+            { keyword: 'AI Marketing', volume: 1200, difficulty: 45 },
+            { keyword: 'SEO Trends', volume: 850, difficulty: 32 }
+        ];
+
+        const backlinksData = [
+            { source: 'Forbes.com', domain_rating: 92 },
+            { source: 'TechCrunch.com', domain_rating: 89 }
+        ];
+    </script>
+</body>
+</html>

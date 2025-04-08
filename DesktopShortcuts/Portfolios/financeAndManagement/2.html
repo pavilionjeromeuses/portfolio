@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Stock Analysis Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/arima@1.0.6/browser/arima.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 2rem; background: #f5f6fa; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .input-group { margin: 1rem 0; display: flex; gap: 1rem; flex-wrap: wrap; }
+        input, select, button { padding: 0.8rem 1.2rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        button { background: var(--secondary-color); color: white; border: none; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: translateY(-2px); }
+        .chart { height: 500px; margin: 2rem 0; border-radius: 8px; overflow: hidden; }
+        .metric-card { background: #f9f9f9; padding: 1.5rem; border-radius: 8px; }
+        .loading { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); justify-content: center; align-items: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--secondary-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: var(--primary-color); text-align: center; margin-bottom: 2rem;">AI Stock Forecasting & Backtesting Platform</h1>
+        
+        <!-- Control Panel -->
+        <div class="input-group">
+            <input type="text" id="apiKey" placeholder="Alpha Vantage API Key (optional)" style="flex: 2;">
+            <input type="text" id="symbol" placeholder="Stock Symbol (e.g., AAPL)" value="AAPL" style="flex: 1;">
+            <select id="modelType" style="flex: 1;">
+                <option value="lstm">LSTM Neural Network</option>
+                <option value="arima">ARIMA Model</option>
+            </select>
+            <button onclick="initializeAnalysis()" style="flex: 1; background: var(--accent-color);">Launch Analysis</button>
+        </div>
+
+        <!-- Model Configuration -->
+        <div class="grid" id="modelConfig">
+            <div class="metric-card">
+                <h3>LSTM Parameters</h3>
+                <label>Epochs: <input type="number" id="lstmEpochs" value="50" min="10" max="200"></label>
+                <label>Window Size: <input type="number" id="windowSize" value="30" min="10" max="60"></label>
+            </div>
+            <div class="metric-card">
+                <h3>Trading Strategy</h3>
+                <label>Stop Loss (%): <input type="number" id="stopLoss" value="5" min="0" max="20"></label>
+                <label>Take Profit (%): <input type="number" id="takeProfit" value="10" min="0" max="30"></label>
+            </div>
+        </div>
+
+        <!-- Visualization Section -->
+        <div id="priceChart" class="chart"></div>
+        <div id="strategyChart" class="chart"></div>
+
+        <!-- Analytics Dashboard -->
+        <div class="grid">
+            <div class="metric-card">
+                <h3>Model Performance</h3>
+                <div id="modelMetrics"></div>
+            </div>
+            <div class="metric-card">
+                <h3>Portfolio Analysis</h3>
+                <div id="portfolioMetrics"></div>
+            </div>
+            <div class="metric-card">
+                <h3>Risk Assessment</h3>
+                <div id="riskMetrics"></div>
+            </div>
+        </div>
+
+        <!-- Detailed Statistics -->
+        <div id="detailedResults" style="margin-top: 2rem;"></div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // Comprehensive sample data (5 years of daily prices)
+        const SAMPLE_DATA = Array.from({length: 1260}, (_, i) => {
+            const date = new Date(2018, 0, 1);
+            date.setDate(date.getDate() + i);
+            const basePrice = 100 + Math.sin(i/30) * 30;
+            const noise = (Math.random() - 0.5) * 10;
+            const volatility = Math.abs(Math.sin(i/90) * 15);
+            return {
+                date: new Date(date),
+                close: basePrice + noise + (i/10) + volatility * Math.random(),
+                volume: 1000000 + Math.random() * 5000000,
+                rsi: 30 + Math.random() * 40,
+                macd: (Math.random() - 0.5) * 5
+            };
+        });
+
+        let model;
+        let stockData = [];
+        let predictions = [];
+        let strategyResults = [];
+
+        async function initializeAnalysis() {
+            showLoading(true);
+            try {
+                await loadData();
+                await trainSelectedModel();
+                generatePredictions();
+                runBacktest();
+                updateVisualizations();
+                showDetailedMetrics();
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+            showLoading(false);
+        }
+
+        async function loadData() {
+            const apiKey = document.getElementById('apiKey').value;
+            const symbol = document.getElementById('symbol').value;
+
+            if(apiKey && symbol) {
+                try {
+                    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${apiKey}&datatype=json`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    stockData = processAPIData(data);
+                } catch {
+                    stockData = SAMPLE_DATA;
+                    alert('Using sample data due to API error');
+                }
+            } else {
+                stockData = SAMPLE_DATA;
+            }
+        }
+
+        function processAPIData(apiData) {
+            const timeSeries = apiData['Time Series (Daily)'] || {};
+            return Object.entries(timeSeries).map(([date, values]) => ({
+                date: new Date(date),
+                close: parseFloat(values['4. close']),
+                volume: parseInt(values['5. volume']),
+                rsi: 30 + Math.random() * 40,
+                macd: (Math.random() - 0.5) * 5
+            })).reverse();
+        }
+
+        async function trainSelectedModel() {
+            const closes = stockData.map(d => d.close);
+            const modelType = document.getElementById('modelType').value;
+            
+            if(modelType === 'lstm') {
+                await trainLSTM(closes);
+            } else {
+                trainARIMA(closes);
+            }
+        }
+
+        async function trainLSTM(closes) {
+            const windowSize = parseInt(document.getElementById('windowSize').value);
+            const epochs = parseInt(document.getElementById('lstmEpochs').value);
+            const [trainX, trainY] = createSequences(normalizeData(closes), windowSize);
+
+            model = tf.sequential({
+                layers: [
+                    tf.layers.lstm({units: 64, returnSequences: true, inputShape: [windowSize, 1]}),
+                    tf.layers.dropout(0.3),
+                    tf.layers.lstm({units: 32}),
+                    tf.layers.dense(1)
+                ]
+            });
+
+            model.compile({optimizer: tf.train.adam(0.001), loss: 'meanSquaredError'});
+            await model.fit(trainX, trainY, {
+                epochs: epochs,
+                batchSize: 32,
+                validationSplit: 0.2,
+                callbacks: {
+                    onEpochEnd: (epoch, logs) => console.log(`Epoch ${epoch}: loss = ${logs.loss}`)
+                }
+            });
+        }
+
+        function trainARIMA(closes) {
+            model = new ARIMA({
+                p: 3,
+                d: 1,
+                q: 3,
+                verbose: false
+            }).fit(closes);
+        }
+
+        function generatePredictions() {
+            const closes = stockData.map(d => d.close);
+            const windowSize = parseInt(document.getElementById('windowSize').value);
+            
+            if(document.getElementById('modelType').value === 'lstm') {
+                const normalized = normalizeData(closes);
+                const input = tf.tensor([normalized.slice(-windowSize)]);
+                const preds = model.predict(input).dataSync();
+                predictions = denormalizeData(preds, closes);
+            } else {
+                predictions = model.predict(30).map(p => p[0]);
+            }
+        }
+
+        function runBacktest() {
+            const testPeriod = Math.min(predictions.length, 30);
+            const testData = stockData.slice(-testPeriod);
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value) / 100;
+            const takeProfit = parseFloat(document.getElementById('takeProfit').value) / 100;
+
+            let portfolio = { cash: 10000, shares: 0, value: 10000 };
+            let trades = [];
+            let equityCurve = [];
+            let positionOpen = null;
+
+            testData.forEach((day, idx) => {
+                const currentPrice = day.close;
+                const predictedPrice = predictions[idx];
+
+                // Close position conditions
+                if(positionOpen) {
+                    const returnPct = (currentPrice - positionOpen.price) / positionOpen.price;
+                    if(returnPct <= -stopLoss || returnPct >= takeProfit) {
+                        portfolio.cash += portfolio.shares * currentPrice;
+                        portfolio.shares = 0;
+                        trades.push({
+                            type: 'sell',
+                            price: currentPrice,
+                            date: day.date,
+                            reason: returnPct >= takeProfit ? 'Take Profit' : 'Stop Loss'
+                        });
+                        positionOpen = null;
+                    }
+                }
+
+                // Open position condition
+                if(!positionOpen && predictedPrice > currentPrice * 1.02) {
+                    const maxInvestment = portfolio.cash * 0.95;
+                    portfolio.shares = maxInvestment / currentPrice;
+                    portfolio.cash -= maxInvestment;
+                    positionOpen = { price: currentPrice, date: day.date };
+                    trades.push({ type: 'buy', price: currentPrice, date: day.date });
+                }
+
+                portfolio.value = portfolio.cash + (portfolio.shares * currentPrice);
+                equityCurve.push(portfolio.value);
+            });
+
+            strategyResults = { equityCurve, trades, portfolio };
+        }
+
+        function updateVisualizations() {
+            // Corrected Plotly configuration with proper string values
+            Plotly.newPlot('priceChart', [
+                {
+                    x: stockData.map(d => d.date),
+                    y: stockData.map(d => d.close),
+                    name: 'Actual Prices',
+                    line: { color: 'var(--primary-color)' }
+                },
+                {
+                    x: stockData.slice(-predictions.length).map(d => d.date),
+                    y: predictions,
+                    name: 'Predicted Prices',
+                    line: { color: 'var(--secondary-color)', dash: 'dot' }
+                },
+                {
+                    x: strategyResults.trades.filter(t => t.type === 'buy').map(t => t.date),
+                    y: strategyResults.trades.filter(t => t.type === 'buy').map(t => t.price),
+                    name: 'Buy Signals',
+                    mode: 'markers',
+                    marker: { symbol: 'triangle-up', size: 12, color: '#2ecc71' }
+                },
+                {
+                    x: strategyResults.trades.filter(t => t.type === 'sell').map(t => t.date),
+                    y: strategyResults.trades.filter(t => t.type === 'sell').map(t => t.price),
+                    name: 'Sell Signals',
+                    mode: 'markers',
+                    marker: { symbol: 'triangle-down', size: 12, color: '#e74c3c' }
+                }
+            ], {
+                title: 'Price Predictions & Trading Signals',
+                xaxis: { title: 'Date' },
+                yaxis: { title: 'Price ($)' }
+            });
+
+            // Corrected strategy performance chart
+            Plotly.newPlot('strategyChart', [
+                {
+                    x: stockData.slice(-strategyResults.equityCurve.length).map(d => d.date),
+                    y: strategyResults.equityCurve,
+                    name: 'Portfolio Value',
+                    line: { color: 'var(--accent-color)' }
+                }
+            ], {
+                title: 'Strategy Performance',
+                xaxis: { title: 'Date' },
+                yaxis: { title: 'Portfolio Value ($)' }
+            });
+        }
+
+        // Corrected calculateSharpeRatio function
+        function calculateSharpeRatio(returns, riskFreeRate = 0) {
+            const excessReturns = returns.map(r => r - riskFreeRate);
+            const mean = excessReturns.reduce((a, b) => a + b, 0) / excessReturns.length;
+            const stdDev = Math.sqrt(excessReturns.map(r => Math.pow(r - mean, 2)).reduce((a, b) => a + b, 0) / excessReturns.length);
+            return mean / stdDev * Math.sqrt(252);
+        }
+
+        // Corrected calculateSortinoRatio function
+        function calculateSortinoRatio(returns, riskFreeRate = 0) {
+            const excessReturns = returns.map(r => r - riskFreeRate);
+            const mean = excessReturns.reduce((a, b) => a + b, 0) / excessReturns.length;
+            const downsideReturns = excessReturns.filter(r => r < 0);
+            const downsideDeviation = Math.sqrt(downsideReturns.map(r => Math.pow(r, 2)).reduce((a, b) => a + b, 0) / excessReturns.length);
+            return mean / downsideDeviation * Math.sqrt(252);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'flex' : 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroCanvas - AI Art & Chat Studio</title>
+    <style>
+        :root {
+            --neon-cyan: #0ff;
+            --neon-pink: #f0f;
+            --deep-space: #0a0a1a;
+            --matrix-green: #00ff00;
+            --cyber-purple: #6a00ff;
+        }
+        body {
+            margin: 0;
+            padding: 2rem;
+            background: var(--deep-space);
+            color: white;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .panel {
+            background: rgba(10, 10, 30, 0.9);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+        h1 {
+            color: var(--neon-cyan);
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            margin: 0 0 2rem 0;
+        }
+        .chat-container {
+            height: 60vh;
+            overflow-y: auto;
+            border: 1px solid var(--cyber-purple);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .message {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            max-width: 80%;
+            position: relative;
+        }
+        .user-message {
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid var(--neon-pink);
+            margin-left: auto;
+        }
+        .ai-message {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            margin-right: auto;
+        }
+        input, button {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        input {
+            width: 70%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--neon-cyan);
+        }
+        button {
+            width: 28%;
+            background: linear-gradient(45deg, var(--neon-pink), var(--cyber-purple));
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        .art-canvas {
+            width: 100%;
+            height: 400px;
+            background: black;
+            border: 2px solid var(--matrix-green);
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        .ai-model-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .model-card {
+            padding: 1rem;
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .model-card:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+        .glow {
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px var(--neon-cyan); }
+            to { box-shadow: 0 0 20px var(--neon-pink); }
+        }
+        .cyber-border {
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+        }
+        @keyframes borderGlow {
+            0% { transform: translate(-100%, -100%); }
+            100% { transform: translate(100%, 100%); }
+        }
+    </style>
+</head>
+<body>
+    <!-- AI Chat Interface -->
+    <div class="panel cyber-border">
+        <h1>NEUROCHAT</h1>
+        <div class="chat-container" id="chatBox">
+            <div class="message ai-message">
+                <strong>NeuroBot:</strong> Welcome to NeuroCanvas! I'm your multidimensional AI assistant. 
+                How can I enhance your reality today?
+                <div class="info-text">Model: GPT-4X</div>
+            </div>
+        </div>
+        <div>
+            <input type="text" id="userInput" placeholder="Transmit thought pattern...">
+            <button onclick="sendMessage()">Engage</button>
+        </div>
+        <div class="ai-model-selector">
+            <div class="model-card" onclick="selectModel('therapy')">
+                <h3>🤖 TherapyAI</h3>
+                <p>Mental health support module</p>
+            </div>
+            <div class="model-card" onclick="selectModel('code')">
+                <h3>💻 CodeX</h3>
+                <p>Quantum programming assistant</p>
+            </div>
+            <div class="model-card" onclick="selectModel('creative')">
+                <h3>🎨 ArtiGen</h3>
+                <p>Creative co-creation engine</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Art Generator -->
+    <div class="panel cyber-border">
+        <h1>NEUROGENESIS</h1>
+        <div class="art-canvas" id="artCanvas"></div>
+        <div class="ai-model-selector">
+            <div class="model-card" onclick="selectArtStyle('cyberpunk')">
+                <h3>🌃 CyberPunk</h3>
+                <p>Neon-drenched urban futures</p>
+            </div>
+            <div class="model-card" onclick="selectArtStyle('surreal')">
+                <h3>🌌 SurrealCore</h3>
+                <p>Dream logic visualization</p>
+            </div>
+            <div class="model-card" onclick="selectArtStyle('biomech')">
+                <h3>🔬 BioMech</h3>
+                <p>Organic-machine hybrid forms</p>
+            </div>
+        </div>
+        <button style="width:100%;margin-top:1rem" onclick="generateArt()">
+            Generate Neural Artwork
+        </button>
+    </div>
+
+    <script>
+        let currentModel = 'creative';
+        let currentStyle = 'cyberpunk';
+        const PROMPT_LIBRARY = {
+            therapy: [
+                "I'm feeling anxious about...",
+                "How can I improve my sleep?",
+                "Techniques for stress management"
+            ],
+            code: [
+                "Optimize this quantum algorithm:",
+                "Explain neural architecture search",
+                "Implement a fractal generator in Python"
+            ],
+            creative: [
+                "Co-write a cyberpunk short story",
+                "Generate concept art prompts for...",
+                "Futuristic cityscape description"
+            ]
+        };
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            
+            // Add user message
+            chatBox.innerHTML += `
+                <div class="message user-message">
+                    <strong>User:</strong> ${input.value}
+                    <div class="info-text">Model: ${currentModel.toUpperCase()}</div>
+                </div>
+            `;
+
+            // Simulated API response
+            const responses = {
+                therapy: [
+                    "Let's explore some grounding techniques...",
+                    "Have you tried the 4-7-8 breathing method?",
+                    "Remember: Growth often comes from discomfort."
+                ],
+                code: [
+                    "Here's an optimized version:\n\nfunction quantumSort() {...}",
+                    "Neural architecture search involves...",
+                    "Implementing fractals using recursive algorithms:"
+                ],
+                creative: [
+                    "The neon-lit rain fell on the nanotech city...",
+                    "Concept: A floating monastery powered by dark matter",
+                    "The AI cathedral's stained glass displayed shifting data streams"
+                ]
+            };
+
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'message ai-message';
+            loadingMsg.innerHTML = `<div class="glow">🌀 Processing quantum thought patterns...</div>`;
+            chatBox.appendChild(loadingMsg);
+
+            setTimeout(() => {
+                loadingMsg.remove();
+                const response = responses[currentModel][Math.floor(Math.random()*3)];
+                chatBox.innerHTML += `
+                    <div class="message ai-message">
+                        <strong>NeuroBot:</strong> ${response}
+                        <div class="info-text">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                `;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1500);
+
+            input.value = '';
+        }
+
+        function generateArt() {
+            const canvas = document.getElementById('artCanvas');
+            canvas.innerHTML = '';
+            const colors = ['#0ff', '#f0f', '#0f0', '#ff0'];
+            
+            for(let i = 0; i < 100; i++) {
+                const element = document.createElement('div');
+                element.style.position = 'absolute';
+                element.style.left = Math.random()*100 + '%';
+                element.style.top = Math.random()*100 + '%';
+                element.style.width = Math.random()*50 + 'px';
+                element.style.height = element.style.width;
+                element.style.background = colors[Math.floor(Math.random()*4)];
+                element.style.mixBlendMode = 'screen';
+                element.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                element.style.transform = `rotate(${Math.random()*360}deg)`;
+                element.style.opacity = '0.7';
+                element.style.animation = `pulse ${2 + Math.random()*3}s infinite`;
+                
+                canvas.appendChild(element);
+            }
+        }
+
+        function selectModel(model) {
+            currentModel = model;
+            document.getElementById('userInput').placeholder = 
+                PROMPT_LIBRARY[model][0] + "...";
+        }
+
+        function selectArtStyle(style) {
+            currentStyle = style;
+            generateArt();
+        }
+
+        // Initial art generation
+        generateArt();
+    </script>
+</body>
+</html>

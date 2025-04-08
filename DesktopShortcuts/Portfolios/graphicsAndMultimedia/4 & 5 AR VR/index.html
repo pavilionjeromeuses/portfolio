@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D AR VR World</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+<body>
+    <div id="info">
+        <h1>Quest VR/AR Test</h1>
+        <p>Choose a mode below:</p>
+        <button id="vr-button">ENTER VR</button>
+        <button id="ar-button">ENTER AR</button>
+    </div>
+    <div id="container"></div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Nexus - Crypto Lending Protocol</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #10b981;
+            --background: #0f172a;
+            --card-bg: #1e293b;
+        }
+
+        body {
+            background: linear-gradient(160deg, var(--background) 60%, #1d4ed8);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .nav-tabs .nav-link {
+            color: #94a3b8;
+            border: none;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+        }
+
+        .form-control {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        .btn-success {
+            background: var(--secondary-color);
+            border: none;
+        }
+
+        .health-factor {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #1e3a8a;
+        }
+
+        .protocol-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .crypto-badge {
+            background: #1e3a8a;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNjM2NmYxIj48cGF0aCBkPSJNMTIgMGMtNi42MjcgMC0xMiA1LjM3My0xMiAxMnM1LjM3MyAxMiAxMiAxMiAxMi01LjM3MyAxMi0xMi01LjM3My0xMi0xMi0xMnpNMTIuNjQ1IDE4LjcxOWwtMy42OTYtMy42OTYgMS4zNjktMS4zNjkgMi4zMjcgMi4zMjcgNS4xMzEtNS4xMzEgMS4zNjkgMS4zNjktNi41IDYuNXoiLz48L3N2Zz4=" alt="Logo">
+            <h1 class="mb-0">DeFi Nexus</h1>
+        </div>
+
+        <!-- Protocol Stats -->
+        <div class="protocol-stats">
+            <div class="card p-3">
+                <small class="text-muted">Total Value Locked</small>
+                <h3>$12.8M</h3>
+                <span class="text-success"><i class="fas fa-arrow-up"></i> +8.2%</span>
+            </div>
+            <div class="card p-3">
+                <small class="text-muted">Total Loans</small>
+                <h3>1,284</h3>
+                <span class="text-primary">Active: 892</span>
+            </div>
+            <div class="card p-3">
+                <small class="text-muted">APY Range</small>
+                <h3>3.8% - 24.5%</h3>
+                <span class="text-muted">Variable Rates</span>
+            </div>
+            <div class="card p-3">
+                <small class="text-muted">Collateral Ratio</small>
+                <h3>167%</h3>
+                <span class="text-warning">Avg. Health Factor</span>
+            </div>
+        </div>
+
+        <!-- Main Interface -->
+        <div class="row">
+            <!-- Lending Section -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-coins me-2"></i>Lending Pool</h4>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>DAI Pool APY:</span>
+                            <strong class="text-success">8.9%</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Your Deposits:</span>
+                            <strong>1,250 DAI</strong>
+                        </div>
+                        <div class="input-group mb-2">
+                            <input type="number" class="form-control" placeholder="DAI amount">
+                            <button class="btn btn-primary">Deposit</button>
+                        </div>
+                        <button class="btn btn-outline-primary w-100">Withdraw</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Borrowing Section -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-hand-holding-usd me-2"></i>Borrow</h4>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Available Credit:</span>
+                            <strong>$8,450</strong>
+                        </div>
+                        <div class="input-group mb-2">
+                            <input type="number" class="form-control" placeholder="ETH collateral">
+                            <span class="input-group-text crypto-badge">
+                                <i class="fab fa-ethereum"></i> ETH
+                            </span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control" placeholder="DAI to borrow">
+                            <span class="input-group-text crypto-badge">
+                                <i class="fas fa-coins"></i> DAI
+                            </span>
+                        </div>
+                        <div class="health-factor mb-3">
+                            Health Factor: 2.8x <i class="fas fa-check-circle text-success ms-2"></i>
+                        </div>
+                        <button class="btn btn-primary w-100">Borrow DAI</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Loans -->
+            <div class="col-12 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-file-invoice-dollar me-2"></i>Active Loans</h4>
+                    <div class="table-responsive">
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th>Collateral</th>
+                                    <th>Loan Value</th>
+                                    <th>Rate</th>
+                                    <th>Health Factor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fab fa-ethereum"></i> 4.2 ETH</td>
+                                    <td>$8,400 DAI</td>
+                                    <td class="text-success">9.2%</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 75%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Healthy</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fab fa-bitcoin"></i> 0.2 BTC</td>
+                                    <td>$5,000 DAI</td>
+                                    <td class="text-warning">15.4%</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning">Warning</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fab fa-ethereum"></i> 8.1 ETH</td>
+                                    <td>$14,200 DAI</td>
+                                    <td class="text-danger">22.1%</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-danger" style="width: 25%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-danger">Liquidated</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Data -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-chart-line me-2"></i>Market Overview</h4>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="crypto-badge p-2">
+                                <i class="fab fa-ethereum"></i>
+                                <div>
+                                    <small>ETH Price</small>
+                                    <div>$3,420.50</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="crypto-badge p-2">
+                                <i class="fab fa-bitcoin"></i>
+                                <div>
+                                    <small>BTC Price</small>
+                                    <div>$42,150.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="rateChart" height="120"></canvas>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-history me-2"></i>Transaction History</h4>
+                    <div class="list-group">
+                        <div class="list-group-item bg-transparent border-secondary">
+                            <div class="d-flex justify-content-between">
+                                <span>DAI Deposit</span>
+                                <span class="text-success">+1,500 DAI</span>
+                            </div>
+                            <small class="text-muted">2 hours ago</small>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary">
+                            <div class="d-flex justify-content-between">
+                                <span>ETH Collateral Added</span>
+                                <span class="text-primary">+2.4 ETH</span>
+                            </div>
+                            <small class="text-muted">1 day ago</small>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary">
+                            <div class="d-flex justify-content-between">
+                                <span>Loan Repayment</span>
+                                <span class="text-danger">-800 DAI</span>
+                            </div>
+                            <small class="text-muted">3 days ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize Rate Chart
+        const ctx = document.getElementById('rateChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Borrow APR',
+                    data: [12.5, 14.2, 18.4, 15.8, 13.1, 16.7],
+                    borderColor: '#6366f1',
+                    tension: 0.4
+                }, {
+                    label: 'Lend APY',
+                    data: [8.2, 9.1, 7.8, 8.5, 9.4, 8.9],
+                    borderColor: '#10b981',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: '#334155' },
+                        ticks: { color: '#fff' }
+                    },
+                    x: {
+                        grid: { color: '#334155' },
+                        ticks: { color: '#fff' }
+                    }
+                }
+            }
+        });
+
+        // Simulated Protocol Data
+        const protocolData = {
+            totalValueLocked: 12845000,
+            activeLoans: 892,
+            averageCollateralRatio: 167,
+            interestRates: {
+                dai: { borrow: 9.2, lend: 8.9 },
+                eth: { borrow: 5.4, lend: 3.8 }
+            },
+            historicalRates: {
+                borrow: [12.5, 14.2, 18.4, 15.8, 13.1, 16.7],
+                lend: [8.2, 9.1, 7.8, 8.5, 9.4, 8.9]
+            },
+            userPortfolio: {
+                deposited: 1250,
+                borrowed: 8400,
+                collateral: 4.2,
+                staked: 450,
+                transactions: [
+                    { type: 'deposit', amount: 1500, asset: 'DAI', timestamp: '2h' },
+                    { type: 'collateral', amount: 2.4, asset: 'ETH', timestamp: '1d' },
+                    { type: 'repayment', amount: 800, asset: 'DAI', timestamp: '3d' }
+                ]
+            }
+        };
+
+        // Real-time Price Updates
+        function updatePrices() {
+            const ethPrice = 3420 + (Math.random() * 200 - 100);
+            const btcPrice = 42150 + (Math.random() * 1500 - 750);
+            document.querySelectorAll('.crypto-badge').forEach(badge => {
+                if (badge.innerHTML.includes('ETH')) {
+                    badge.querySelector('div div').textContent = `$${ethPrice.toFixed(2)}`;
+                }
+                if (badge.innerHTML.includes('BTC')) {
+                    badge.querySelector('div div').textContent = `$${btcPrice.toFixed(2)}`;
+                }
+            });
+        }
+
+        setInterval(updatePrices, 5000);
+        updatePrices();
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Nexus - Crypto Lending Protocol</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #10b981;
+            --background: #0f172a;
+            --card-bg: #1e293b;
+        }
+
+        body {
+            background: linear-gradient(160deg, var(--background) 60%, #1d4ed8);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .nav-tabs .nav-link {
+            color: #94a3b8;
+            border: none;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+        }
+
+        .form-control {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        .btn-success {
+            background: var(--secondary-color);
+            border: none;
+        }
+
+        .health-factor {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #1e3a8a;
+        }
+
+        .protocol-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .crypto-badge {
+            background: #1e3a8a;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNjM2NmYxIj48cGF0aCBkPSJNMTIgMGMtNi42MjcgMC0xMiA1LjM3My0xMiAxMnM1LjM3MyAxMiAxMiAxMiAxMi01LjM3MyAxMi0xMi01LjM3My0xMi0xMi0xMnpNMTIuNjQ1IDE4LjcxOWwtMy42OTYtMy42OTYgMS4zNjktMS4zNjkgMi4zMjcgMi4zMjcgNS4xMzEtNS4xMzEgMS4zNjkgMS4zNjktNi41IDYuNXoiLz48L3N2Zz4=" alt="Logo">
+            <h1 class="mb-0">DeFi Nexus</h1>
+        </div>
+
+        <!-- Protocol Stats -->
+        <div class="protocol-stats">
+            <div class="card p-3">
+                <small class="text-muted">Total Value Locked</small>
+                <h3>$12.8M</h3>
+                <span class="text-success"><i class="fas fa-arrow-up"></i> +8.2%</span>
+            </div>
+            <div class="card p-3">
+                <small class="text-muted">Total Loans</small>
+                <h3>1,284</h3>
+                <span class="text-primary">Active: 892</span>
+            </div>
+            <div class="card p-3">
+                <small class="text-muted">APY Range</small>
+                <h3>3.8% - 24.5%</h3>
+                <span class="text-muted">Variable Rates</span>
+            </div>
+            <div class="card p-3">
+                <small class="text-muted">Collateral Ratio</small>
+                <h3>167%</h3>
+                <span class="text-warning">Avg. Health Factor</span>
+            </div>
+        </div>
+
+        <!-- Main Interface -->
+        <div class="row">
+            <!-- Lending Section -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-coins me-2"></i>Lending Pool</h4>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>DAI Pool APY:</span>
+                            <strong class="text-success">8.9%</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Your Deposits:</span>
+                            <strong>1,250 DAI</strong>
+                        </div>
+                        <div class="input-group mb-2">
+                            <input type="number" class="form-control" placeholder="DAI amount">
+                            <button class="btn btn-primary">Deposit</button>
+                        </div>
+                        <button class="btn btn-outline-primary w-100">Withdraw</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Borrowing Section -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-hand-holding-usd me-2"></i>Borrow</h4>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Available Credit:</span>
+                            <strong>$8,450</strong>
+                        </div>
+                        <div class="input-group mb-2">
+                            <input type="number" class="form-control" placeholder="ETH collateral">
+                            <span class="input-group-text crypto-badge">
+                                <i class="fab fa-ethereum"></i> ETH
+                            </span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control" placeholder="DAI to borrow">
+                            <span class="input-group-text crypto-badge">
+                                <i class="fas fa-coins"></i> DAI
+                            </span>
+                        </div>
+                        <div class="health-factor mb-3">
+                            Health Factor: 2.8x <i class="fas fa-check-circle text-success ms-2"></i>
+                        </div>
+                        <button class="btn btn-primary w-100">Borrow DAI</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Loans -->
+            <div class="col-12 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-file-invoice-dollar me-2"></i>Active Loans</h4>
+                    <div class="table-responsive">
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th>Collateral</th>
+                                    <th>Loan Value</th>
+                                    <th>Rate</th>
+                                    <th>Health Factor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fab fa-ethereum"></i> 4.2 ETH</td>
+                                    <td>$8,400 DAI</td>
+                                    <td class="text-success">9.2%</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 75%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Healthy</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fab fa-bitcoin"></i> 0.2 BTC</td>
+                                    <td>$5,000 DAI</td>
+                                    <td class="text-warning">15.4%</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning">Warning</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fab fa-ethereum"></i> 8.1 ETH</td>
+                                    <td>$14,200 DAI</td>
+                                    <td class="text-danger">22.1%</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-danger" style="width: 25%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-danger">Liquidated</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Data -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-chart-line me-2"></i>Market Overview</h4>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="crypto-badge p-2">
+                                <i class="fab fa-ethereum"></i>
+                                <div>
+                                    <small>ETH Price</small>
+                                    <div>$3,420.50</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="crypto-badge p-2">
+                                <i class="fab fa-bitcoin"></i>
+                                <div>
+                                    <small>BTC Price</small>
+                                    <div>$42,150.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="rateChart" height="120"></canvas>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <h4 class="mb-4"><i class="fas fa-history me-2"></i>Transaction History</h4>
+                    <div class="list-group">
+                        <div class="list-group-item bg-transparent border-secondary">
+                            <div class="d-flex justify-content-between">
+                                <span>DAI Deposit</span>
+                                <span class="text-success">+1,500 DAI</span>
+                            </div>
+                            <small class="text-muted">2 hours ago</small>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary">
+                            <div class="d-flex justify-content-between">
+                                <span>ETH Collateral Added</span>
+                                <span class="text-primary">+2.4 ETH</span>
+                            </div>
+                            <small class="text-muted">1 day ago</small>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary">
+                            <div class="d-flex justify-content-between">
+                                <span>Loan Repayment</span>
+                                <span class="text-danger">-800 DAI</span>
+                            </div>
+                            <small class="text-muted">3 days ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize Rate Chart
+        const ctx = document.getElementById('rateChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Borrow APR',
+                    data: [12.5, 14.2, 18.4, 15.8, 13.1, 16.7],
+                    borderColor: '#6366f1',
+                    tension: 0.4
+                }, {
+                    label: 'Lend APY',
+                    data: [8.2, 9.1, 7.8, 8.5, 9.4, 8.9],
+                    borderColor: '#10b981',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: '#334155' },
+                        ticks: { color: '#fff' }
+                    },
+                    x: {
+                        grid: { color: '#334155' },
+                        ticks: { color: '#fff' }
+                    }
+                }
+            }
+        });
+
+        // Simulated Protocol Data
+        const protocolData = {
+            totalValueLocked: 12845000,
+            activeLoans: 892,
+            averageCollateralRatio: 167,
+            interestRates: {
+                dai: { borrow: 9.2, lend: 8.9 },
+                eth: { borrow: 5.4, lend: 3.8 }
+            },
+            historicalRates: {
+                borrow: [12.5, 14.2, 18.4, 15.8, 13.1, 16.7],
+                lend: [8.2, 9.1, 7.8, 8.5, 9.4, 8.9]
+            },
+            userPortfolio: {
+                deposited: 1250,
+                borrowed: 8400,
+                collateral: 4.2,
+                staked: 450,
+                transactions: [
+                    { type: 'deposit', amount: 1500, asset: 'DAI', timestamp: '2h' },
+                    { type: 'collateral', amount: 2.4, asset: 'ETH', timestamp: '1d' },
+                    { type: 'repayment', amount: 800, asset: 'DAI', timestamp: '3d' }
+                ]
+            }
+        };
+
+        // Real-time Price Updates
+        function updatePrices() {
+            const ethPrice = 3420 + (Math.random() * 200 - 100);
+            const btcPrice = 42150 + (Math.random() * 1500 - 750);
+            document.querySelectorAll('.crypto-badge').forEach(badge => {
+                if (badge.innerHTML.includes('ETH')) {
+                    badge.querySelector('div div').textContent = `$${ethPrice.toFixed(2)}`;
+                }
+                if (badge.innerHTML.includes('BTC')) {
+                    badge.querySelector('div div').textContent = `$${btcPrice.toFixed(2)}`;
+                }
+            });
+        }
+
+        setInterval(updatePrices, 5000);
+        updatePrices();
+    </script>
+</body>
+</html>

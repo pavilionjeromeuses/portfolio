@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroEngine Predictive Maintenance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a2f38;
+            --secondary: #3d9fdb;
+            --accent: #ff6b35;
+            --text: #e0e0e0;
+            --background: #0d1a21;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(13, 26, 33, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwZDFhMjEiLz48ZyBvcGFjaXR5PSIwLjEiPjxwYXRoIGQ9Ik0wIDI1MHYyNTBoMjVWMTI1aDUwdjI1MGg1MFY3NWg1MHY0MjVoNTBWMjUwaDUwdjI1MEg0MDBWMjI1aDUwdjI3NWg1MFYxMDBoNTB2NDAwaDUwVjI1MGg1MHYyNTBIMTAwMFYzNzVoNTB2Mzc1SDB6IiBzdHJva2U9IiMzZDlmZGIiIHN0cm9rZS13aWR0aD0iMiIvPjwvZz48L3N2Zz4=');
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255,107,53,0.1);
+            border-radius: 10px;
+        }
+
+        .engine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .engine-card {
+            background: linear-gradient(145deg, #12252e, #0b171e);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(61,159,219,0.3);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .engine-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .gauge-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .sensor-item {
+            background: rgba(26,47,56,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .alert-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .critical { background: #e74c3c; color: white; }
+        .warning { background: #f1c40f; color: black; }
+        .normal { background: #2ecc71; color: white; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26,47,56,0.8);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(61,159,219,0.2);
+        }
+
+        th {
+            background: var(--primary);
+            font-weight: 500;
+        }
+
+        .chart-panel {
+            background: rgba(26,47,56,0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 1px solid rgba(61,159,219,0.2);
+        }
+
+        .maintenance-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1><i class="fas fa-turbine"></i> Turbofan Engine Health Monitoring</h1>
+            <p>NASA C-MAPSS Dataset - FD001 | 100 Engines | 21 Sensors</p>
+        </div>
+
+        <div class="engine-grid">
+            <!-- Engine Cards will be populated by JavaScript -->
+        </div>
+
+        <div class="chart-panel">
+            <h3><i class="fas fa-wave-square"></i> Sensor Trends - Last 24 Cycles</h3>
+            <canvas id="sensorTrendChart"></canvas>
+        </div>
+
+        <div class="chart-panel">
+            <h3><i class="fas fa-heartbeat"></i> Engine Health Index Timeline</h3>
+            <canvas id="healthTimelineChart"></canvas>
+        </div>
+
+        <div class="chart-panel">
+            <h3><i class="fas fa-exclamation-triangle"></i> Failure Probability Distribution</h3>
+            <canvas id="failureDistributionChart"></canvas>
+        </div>
+
+        <div class="chart-panel">
+            <h3><i class="fas fa-history"></i> Maintenance Log</h3>
+            <div class="maintenance-log">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Engine ID</th>
+                            <th>Action</th>
+                            <th>Technician</th>
+                        </tr>
+                    </thead>
+                    <tbody id="maintenanceLog">
+                        <!-- Log entries will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="chart-panel">
+            <h3><i class="fas fa-microchip"></i> Model Performance Metrics</h3>
+            <div class="sensor-grid" style="grid-template-columns: repeat(3, 1fr)">
+                <div class="sensor-item">
+                    <h4>Model Accuracy</h4>
+                    <p class="normal">94.2%</p>
+                </div>
+                <div class="sensor-item">
+                    <h4>Precision</h4>
+                    <p class="normal">92.8%</p>
+                </div>
+                <div class="sensor-item">
+                    <h4>Recall</h4>
+                    <p class="normal">95.1%</p>
+                </div>
+            </div>
+            <canvas id="confusionMatrix"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Generate mock engine data
+        const generateEngineData = () => {
+            const engines = [];
+            const statuses = ['normal', 'warning', 'critical'];
+            
+            for(let i = 1; i <= 12; i++) {
+                engines.push({
+                    id: i,
+                    rul: Math.floor(Math.random() * 200 + 50),
+                    failureProb: (Math.random() * 30 + 5).toFixed(1),
+                    sensors: {
+                        temp: (Math.random() * 100 + 200).toFixed(1),
+                        vibration: (Math.random() * 5 + 2).toFixed(2),
+                        oilPressure: (Math.random() * 50 + 30).toFixed(1),
+                        exhaustPressure: (Math.random() * 20 + 10).toFixed(1),
+                        fuelFlow: (Math.random() * 10 + 5).toFixed(2)
+                    },
+                    status: statuses[Math.floor(Math.random() * 3)],
+                    lastMaintenance: `2024-0${Math.floor(Math.random() * 3 + 5)}-${Math.floor(Math.random() * 28 + 1)}`
+                });
+            }
+            return engines;
+        };
+
+        // Generate maintenance log entries
+        const generateMaintenanceLog = () => {
+            const actions = ['Routine Inspection', 'Bearing Replacement', 'Oil Change', 
+                           'Vibration Analysis', 'Thermal Calibration', 'Software Update'];
+            const technicians = ['T. Wilson', 'A. Rodriguez', 'M. Chen', 'J. Patel'];
+            
+            return Array.from({length: 15}, (_, i) => ({
+                timestamp: `2024-05-${String(15 - i).padStart(2, '0')} ${Math.floor(Math.random() * 24)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+                engineId: Math.floor(Math.random() * 12 + 1),
+                action: actions[Math.floor(Math.random() * actions.length)],
+                technician: technicians[Math.floor(Math.random() * technicians.length)]
+            }));
+        };
+
+        // Populate engine cards
+        const engineGrid = document.querySelector('.engine-grid');
+        generateEngineData().forEach(engine => {
+            const card = document.createElement('div');
+            card.className = 'engine-card';
+            card.innerHTML = `
+                <div class="alert-badge ${engine.status}">${engine.status.toUpperCase()}</div>
+                <h3><i class="fas fa-engine"></i> Engine #${engine.id}</h3>
+                <div class="gauge-container">
+                    <div>
+                        <h4>RUL</h4>
+                        <p style="color: ${engine.rul < 100 ? 'var(--accent)' : 'var(--secondary)'}">${engine.rul} Cycles</p>
+                    </div>
+                    <div>
+                        <h4>Failure Risk</h4>
+                        <p style="color: ${engine.failureProb > 25 ? 'var(--accent)' : 'var(--text)'}">${engine.failureProb}%</p>
+                    </div>
+                </div>
+                <div class="sensor-grid">
+                    <div class="sensor-item">
+                        <small>TEMP</small>
+                        <p>${engine.sensors.temp}°C</p>
+                    </div>
+                    <div class="sensor-item">
+                        <small>VIBRATION</small>
+                        <p>${engine.sensors.vibration} mm/s²</p>
+                    </div>
+                    <div class="sensor-item">
+                        <small>OIL PRESS</small>
+                        <p>${engine.sensors.oilPressure} psi</p>
+                    </div>
+                </div>
+                <small style="opacity:0.7">Last maintained: ${engine.lastMaintenance}</small>
+            `;
+            engineGrid.appendChild(card);
+        });
+
+        // Populate maintenance log
+        const logBody = document.getElementById('maintenanceLog');
+        generateMaintenanceLog().forEach(entry => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${entry.timestamp}</td>
+                <td>Engine #${entry.engineId}</td>
+                <td>${entry.action}</td>
+                <td>${entry.technician}</td>
+            `;
+            logBody.appendChild(row);
+        });
+
+        // Initialize Sensor Trend Chart
+        new Chart(document.getElementById('sensorTrendChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                datasets: [{
+                    label: 'Exhaust Temp (°C)',
+                    data: Array.from({length: 24}, () => Math.random() * 50 + 250),
+                    borderColor: '#ff6b35',
+                    tension: 0.3
+                },{
+                    label: 'Vibration (mm/s²)',
+                    data: Array.from({length: 24}, () => Math.random() * 3 + 2),
+                    borderColor: '#3d9fdb',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            thresholdLine: {
+                                type: 'line',
+                                yMin: 280,
+                                yMax: 280,
+                                borderColor: '#e74c3c',
+                                borderWidth: 2,
+                                borderDash: [5,5]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Initialize Health Timeline Chart
+        new Chart(document.getElementById('healthTimelineChart'), {
+            type: 'bar',
+            data: {
+                labels: Array.from({length: 30}, (_, i) => `Day ${i + 1}`),
+                datasets: [{
+                    label: 'Health Index',
+                    data: Array.from({length: 30}, () => Math.random() * 40 + 60),
+                    backgroundColor: '#3d9fdb77'
+                }]
+            }
+        });
+
+        // Initialize Confusion Matrix
+        new Chart(document.getElementById('confusionMatrix'), {
+            type: 'matrix',
+            data: {
+                datasets: [{
+                    label: 'Confusion Matrix',
+                    data: [[85, 15], [8, 192]],
+                    backgroundColor: ['#2ecc77', '#e74c3c', '#e74c3c', '#2ecc77'],
+                    anchorX: 'left',
+                    anchorY: 'bottom'
+                }]
+            }
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            document.querySelectorAll('.engine-card').forEach(card => {
+                const rulElem = card.querySelector('p:nth-of-type(1)');
+                const currentRul = parseInt(rulElem.textContent);
+                rulElem.textContent = `${currentRul - 1} Cycles`;
+                rulElem.style.color = (currentRul - 1) < 100 ? 'var(--accent)' : 'var(--secondary)';
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Literary Canvas: Cultural Analysis Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C5A47E;
+            --deep-blue: #0A1A2F;
+            --parchment: #F4F0E6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #fafafa 0%, #f0f3ff 100%);
+            margin: 0;
+            padding: 40px 0;
+            color: var(--deep-blue);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-art {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2em;
+            color: var(--deep-blue);
+            margin: 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .quill-divider {
+            text-align: center;
+            margin: 40px 0;
+            opacity: 0.2;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(10,26,47,0.08);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .analysis-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(197,164,126,0) 0%,
+                rgba(197,164,126,0.08) 50%,
+                rgba(197,164,126,0) 100%);
+            transition: left 0.6s;
+        }
+
+        .analysis-card:hover:before {
+            left: 100%;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--deep-blue);
+            margin-top: 0;
+            font-size: 2em;
+            position: relative;
+        }
+
+        .theme-tag {
+            display: inline-block;
+            background: rgba(197,164,126,0.15);
+            color: var(--gold);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 15px 0;
+        }
+
+        .illuminated-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            float: left;
+            margin-right: 10px;
+            color: var(--gold);
+            line-height: 0.8;
+        }
+
+        .manuscript-note {
+            background: var(--parchment);
+            border-left: 3px solid var(--gold);
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .manuscript-note:before {
+            content: '✍️';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.3;
+        }
+
+        .rating-stars {
+            color: var(--gold);
+            font-size: 1.4em;
+            letter-spacing: 3px;
+        }
+
+        .ink-splash {
+            position: fixed;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes fadeScroll {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .scroll-reveal {
+            animation: fadeScroll 0.8s ease-out;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: rgba(10,26,47,0.6);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-art">
+            <h1>Literary Canvas</h1>
+            <p class="theme-tag">Cultural Analysis Suite</p>
+        </div>
+
+        <div class="analysis-card scroll-reveal">
+            <div class="theme-tag">Cinema & Society</div>
+            <h2><span class="illuminated-letter">B</span>arbie: 2024's Cultural Mirror</h2>
+            
+            <div class="manuscript-note">
+                <h3>Structural Framework</h3>
+                <p>📜 <em>Historical Context:</em> From toy aisles to cultural battlefield</p>
+                <p>🎭 <em>Dual Identity:</em> Plastic perfection vs feminist manifesto</p>
+                <p>🌐 <em>Digital Resonance:</em> TikTok deconstructions & AI companion debates</p>
+            </div>
+
+            <div class="manuscript-note">
+                <h3>Critical Reception</h3>
+                <div class="rating-stars">★★★★☆</div>
+                <p>"A kaleidoscopic examination of modernity's contradictions" - <em>Cultural Review Quarterly</em></p>
+            </div>
+        </div>
+
+        <div class="quill-divider">✒️</div>
+
+        <div class="analysis-card scroll-reveal">
+            <div class="theme-tag">Television Archetypes</div>
+            <h2><span class="illuminated-letter">A</span>ntihero's Journey</h2>
+            
+            <div class="manuscript-note">
+                <h3>Comparative Lens</h3>
+                <p>⚖️ Walter White's Meth Empire vs. Fleabag's Chaotic Charm</p>
+                <p>🔍 Fourth Wall as Confessional: Breaking bad vs breaking hearts</p>
+                <p>💔 Moral Bankruptcy as Audience Catharsis</p>
+            </div>
+
+            <div class="manuscript-note">
+                <h3>Thesis Core</h3>
+                <blockquote>"Modern antiheroes don't break the rules - they rewrite them in blood and tears."</blockquote>
+            </div>
+        </div>
+
+        <div class="analysis-card scroll-reveal">
+            <div class="theme-tag">Writer's Atelier</div>
+            <h2><span class="illuminated-letter">C</span>rafting Toolkit</h2>
+            
+            <div class="manuscript-note">
+                <h3>Creative Process</h3>
+                <p>📅 <em>Rhythm:</em> Research (3d) → Ideation (2d) → Draft (5d) → Polish (3d)</p>
+                <p>🔗 <em>Source Weaving:</em> Academic rigor meets pop culture pulse</p>
+                <p>✒️ <em>Style:</em> Analytical poetry with data-driven backbone</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Crafted with intellectual curiosity • Updated on <span id="currentDate"></span>
+    </footer>
+
+    <script>
+        // Dynamic date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
+            month: 'long', 
+            day: 'numeric', 
+            year: 'numeric' 
+        });
+
+        // Scroll animation trigger
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('scroll-reveal');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.analysis-card').forEach((card) => {
+            observer.observe(card);
+        });
+
+        // Ink splash effect
+        document.addEventListener('mousemove', (e) => {
+            const splash = document.createElement('div');
+            splash.className = 'ink-splash';
+            splash.style.left = e.pageX + 'px';
+            splash.style.top = e.pageY + 'px';
+            splash.innerHTML = '✒️';
+            document.body.appendChild(splash);
+            setTimeout(() => splash.remove(), 2000);
+        });
+    </script>
+</body>
+</html>

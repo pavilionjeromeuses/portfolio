@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industry CRM Suite</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            background: #2c3e50;
+            padding: 15px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .compliance-status {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .integration-box {
+            border: 2px solid #3498db;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .lead-score {
+            background: #2ecc71;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .status-indicator {
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .connected { background: #2ecc71; }
+        .disconnected { background: #e74c3c; }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .progress-bar {
+            background: #ecf0f1;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #2ecc71;
+            transition: width 0.3s ease;
+        }
+        
+        .client-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .client-card {
+            background: white;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            border-radius: 5px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        
+        .active { background: #2ecc7130; color: #27ae60; }
+        .inactive { background: #e74c3c30; color: #c0392b; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        Industry CRM Suite | Healthcare & Legal Specialization
+    </div>
+
+    <div class="dashboard">
+        <!-- Expanded Compliance Tracking -->
+        <div class="card">
+            <h2>Healthcare Compliance Tracking</h2>
+            <div class="compliance-details">
+                <table class="data-table">
+                    <tr>
+                        <th>Regulation</th>
+                        <th>Status</th>
+                        <th>Last Audit</th>
+                        <th>Officer</th>
+                    </tr>
+                    <tr>
+                        <td>HIPAA Privacy Rule</td>
+                        <td><span class="compliance-status">Compliant</span></td>
+                        <td>2024-02-15</td>
+                        <td>Dr. Sarah Johnson</td>
+                    </tr>
+                    <tr>
+                        <td>PCI DSS (Payment Security)</td>
+                        <td><span class="compliance-status">Non-Compliant</span></td>
+                        <td>2024-01-30</td>
+                        <td>Michael Chen</td>
+                    </tr>
+                    <tr>
+                        <td>FDA 21 CFR Part 11</td>
+                        <td><span class="compliance-status">Under Review</span></td>
+                        <td>2023-12-01</td>
+                        <td>Emily Rodriguez</td>
+                    </tr>
+                </table>
+            </div>
+            <button onclick="runComplianceCheck()">Run Full Audit</button>
+        </div>
+
+        <!-- Enhanced Lead Management -->
+        <div class="card">
+            <h2>Lead Management</h2>
+            <div class="lead-filters">
+                <button class="active">Healthcare (23)</button>
+                <button>Legal (15)</button>
+                <button>Other (7)</button>
+            </div>
+            <table class="data-table">
+                <tr>
+                    <th>Name</th>
+                    <th>Industry</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Boston General Hospital</td>
+                    <td>Healthcare</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        85/100
+                    </td>
+                    <td><span class="status-badge active">Hot Lead</span></td>
+                </tr>
+                <tr>
+                    <td>Smith & Associates Law</td>
+                    <td>Legal</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        65/100
+                    </td>
+                    <td><span class="status-badge active">In Negotiation</span></td>
+                </tr>
+                <tr>
+                    <td>MediTech Solutions</td>
+                    <td>Healthcare IT</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        45/100
+                    </td>
+                    <td><span class="status-badge inactive">Cold Lead</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Expanded Integrations -->
+        <div class="card">
+            <h2>System Integrations</h2>
+            <div class="integration-box">
+                <div class="status-indicator connected"></div>
+                <strong>QuickBooks Online</strong>
+                <div class="integration-details">
+                    <div>Last Sync: 2024-03-15 14:30</div>
+                    <div>Transactions Synced: 1,234</div>
+                    <div>API Status: <span class="active">Stable</span></div>
+                </div>
+                <button onclick="syncQuickBooks()">Force Sync</button>
+            </div>
+
+            <div class="integration-box">
+                <div class="status-indicator disconnected"></div>
+                <strong>LegalCase Manager Pro</strong>
+                <div class="integration-details">
+                    <div>Last Connected: 2024-02-28</div>
+                    <div>Active Matters: 0</div>
+                    <div>Error Rate: <span class="inactive">High (23%)</span></div>
+                </div>
+                <button onclick="repairLegalCaseConnection()">Repair Connection</button>
+            </div>
+
+            <div class="integration-box">
+                <div class="status-indicator connected"></div>
+                <strong>Epic EHR System</strong>
+                <div class="integration-details">
+                    <div>Patient Records: 45,678</div>
+                    <div>Daily Updates: 1,234</div>
+                    <div>Compliance Score: 98%</div>
+                </div>
+                <button onclick="showEHRDashboard()">View Health Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Data Sections -->
+    <div class="dashboard">
+        <div class="card">
+            <h2>Client Portfolio</h2>
+            <div class="client-list">
+                <div class="client-card">
+                    <h3>Lawson & Partners</h3>
+                    <div>Industry: Corporate Law</div>
+                    <div>Active Matters: 12</div>
+                    <div>Last Contact: 2024-03-12</div>
+                </div>
+                <div class="client-card">
+                    <h3>City Heart Clinic</h3>
+                    <div>Industry: Healthcare</div>
+                    <div>Patient Volume: 1,200/mo</div>
+                    <div>Last Audit: 2024-02-28</div>
+                </div>
+                <div class="client-card">
+                    <h3>Digital Legal Solutions</h3>
+                    <div>Industry: Legal Tech</div>
+                    <div>MRR: $45,000</div>
+                    <div>Contract Ends: 2024-12-01</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Sales Pipeline Analytics</h2>
+            <div class="pipeline-stages">
+                <div class="stage">
+                    <h4>Prospects ($2.1M)</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%"></div>
+                    </div>
+                </div>
+                <div class="stage">
+                    <h4>Negotiation ($1.4M)</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="stage">
+                    <h4>Closed Won ($650K)</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-container">
+                <div class="kpi">
+                    <div class="kpi-value">37%</div>
+                    <div class="kpi-label">Win Rate</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-value">$142K</div>
+                    <div class="kpi-label">Avg. Deal Size</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-value">14 days</div>
+                    <div class="kpi-label">Sales Cycle</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Expanded Data Model
+        const sampleData = {
+            healthcareLeads: [
+                { name: "Mayo Clinical Partners", score: 92, status: "hot" },
+                { name: "Veterans Health Network", score: 78, status: "warm" }
+            ],
+            legalIntegrations: {
+                caseManagement: {
+                    activeMatters: 45,
+                    billedHours: 1200,
+                    upcomingDeadlines: 7
+                }
+            },
+            financials: {
+                ytdRevenue: 2450000,
+                quotaAttainment: 85,
+                topClient: "State Health System"
+            }
+        };
+
+        // Enhanced Functions
+        function runComplianceCheck() {
+            document.querySelectorAll('.compliance-status').forEach(status => {
+                const random = Math.random();
+                status.textContent = random > 0.66 ? 'Compliant' : 
+                                  random > 0.33 ? 'Under Review' : 'Non-Compliant';
+                status.style.color = status.textContent === 'Compliant' ? '#2ecc71' :
+                                    status.textContent === 'Under Review' ? '#f1c40f' : '#e74c3c';
+            });
+            alert("Full compliance audit initiated. Results will update momentarily.");
+        }
+
+        function syncQuickBooks() {
+            const integration = document.querySelector('.integration-box:first-child');
+            integration.querySelector('.status-indicator').className = 'status-indicator connected';
+            integration.querySelector('div:nth-child(3)').innerHTML = `
+                <div>Last Sync: ${new Date().toLocaleString()}</div>
+                <div>Transactions Synced: ${Math.floor(Math.random() * 5000)}</div>
+                <div>API Status: <span class="active">Optimized</span></div>
+            `;
+        }
+
+        function showEHRDashboard() {
+            const modal = document.createElement('div');
+            modal.style = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                            background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.2);
+                            z-index: 1000;`;
+            modal.innerHTML = `
+                <h3>Epic EHR Integration</h3>
+                <div>Connected Patients: ${sampleData.healthcareLeads.length * 1500}</div>
+                <div>Active Prescriptions: 1,234</div>
+                <div>Pending Lab Results: 45</div>
+                <button onclick="this.parentElement.remove()">Close</button>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Real-time Data Simulation
+setInterval(() => {
+    document.querySelectorAll('.progress-fill').forEach(bar => {
+        const currentWidth = parseFloat(bar.style.width) || 0;
+        const change = (Math.random() * 10 - 5); // Random value between -5 and +5
+        const newWidth = Math.min(100, Math.max(0, currentWidth + change));
+        bar.style.width = `${newWidth}%`;
+    });
+}, 5000);
+    </script>
+</body>
+</html>
